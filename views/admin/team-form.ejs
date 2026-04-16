@@ -1,0 +1,92 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1><%= member ? 'Edit Team Member' : 'Add Team Member' %></h1>
+  <a href="/admin/team" class="btn btn-outline">← Back to Team</a>
+</div>
+
+<form method="POST" action="/admin/team/save" enctype="multipart/form-data" class="admin-form">
+  <input type="hidden" name="memberId" value="<%= member ? member.id : '' %>">
+  <% if (member && member.image) { %>
+    <input type="hidden" name="existingImage" value="<%= member.image %>">
+  <% } %>
+
+  <div class="admin-card">
+    <h3>Member Type</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="memberType">Type</label>
+        <select id="memberType" name="memberType" onchange="toggleVolunteerFields()">
+          <option value="staff" <%= (typeof isVolunteer !== 'undefined' && isVolunteer) ? '' : 'selected' %>>Staff Member</option>
+          <option value="volunteer" <%= (typeof isVolunteer !== 'undefined' && isVolunteer) ? 'selected' : '' %>>Volunteer</option>
+        </select>
+      </div>
+      <div class="form-group" id="volunteerTeamGroup" style="<%= (typeof isVolunteer !== 'undefined' && isVolunteer) ? '' : 'display:none;' %>">
+        <label for="volunteerTeam">Volunteer Team</label>
+        <select id="volunteerTeam" name="volunteerTeam">
+          <option value="Office & Wraparound Support" <%= member && member.team === 'Office & Wraparound Support' ? 'selected' : '' %>>Office & Wraparound Support</option>
+          <option value="Cultural Engagement Team" <%= member && member.team === 'Cultural Engagement Team' ? 'selected' : '' %>>Cultural Engagement Team</option>
+          <option value="Group Facilitators" <%= member && member.team === 'Group Facilitators' ? 'selected' : '' %>>Group Facilitators</option>
+          <option value="Criminal Justice Team" <%= member && member.team === 'Criminal Justice Team' ? 'selected' : '' %>>Criminal Justice Team</option>
+          <option value="Research" <%= member && member.team === 'Research' ? 'selected' : '' %>>Research</option>
+          <option value="General" <%= member && member.team === 'General' ? 'selected' : '' %>>General</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <h3>Details</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required value="<%= member ? member.name : '' %>" placeholder="e.g. Dave Williams">
+      </div>
+      <div class="form-group">
+        <label for="role">Role</label>
+        <input type="text" id="role" name="role" value="<%= member ? member.role : '' %>" placeholder="e.g. Peer Mentor">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="bio">Short Bio</label>
+      <textarea id="bio" name="bio" rows="4" placeholder="A brief bio — remember to mention lived experience if appropriate."><%= member ? member.bio : '' %></textarea>
+    </div>
+    <div class="form-group">
+      <label for="videoUrl">Video URL (optional)</label>
+      <input type="url" id="videoUrl" name="videoUrl" value="<%= member && member.videoUrl ? member.videoUrl : '' %>" placeholder="https://www.youtube.com/watch?v=...">
+      <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem;">Link to a YouTube video or similar — displayed on the About page.</p>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <h3>Photo</h3>
+    <% if (member && member.image) { %>
+      <div style="margin-bottom: 1rem;">
+        <img src="<%= member.image %>" class="preview-image" alt="Current photo" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;">
+        <p style="font-size: 0.8rem; color: var(--text-mid);">Upload a new photo to replace</p>
+      </div>
+    <% } %>
+    <input type="file" name="memberImage" accept="image/*">
+    <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem;">Square photos work best. JPG or PNG.</p>
+  </div>
+
+  <button type="submit" class="btn btn-cta" style="font-size: 1.1rem; padding: 1rem 2.5rem; display:inline-flex;align-items:center;gap:0.45rem;">
+    <%- include('../partials/icon', { name: 'lucide:save', size: 20 }) %> Save Team Member
+  </button>
+</form>
+
+<script>
+function toggleVolunteerFields() {
+  var sel = document.getElementById('memberType');
+  var vtg = document.getElementById('volunteerTeamGroup');
+  var vid = document.getElementById('videoUrl');
+  if (sel.value === 'volunteer') {
+    vtg.style.display = '';
+    if (vid) vid.closest('.form-group').style.display = 'none';
+  } else {
+    vtg.style.display = 'none';
+    if (vid) vid.closest('.form-group').style.display = '';
+  }
+}
+toggleVolunteerFields();
+</script>

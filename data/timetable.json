@@ -1,0 +1,168 @@
+{
+  "monday": [
+    {
+      "id": "mon-rise",
+      "time": "10:00",
+      "endTime": "14:30",
+      "title": "RISE Day Hab Programme",
+      "category": "group",
+      "location": "Recovery Hub, 1 Connaught Road, WV1 4SJ",
+      "description": "8-week structured day programme with RNY & SUIT. Keyworker referral.",
+      "programmeSlug": "rise-day-hab"
+    },
+    {
+      "id": "mon-smart",
+      "time": "10:00",
+      "endTime": "12:00",
+      "title": "SMART Recovery",
+      "category": "group",
+      "location": "Recovery Hub, 1 Connaught Road, WV1 4SJ",
+      "description": "SMART meetings — see programme for the four-point toolkit.",
+      "programmeSlug": "smart-recovery"
+    },
+    {
+      "id": "mon-women",
+      "time": "12:30",
+      "endTime": "14:30",
+      "title": "Women’s Peer Support Group",
+      "category": "women",
+      "location": "Recovery Hub, Connaught Road",
+      "description": "Crafts and activities — RNY or SUIT clients. No referral needed.",
+      "programmeSlug": "womens-peer"
+    },
+    {
+      "id": "mon-dropin",
+      "time": "14:30",
+      "endTime": "15:00",
+      "title": "Drop-in & one-to-one",
+      "category": "dropin",
+      "location": "Paycare House / Hub — call 01902 328983",
+      "description": "Advocacy, forms, and signposting — check opening details with SUIT."
+    }
+  ],
+  "tuesday": [
+    {
+      "id": "tue-rise",
+      "time": "10:00",
+      "endTime": "14:30",
+      "title": "RISE Day Hab Programme",
+      "category": "group",
+      "location": "Recovery Hub, 1 Connaught Road, WV1 4SJ",
+      "description": "Themed sessions and creative workshops — keyworker referral.",
+      "programmeSlug": "rise-day-hab"
+    },
+    {
+      "id": "tue-smart",
+      "time": "10:00",
+      "endTime": "12:00",
+      "title": "SMART Recovery",
+      "category": "group",
+      "location": "Recovery Hub, 1 Connaught Road, WV1 4SJ",
+      "description": "Morning SMART meeting — referral via SUIT.",
+      "programmeSlug": "smart-recovery"
+    },
+    {
+      "id": "tue-art",
+      "time": "12:30",
+      "endTime": "14:30",
+      "title": "Weekly Art Group",
+      "category": "creative",
+      "location": "Connaught Road Hub (RNY)",
+      "description": "Creative collective — beginners welcome. Email Christiane or ask your keyworker.",
+      "programmeSlug": "creative-arts"
+    },
+    {
+      "id": "tue-appt",
+      "time": "14:30",
+      "endTime": "16:00",
+      "title": "Appointments & buddy support",
+      "category": "group",
+      "location": "SUIT — call 01902 328983",
+      "description": "One-to-ones and mentoring by arrangement."
+    }
+  ],
+  "wednesday": [
+    {
+      "id": "wed-smart-eve",
+      "time": "17:30",
+      "endTime": "19:30",
+      "title": "SMART Recovery (evening)",
+      "category": "group",
+      "location": "Recovery Hub, 1 Connaught Road, WV1 4SJ",
+      "description": "Evening SMART session — contact SUIT for referral.",
+      "programmeSlug": "smart-recovery"
+    }
+  ],
+  "thursday": [
+    {
+      "id": "thu-rise",
+      "time": "10:00",
+      "endTime": "14:30",
+      "title": "RISE Day Hab Programme",
+      "category": "group",
+      "location": "Recovery Hub, 1 Connaught Road, WV1 4SJ",
+      "description": "Day hab programme — keyworker referral.",
+      "programmeSlug": "rise-day-hab"
+    },
+    {
+      "id": "thu-creative",
+      "time": "14:00",
+      "endTime": "16:00",
+      "title": "Creative arts & community",
+      "category": "creative",
+      "location": "Wolverhampton (varies)",
+      "description": "Outreach, drama, and spoken word — ask the team what’s on this week.",
+      "programmeSlug": "creative-arts"
+    }
+  ],
+  "friday": [
+    {
+      "id": "fri-rise",
+      "time": "10:00",
+      "endTime": "14:30",
+      "title": "RISE Day Hab Programme",
+      "category": "group",
+      "location": "Recovery Hub, 1 Connaught Road, WV1 4SJ",
+      "description": "Day hab — keyworker referral.",
+      "programmeSlug": "rise-day-hab"
+    },
+    {
+      "id": "fri-smart",
+      "time": "10:00",
+      "endTime": "12:00",
+      "title": "SMART Recovery",
+      "category": "group",
+      "location": "Recovery Hub, 1 Connaught Road, WV1 4SJ",
+      "description": "Friday SMART meeting.",
+      "programmeSlug": "smart-recovery"
+    },
+    {
+      "id": "fri-men",
+      "time": "13:00",
+      "endTime": "15:00",
+      "title": "WV Men Matter (men’s peer group)",
+      "category": "men",
+      "location": "Recovery Hub, Connaught Road",
+      "description": "Men’s peer support — SUIT or RNY clients. No referral needed.",
+      "programmeSlug": "mens-peer"
+    },
+    {
+      "id": "fri-lunch",
+      "time": "12:00",
+      "endTime": "13:00",
+      "title": "Community lunch",
+      "category": "dropin",
+      "location": "SUIT / Hub — confirm with team",
+      "description": "Food and connection — check this week’s plan with SUIT."
+    },
+    {
+      "id": "fri-social",
+      "time": "15:00",
+      "endTime": "16:00",
+      "title": "Friday social & recovery café",
+      "category": "dropin",
+      "location": "SUIT",
+      "description": "Wind down the week together."
+    }
+  ]
+}

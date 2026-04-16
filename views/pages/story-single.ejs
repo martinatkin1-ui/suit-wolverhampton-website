@@ -1,0 +1,47 @@
+<% layout('layout') -%>
+
+<section class="section" style="padding-top: 3rem;">
+  <div style="max-width: 800px; margin: 0 auto;">
+
+    <!-- Story Header -->
+    <div class="text-center mb-xl">
+      <h1><%= story.name %>'s Story</h1>
+      <p style="font-size: 1.25rem; color: var(--color-primary); font-weight: 600;"><%= story.title %></p>
+    </div>
+
+    <!-- Media -->
+    <% if (story.video) { %>
+    <div style="margin-bottom: 2rem; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 8px 30px var(--card-shadow);">
+      <video controls style="width: 100%; display: block;">
+        <source src="<%= story.video %>" type="video/mp4">
+        Your browser does not support the video element.
+      </video>
+    </div>
+    <% } else if (story.image) { %>
+    <div style="margin-bottom: 2rem; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 8px 30px var(--card-shadow);">
+      <img src="<%= story.image %>" alt="<%= story.name %>" style="width: 100%; display: block;">
+    </div>
+    <% } %>
+
+    <!-- Full Story Text -->
+    <div style="font-size: 1.1rem; line-height: 1.9; color: var(--text-dark);">
+      <% story.fullStory.split('\n\n').forEach(function(para) { %>
+        <p style="margin-bottom: 1.5rem;"><%= para %></p>
+      <% }); %>
+    </div>
+
+    <!-- Back Link -->
+    <div class="text-center mt-xl" style="padding-top: 2rem; border-top: 2px solid var(--border-soft);">
+      <a href="/stories" class="btn btn-outline">← All Stories of Hope</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="impact-banner">
+  <h2>Recovery is possible. We're living proof.</h2>
+  <div style="margin-top: 2rem;">
+    <a href="/get-help" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">Get Support Today →</a>
+  </div>
+</section>

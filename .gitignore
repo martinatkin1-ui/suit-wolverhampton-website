@@ -1,0 +1,14 @@
+.cursor/
+mcps/
+node_modules/
+.env
+.env.*
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/*
+!.vscode/extensions.json

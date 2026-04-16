@@ -1,0 +1,373 @@
+{
+  "hubTitle": "Cultural Outreach",
+  "hubIntro": "Dedicated multilingual and culturally sensitive support for Punjabi, Polish, and Afro Caribbean communities in Wolverhampton — the same programmes that lived on our legacy site, now on our main home.",
+  "cards": [
+    {
+      "slug": "punjabi",
+      "title": "Punjabi Project",
+      "description": "Punjabi-speaking outreach, gurdwaras and community hubs, liver health awareness, Forward Together for families, and radio partnerships.",
+      "icon": "lucide:languages",
+      "colorClass": "card-orange"
+    },
+    {
+      "slug": "polish",
+      "title": "Polish Community",
+      "description": "Polish-language advocacy with Karolina — welfare, healthcare, housing, employment, hospital liaison, and Recovery Near You translation.",
+      "icon": "lucide:heart-handshake",
+      "colorClass": "card-cyan"
+    },
+    {
+      "slug": "afro-caribbean",
+      "title": "Afro Caribbean Support",
+      "description": "Volunteer-led wellbeing and recovery advocacy with Lynette — confidential, non-judgemental support that understands cultural barriers.",
+      "icon": "lucide:users-round",
+      "colorClass": "card-green"
+    }
+  ],
+  "programmes": {
+    "punjabi": {
+      "title": "Punjabi Project",
+      "heroLead": "Punjabi-speaking staff and volunteers reduce barriers where addiction is shaped by cultural norms, stigma, and silence — through education, empathy, and open conversation.",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/punjabi-project-1",
+      "youtubeIds": [
+        "O0CgIrin13k"
+      ],
+      "sections": [
+        {
+          "type": "notice",
+          "title": "Community visits & announcements",
+          "paragraphs": [
+            "To find out about Cultural Engagement Team visits in your community, check our announcements on the main site.",
+            "ਆਪਣੀ ਕਮਿਊਨਿਟੀ ਵਿੱਚ ਕਲਚਰਲ ਇਂਗੇਜਮੈਂਟ ਟੀਮ ਦੇ ਦੌਰਿਆਂ ਬਾਰੇ ਜਾਣਨ ਲਈ, ਸਾਡਾ ਐਲਾਨਾਂ ਵਾਲਾ ਪੰਨਾ ਵੇਖੋ।"
+          ],
+          "links": [
+            {
+              "label": "Announcements — timeline",
+              "href": "/community?cat=announcements#community-feed"
+            },
+            {
+              "label": "ਸੂਚਨਾ / Announcements",
+              "href": "/community?cat=announcements#community-feed"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "title": "What we do",
+          "paragraphs": [
+            "Our service offers a unique range of support for people with drug and alcohol problems. Our Punjabi-speaking staff and volunteers work to reduce barriers in communities where people are directly affected by addiction due to cultural norms, stigma and embarrassment — where drinking may be seen as both traditionally acceptable or forbidden. We deliver education and empathy and open important conversations between individuals and affected others.",
+            "The team visit gurdwaras, mosques, and community hubs, delivering health and wellbeing interventions alongside Recovery Near You and Wolverhampton Today’s Department of Public Health. Our lived experience team offers free fibro scans — a non-invasive scan that can help detect liver problems, often linked to heavy drinking. This work is especially relevant in the Sikh-Punjabi community, where drinking excessively has been associated with masculinity and celebration. For families, especially Punjabi women, the impact of heavy drinking can include domestic abuse, debt, and rejection by the community. Our affected others group, Forward Together, offers kindness, understanding and solutions for families, and compassionately engages with loved ones who need support.",
+            "Our lived experience team work in the community alongside Recovery Near You and Public Health, building relationships with councillors, MPs, and strategic leads as well as clients and affected others.",
+            "Punjabi summary: Our team works in the community with lived experience alongside Recovery Near You and Public Health — supporting people, and building relationships with councillors, MPs, leads, clients, and families (full Gurmukhi text is on the legacy Punjabi Project page)."
+          ]
+        },
+        {
+          "type": "text",
+          "title": "From the community",
+          "paragraphs": [
+            "From left in our team photography: Vijay Sahota, Marcus Johnson, Kiran Kaur, Councillor Obaida Ahmed, Mark Hand, Karolina Sowinska."
+          ]
+        },
+        {
+          "type": "text",
+          "title": "Radio & media",
+          "paragraphs": [
+            "Check our announcements for upcoming media appearances.",
+            "ਆਉਣ ਵਾਲੀਆਂ ਮੀਡੀਆ ਹਾਜ਼ਰੀਆਂ ਲਈ ਸਾਡੇ ਐਲਾਨਾਂ ਵਾਲੇ ਪੰਨੇ ਨੂਂ ਵੇਖੋ।"
+          ],
+          "links": [
+            {
+              "label": "Gulshan Radio",
+              "href": "https://gulshanradio.com/"
+            },
+            {
+              "label": "Black Country Xtra",
+              "href": "https://www.blackcountryradio.co.uk/"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "title": "Liver scans with Recovery Near You & Public Health",
+          "paragraphs": [
+            "Working closely with clinical treatment staff at Recovery Near You and the NHS Trust, we take free liver fibro scans into temples and community spaces across Wolverhampton.",
+            "The fibro scan helps identify early signs of liver damage, often unnoticed until serious conditions develop. Alcohol is a primary cause of liver damage. The scan is non-invasive — similar to an ultrasound — and measures stiffness and fat in the liver.",
+            "In the UK, alcohol harm is estimated to be high among Punjabi-Sikh men, and alcohol-related hospital admissions are markedly higher in Indian men compared with white men. Heavy drinking is more common among Punjabi-Sikh men than women, and can be a culturally accepted norm. Many Punjabi-Sikh men refuse help because drinking is tied to masculinity in the community (Drug & Alcohol Review, 2020).",
+            "The fibro scan can help save lives by preventing alcohol harm."
+          ],
+          "links": [
+            {
+              "label": "Alcohol harm in Wolverhampton — briefing note (PDF)",
+              "href": "https://wolverhampton.moderngov.co.uk/documents/s229729/Update%20-%20Alcohol%20Harm%20in%20Wolverhampton%20Briefing%20Note.pdf"
+            },
+            {
+              "label": "Wolverhampton City Council — public health",
+              "href": "https://www.wolverhampton.gov.uk/"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "title": "Alcohol harm in the Punjabi-Sikh community",
+          "paragraphs": [
+            "SUIT’s Cultural Engagement Team delivers awareness and education in Wolverhampton, especially for individuals and families affected by harmful drinking. Traditions and cultural norms can make alcohol a difficult subject where it is used for celebration. Many people do not realise the harm until there are severe complications.",
+            "Our Punjabi-speaking support worker Vijay Sahota also volunteers at New Cross Hospital’s Drug & Alcohol Liaison Team, where there are frequent admissions from Punjabi-Sikh men and women."
+          ]
+        },
+        {
+          "type": "quote",
+          "quote": "Within Punjabi households, there is an unspoken acceptance of alcohol as a norm that continues to have a detrimental impact on all members of our community… At the tender age of seven, I witnessed plenty of drinking within my Punjabi household and attended countless Punjabi weddings that glamourised alcohol. As a child growing up in this environment, I learned that alcohol is socially acceptable. At family gatherings there is a trend where some men dip a finger into alcohol and place it into the mouths of young children. With taste being a powerful human sense, this behaviour exposes the sensibilities of the young to alcohol.",
+          "cite": "Simran Kaur Bagri",
+          "links": [
+            {
+              "label": "Read Simran's blog — alcohol harm in the Punjabi-Sikh community",
+              "href": "https://ahauk.org/alcohol-harm-in-the-punjabi-sikh-community/"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "title": "BAC-IN & allied communities",
+          "paragraphs": [
+            "BAC-IN is an award-winning specialist drug and alcohol recovery service dedicated to empowering seldom engaged individuals, families, young adults and caregivers from Black, Asian, and Minority Ethnic communities. Founded in 2003 by individuals in recovery, it embodies community, resilience and heart-centred lived experience leadership."
+          ],
+          "links": [
+            {
+              "label": "Find out more about BAC-IN",
+              "href": "https://www.bacin.org.uk/"
+            },
+            {
+              "label": "Search YouTube for BAC-IN Nottingham — Jit",
+              "href": "https://www.youtube.com/results?search_query=BAC-IN+Nottingham+Jit"
+            }
+          ]
+        }
+      ],
+      "gallery": [
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/7a552a9b-5cb0-42cb-92ec-256fb9fbea77/IMG_0116.JPEG",
+          "alt": "SUIT Punjabi project — community photo 1"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/446554f1-028b-44eb-bd34-5fba25ddf4eb/504c5c12-c2da-41c4-a99a-1602faeed5b2.JPEG",
+          "alt": "SUIT Punjabi project — community photo 2"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/bb0ef735-450a-4d8e-88f4-b59a48c0eff6/a1b1bb47-b444-4da7-bba3-87ea7712ec89.JPEG",
+          "alt": "SUIT Punjabi project — community photo 3"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/c381fe6d-869e-4b2f-8c5d-4d36342fb429/4d40b77b-b8de-4820-83a9-e4d706d966de+%281%29.JPEG",
+          "alt": "SUIT Punjabi project — community photo 4"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/3c2b6e1d-ef5d-4fc3-88fd-ab443ff93e37/GulshanRadio-UPDATE3-03%281%29.png",
+          "alt": "SUIT Punjabi project — community photo 5"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/e5921ee7-bff2-4a05-9ad3-e999f1d36313/d0620f11-6ea4-4bf6-af26-842bebb90205.JPEG",
+          "alt": "SUIT Punjabi project — community photo 6"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/8c25aab2-ba93-4ded-b068-f1b3908f860c/817c7901-aab2-4700-814b-64d529ddcd40.JPEG",
+          "alt": "SUIT Punjabi project — community photo 7"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/6d62b136-3afc-4d2c-b18b-97b53c66469c/4ea9fc70-9843-4fbc-9d0d-3f2ef9df556e.JPEG",
+          "alt": "SUIT Punjabi project — community photo 8"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/a07d589d-589e-40df-9b9d-ebc56c3a81ba/6424ee99-d3f9-45b7-b015-304c032126cc.JPEG",
+          "alt": "SUIT Punjabi project — community photo 9"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/dac4b39d-aabc-4e13-a177-8b7800457d6f/30b46952-dda6-4015-8da6-4228ffd470c2.JPEG",
+          "alt": "SUIT Punjabi project — community photo 10"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/53af0392-c795-4842-9ada-eaa63d78d6ae/IMG_1088.JPEG",
+          "alt": "SUIT Punjabi project — community photo 11"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/38701cb1-aa59-42e6-936b-db05e06f5087/IMG-20250120-WA0037.jpg",
+          "alt": "SUIT Punjabi project — community photo 12"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/7d6f1a16-5977-4c0d-ad4d-a258cc75b3eb/9f6de07a-dd9c-458e-95d2-56ab88724889.JPEG",
+          "alt": "SUIT Punjabi project — community photo 13"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/39f4eb24-ef03-44d4-93b0-4af463e2db29/IMG_1641.JPEG",
+          "alt": "SUIT Punjabi project — community photo 14"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/fae01bef-283a-4d2a-b028-228bed28f350/IMG_3207.JPEG",
+          "alt": "SUIT Punjabi project — community photo 15"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/70b94076-f5bd-4ff1-8ca8-bd608d8a6128/IMG_1609.JPEG",
+          "alt": "SUIT Punjabi project — community photo 16"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/f0e9561e-a9ca-4c57-acbb-4819d9ccd8ba/FB_IMG_1737491692073.jpg",
+          "alt": "SUIT Punjabi project — community photo 17"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/81a1f346-e0bf-4bea-9aaa-d540517c5738/FB_IMG_1737491678778.jpg",
+          "alt": "SUIT Punjabi project — community photo 18"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/61e5c89b-85af-4137-8f7d-e579328d3192/IMG_2023.JPEG",
+          "alt": "SUIT Punjabi project — community photo 19"
+        }
+      ]
+    },
+    "polish": {
+      "title": "Polish Community",
+      "heroLead": "Polish-speaking advocacy, welfare, healthcare and social support — in the community, on the wards, and alongside Recovery Near You.",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/polish-community",
+      "youtubeIds": [
+        "jCQc2G9Zshs"
+      ],
+      "sections": [
+        {
+          "type": "text",
+          "title": "Polish speaking support / Wsparcie w języku polskim",
+          "paragraphs": [
+            "Karolina Sowinska — Polish-Speaking Support Worker.",
+            "Karolina specialises in advocacy help, welfare and benefits, healthcare, and social support for Polish-speaking clients and their families.",
+            "You can contact Karolina at karolina.sowinska@wvca.org.uk",
+            "Karolina zaczęła jako wolontariuszka w SUIT, a od pierwszego dnia jej motywacja do wspierania osób w trudnej sytuacji była wyjątkowa. Pracuje niestrudzenie, pomagając ludziom w sytuacjach, gdy występuje bariera językowa, trudności związane ze statusem uchodźcy oraz wyzwania wynikające z migracji. Wiele naszych klientów ze Wschodniej Europy doświadczyło stygmatyzacji, ubóstwa, a społeczność może czuć się odizolowana.",
+            "Karolina buduje zaufanie w społeczności i zachęca do zaangażowania tam, gdzie może występować strach lub nieufność. Działa w społeczności, prowadzi wizyty domowe, jest wolontariuszką w Zespole ds. Uzależnień od Narkotyków i Alkoholu w Szpitalu New Cross, uczestniczy w wizytach klientów, wspierając dostęp do świadczeń socjalnych, opieki zdrowotnej, mieszkań i zatrudnienia, a także tłumaczy dla Recovery Near You."
+          ],
+          "links": [
+            {
+              "label": "Recovery Near You",
+              "href": "https://www.recoverynearyou.org.uk/"
+            }
+          ]
+        },
+        {
+          "type": "quote",
+          "quote": "Everyone deserves to have supporters on their side, to keep believing in them, to help them achieve. To keep being different, unique, valued. To survive.",
+          "cite": "Karolina Sowinska"
+        },
+        {
+          "type": "quote",
+          "quote": "Każdy zasługuje na to, by mieć po swojej stronie osoby, które w niego wierzą, które go wspierają i pomagają osiągać cele. By móc być inny, wyjątkowy, wartościowy. By przetrwać.",
+          "cite": "Karolina Sowinska"
+        },
+        {
+          "type": "text",
+          "title": "Music with Beatsabar",
+          "paragraphs": [
+            "Working with Beatsabar back in 2024, Karolina wrote and performed a track based on her life history and achievements — the same story told on our legacy Polish Community page. The video for “Choices” was produced and directed by the Beatsabar Music Project at Wolverhampton Art Centre: survival, achievement, and moving forward even when it feels impossible."
+          ],
+          "links": [
+            {
+              "label": "Watch “Choices” on YouTube",
+              "href": "https://www.youtube.com/watch?v=jCQc2G9Zshs"
+            }
+          ]
+        }
+      ],
+      "gallery": [
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/fe370768-0141-4716-a3cd-cc037a798b59/IMG_2959.JPEG",
+          "alt": "SUIT Polish community — photo 1"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/aeddd20e-2e62-47bc-9e15-10feb8a9d1e0/cb1b33c1-6634-419d-b3d6-b70da1a5e95a.JPEG",
+          "alt": "SUIT Polish community — photo 2"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/2da2dc24-ada7-4c09-9d4a-4c93dad9e1b3/FB_IMG_1708359969175.jpg",
+          "alt": "SUIT Polish community — photo 3"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/592fe9e0-90d5-42e0-9a5d-9f6b02944874/IMG_1740.JPEG",
+          "alt": "SUIT Polish community — photo 4"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/2ba2612e-3bb4-440c-9397-c100af75e626/IMG-20240807-WA0007.jpg",
+          "alt": "SUIT Polish community — photo 5"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/ada892c8-5463-442f-a8f5-5e8481d3cb91/IMG_1108.JPEG",
+          "alt": "SUIT Polish community — photo 6"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/721af8c7-e9bf-4381-92b9-765bcf33ffe5/FB_IMG_1725385752112.jpg",
+          "alt": "SUIT Polish community — photo 7"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/d8d88c69-7352-41f6-9d75-1dafd533e02f/IMG_2022.JPEG",
+          "alt": "SUIT Polish community — photo 8"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/2862f8a2-fcba-4d31-9d4d-75ddfa605fae/IMG-20240306-WA0008.jpg",
+          "alt": "SUIT Polish community — photo 9"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/44c2166d-3105-4951-8026-3d8a0f9c21d8/FB_IMG_1730925173542.jpg",
+          "alt": "SUIT Polish community — photo 10"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/f5253c0a-c242-4e5f-b3ae-438e9cd081f2/FB_IMG_1742757112157.jpg",
+          "alt": "SUIT Polish community — photo 11"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/04039fee-3de5-435e-968e-b2ab9b413606/IMG_2023.JPEG",
+          "alt": "SUIT Polish community — photo 12"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/e21260d8-472e-45bc-a7c0-7c5fb8339682/IMG-20230714-WA0032.jpg",
+          "alt": "SUIT Polish community — photo 13"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/ca3c95db-4a1e-47b2-b426-a5952f3aaa38/20241102_190510.jpg",
+          "alt": "SUIT Polish community — photo 14"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/8096e742-d52e-49e7-8a5a-2c8a9a6579a2/20241002_113154.jpg",
+          "alt": "SUIT Polish community — photo 15"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/24d99eea-ca09-425a-89e2-f1ca6d1a07ea/20241102_190546.jpg",
+          "alt": "SUIT Polish community — photo 16"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/0367f45b-14a8-44d0-9956-d177f0ac18c1/IMG_1069.JPEG",
+          "alt": "SUIT Polish community — photo 17"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/fd5b1337-4c41-422e-9293-cbe6df3ae3af/IMG_3189.JPEG",
+          "alt": "SUIT Polish community — photo 18"
+        }
+      ]
+    },
+    "afro-caribbean": {
+      "title": "Afro Caribbean Support",
+      "heroLead": "Support for Afro Caribbean communities in Wolverhampton — launched by our volunteer Lynette. The same welcoming message as our legacy Cultural Outreach page, with confidential, non-judgemental advocacy.",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/new-page-53",
+      "sections": [
+        {
+          "type": "text",
+          "title": "Connect with Lynette",
+          "paragraphs": [
+            "Get in touch with our volunteer Lynette on 07842 315 472 for guidance on wellbeing and recovery.",
+            "You can speak with Lynette if you want someone who understands cultural barriers and offers non-judgemental, confidential advocacy and help.",
+            "Email the team at suit@wvca.org.uk — or visit us at Paycare House, George Street, Wolverhampton WV2 4DX. Main office: 01902 328983."
+          ],
+          "links": [
+            {
+              "label": "Email suit@wvca.org.uk",
+              "href": "mailto:suit@wvca.org.uk"
+            }
+          ]
+        }
+      ],
+      "gallery": []
+    }
+  }
+}

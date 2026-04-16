@@ -1,0 +1,31 @@
+<% layout('layout') -%>
+
+<section class="hero" style="min-height: 36vh; padding: 3.5rem 5% 2rem;">
+  <nav class="outreach-breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true"> / </span>
+    <span><%= nm.hubTitle %></span>
+  </nav>
+  <h1><%= nm.hubTitle %></h1>
+  <p class="hero-sub"><%= nm.hubIntro %></p>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <h2>Topics from our previous site</h2>
+    <p>Each card opens a full page on this site — same header, footer, colours, and typography as the rest of SUIT. Bookmarks to the old Squarespace paths (for example <span class="nm-inline-mono">/publications</span>) still redirect to these pages.</p>
+  </div>
+  <div class="card-grid news-more-card-grid">
+    <% nm.cards.forEach(function(card) { %>
+    <a href="/news-more/<%= card.slug %>" class="card <%= card.colorClass %> card--link">
+      <span class="card-icon"><%- include('partials/icon', { name: card.icon, size: 28 }) %></span>
+      <h3><%= card.title %></h3>
+      <p><%= card.description %></p>
+      <% if (card.legacyPath) { %>
+      <span class="card-legacy-hint">Was: <%= card.legacyPath %> on the old site</span>
+      <% } %>
+      <span class="card-cta-pill">Open page →</span>
+    </a>
+    <% }); %>
+  </div>
+</section>

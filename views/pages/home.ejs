@@ -1,0 +1,178 @@
+<% layout('layout') -%>
+
+<!-- Hero Section -->
+<section class="hero">
+  <h1><%= content.hero.headline %></h1>
+  <p class="hero-sub"><%= content.hero.subheadline %></p>
+  <div class="hero-buttons">
+    <a href="<%= content.hero.btnPrimaryLink %>" class="btn btn-cta"><%= content.hero.btnPrimary %></a>
+    <a href="<%= content.hero.btnSecondaryLink %>" class="btn btn-outline"><%= content.hero.btnSecondary %></a>
+  </div>
+</section>
+
+<!-- 3 Steps Section -->
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>Three Simple Steps</h2>
+    <p>There's no red tape here. Just real human support.</p>
+  </div>
+  <div class="steps">
+    <% content.steps.forEach(function(step) { %>
+    <div class="step">
+      <div class="step-number"><%= step.number %></div>
+      <h3><%= step.title %></h3>
+      <p><%= step.description %></p>
+    </div>
+    <% }); %>
+  </div>
+</section>
+
+<!-- Services Preview -->
+<section class="section">
+  <div class="section-header">
+    <h2>We Can Help You With…</h2>
+    <p>No jargon. No hoops to jump through. Just support that works.</p>
+  </div>
+  <div class="card-grid">
+    <% content.services.slice(0, 4).forEach(function(svc) { %>
+    <div class="card <%= svc.colorClass %>">
+      <span class="card-icon"><%- include('partials/icon', { name: svc.icon, size: 28 }) %></span>
+      <h3><%= svc.title %></h3>
+      <p><%= svc.description %></p>
+    </div>
+    <% }); %>
+  </div>
+  <div class="text-center mt-lg">
+    <a href="/services" class="btn btn-outline">See All Our Services →</a>
+  </div>
+</section>
+
+<!-- Community / Creative Band -->
+<section class="section band-teal">
+  <div class="featured-split">
+    <div class="text-side">
+      <h2>SUIT in the Community</h2>
+      <p style="font-size: 1.15rem; opacity: 0.9; margin-bottom: 1rem;">
+        Recovery isn't just about stopping something — it's about starting something new.
+        From art galleries to the British Library, our community work is changing how the world sees recovery.
+      </p>
+      <p style="opacity: 0.85; margin-bottom: 2rem;">
+        Explore five years of exhibitions, performances, conferences, PRIDE celebrations,
+        and cultural engagement projects — all created by people in recovery.
+      </p>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/community" class="btn btn-outline-white">Explore Our Community Story →</a>
+        <a href="/timetable" class="btn btn-outline-white" style="opacity: 0.8;">What's On This Week →</a>
+      </div>
+    </div>
+    <div class="media-side">
+      <div class="media-placeholder" style="background: linear-gradient(135deg, var(--brand-teal), var(--brand-cyan)); text-align: left; padding: 2.5rem;">
+        <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;"><%- include('partials/icon', { name: 'lucide:palette', size: 28, iconStyle: 'color: rgba(255,255,255,0.95)' }) %> Creative Arts at SUIT</h3>
+        <p style="color: rgba(255,255,255,0.9); font-size: 1rem; line-height: 1.6;">Art therapy, drama with Geese Theatre, spoken word at the Literature Festival, and community exhibitions at Asylum Artist Quarter.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Today's Timetable Snippet -->
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>What's happening at SUIT today?</h2>
+    <p><%= today.charAt(0).toUpperCase() + today.slice(1) %>'s schedule</p>
+  </div>
+  <div class="today-snippet">
+    <% if (todayEvents.length === 0) { %>
+      <p class="text-center" style="color: var(--text-mid); padding: 1rem;">
+        Nothing scheduled today — but we're always here for a chat.
+        <a href="/timetable">View the full weekly timetable →</a>
+      </p>
+    <% } else { %>
+      <% todayEvents.forEach(function(evt) { %>
+      <div class="snippet-event">
+        <span class="event-time"><%= evt.time %></span>
+        <span class="event-title"><%= evt.title %></span>
+        <span class="event-tag tag-<%= evt.category %>"><%= evt.category %></span>
+      </div>
+      <% }); %>
+    <% } %>
+  </div>
+  <div class="text-center mt-lg">
+    <a href="/timetable" class="btn btn-primary">Full Weekly Timetable →</a>
+  </div>
+</section>
+
+<!-- Impact Banner -->
+<section class="section">
+  <div class="section-header">
+    <h2>SUIT by the Numbers</h2>
+    <p>Real impact, real people, real change.</p>
+  </div>
+  <div class="stats-ribbon">
+    <div class="stat-item">
+      <span class="stat-number">17+</span>
+      <span class="stat-label">Years serving Wolverhampton</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">11</span>
+      <span class="stat-label">Staff — all in recovery</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">3</span>
+      <span class="stat-label">International awards</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">6</span>
+      <span class="stat-label">Core services offered</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA for Professionals / Partners -->
+<section class="section section-alt">
+  <div class="cta-action-banner">
+    <h3>Are You a Professional or Partner Organisation?</h3>
+    <p>Refer a client, collaborate on a project, or commission SUIT for consultancy, training, or events.</p>
+    <div class="cta-button-row">
+      <a href="/contact?type=referral" class="btn btn-cta">Refer a Client</a>
+      <a href="/contact?type=partnership" class="btn btn-outline-white">Partner With Us</a>
+      <a href="/community" class="btn btn-outline-white">See Our Community Work</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stories Preview -->
+<% if (stories && stories.length > 0) { %>
+<section class="section">
+  <div class="section-header">
+    <h2>Stories of Hope</h2>
+    <p>Real people. Real recovery. Their words, not ours.</p>
+  </div>
+  <div class="story-grid">
+    <% stories.forEach(function(story) { %>
+    <a href="/stories/<%= story.id %>" class="story-card" style="text-decoration:none; color:inherit;">
+      <div class="story-media">
+        <% if (story.image) { %>
+          <img src="<%= story.image %>" alt="<%= story.name %>'s photo" style="width:100%;height:100%;object-fit:cover;">
+        <% } else { %>
+          <span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><%- include('partials/icon', { name: 'lucide:sunrise', size: 56, iconStyle: 'opacity:0.85' }) %></span>
+        <% } %>
+      </div>
+      <div class="story-body">
+        <h3><%= story.name %>'s Story</h3>
+        <p><%= story.title %></p>
+        <span class="read-more">Read more →</span>
+      </div>
+    </a>
+    <% }); %>
+  </div>
+  <div class="text-center mt-lg">
+    <a href="/stories" class="btn btn-outline">All Stories of Hope →</a>
+  </div>
+</section>
+<% } %>
+
+<!-- Quote -->
+<section class="quote-block">
+  <blockquote>"<%= content.quote.text %>"</blockquote>
+  <cite>— <%= content.quote.author %></cite>
+</section>

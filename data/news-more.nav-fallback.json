@@ -1,0 +1,85 @@
+{
+  "cards": [
+    {
+      "slug": "our-vision",
+      "title": "Our Vision",
+      "description": "How we help, what we offer, volunteering, and strategic involvement as Wolverhampton’s LERO.",
+      "icon": "lucide:eye",
+      "colorClass": "card-orange",
+      "legacyPath": "/our-vision",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/our-vision"
+    },
+    {
+      "slug": "announcements",
+      "title": "Announcements",
+      "description": "Latest dates for liver scans, exhibitions, consultations, and community gatherings.",
+      "icon": "lucide:megaphone",
+      "colorClass": "card-cyan",
+      "legacyPath": "/announcements",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/announcements"
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "description": "Drama, literature festival, Forest Faced, and Asylum Artist Quarter highlights.",
+      "icon": "lucide:images",
+      "colorClass": "card-green",
+      "legacyPath": "/gallery",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/gallery"
+    },
+    {
+      "slug": "leag",
+      "title": "LEAG",
+      "description": "Lived Experience Advisory Group — shaping services with your voice.",
+      "icon": "lucide:users-round",
+      "colorClass": "card-orange",
+      "legacyPath": "/leag",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/leag"
+    },
+    {
+      "slug": "swap-to-stop",
+      "title": "Swap to Stop",
+      "description": "Vaping support to become smoke-free with our trained team — eligibility and how to register.",
+      "icon": "lucide:cigarette-off",
+      "colorClass": "card-cyan",
+      "legacyPath": "/new-page-1",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/new-page-1"
+    },
+    {
+      "slug": "harm-reduction",
+      "title": "Harm Reduction",
+      "description": "Needle exchange, naloxone, safer using resources, and signposting across Wolverhampton.",
+      "icon": "lucide:shield-heart",
+      "colorClass": "card-green",
+      "legacyPath": "/new-page-2",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/new-page-2"
+    },
+    {
+      "slug": "mental-health-support",
+      "title": "Mental Health Support",
+      "description": "Peer drop-ins, crisis lines, and partners alongside Recovery Near You and the NHS.",
+      "icon": "lucide:brain",
+      "colorClass": "card-orange",
+      "legacyPath": "/new-page-3",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/new-page-3"
+    },
+    {
+      "slug": "publications",
+      "title": "Publications",
+      "description": "Books, chapters, poetry, and Performing Recovery — including the British Library LERO volume.",
+      "icon": "lucide:book-open",
+      "colorClass": "card-cyan",
+      "legacyPath": "/publications",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/publications"
+    },
+    {
+      "slug": "podcasts",
+      "title": "Podcasts & Radio",
+      "description": "Black Country Xtra, Graham Stubbs, research conversations, and BBC Prison Radio.",
+      "icon": "lucide:mic",
+      "colorClass": "card-green",
+      "legacyPath": "/podcasts",
+      "legacyUrl": "https://www.suitrecoverywolverhampton.com/podcasts"
+    }
+  ]
+}

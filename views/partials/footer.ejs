@@ -1,0 +1,57 @@
+<!-- Footer -->
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>SUIT Wolverhampton</h4>
+        <p><%= content.site.tagline %></p>
+        <p style="margin-top: 1rem;">
+          <strong>Every person on our team is in sustained recovery.</strong> We are proof that it works.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/get-help">Get Help Now</a></li>
+          <li><a href="/services">How We Help</a></li>
+          <li><a href="/timetable">Weekly Timetable</a></li>
+          <li><a href="/community">In the Community</a></li>
+          <li><a href="/news-more">News &amp; More</a></li>
+          <li><a href="/stories">Stories of Hope</a></li>
+          <li><a href="/timeline">Our Timeline</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Get In Touch</h4>
+        <ul>
+          <li style="display: flex; align-items: center; gap: 0.4rem;"><%- include('partials/icon', { name: 'lucide:phone', size: 18 }) %> <a href="tel:<%= content.site.phone.replace(/\s/g,'') %>"><%= content.site.phone %></a></li>
+          <li style="display: flex; align-items: center; gap: 0.4rem;"><%- include('partials/icon', { name: 'lucide:mail', size: 18 }) %> <a href="mailto:<%= content.site.email %>"><%= content.site.email %></a></li>
+          <li style="display: flex; align-items: flex-start; gap: 0.4rem;"><%- include('partials/icon', { name: 'lucide:map-pin', size: 18 }) %> <span><%= content.site.address %></span></li>
+        </ul>
+        <div class="footer-social-links" style="margin-top: 1rem;">
+          <% if (content.site.facebook) { %><a href="<%= content.site.facebook %>" target="_blank" rel="noopener" aria-label="Facebook"><%- include('partials/icon', { name: 'lucide:facebook', size: 22 }) %></a><% } %>
+          <% if (content.site.instagram) { %><a href="<%= content.site.instagram %>" target="_blank" rel="noopener" aria-label="Instagram"><%- include('partials/icon', { name: 'lucide:instagram', size: 22 }) %></a><% } %>
+          <% if (content.site.twitter) { %><a href="<%= content.site.twitter %>" target="_blank" rel="noopener" aria-label="Twitter/X"><%- include('partials/icon', { name: 'lucide:twitter', size: 22 }) %></a><% } %>
+          <% if (content.site.youtube) { %><a href="<%= content.site.youtube %>" target="_blank" rel="noopener" aria-label="YouTube"><%- include('partials/icon', { name: 'lucide:youtube', size: 22 }) %></a><% } %>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Crisis Numbers</h4>
+        <ul>
+          <li style="display: flex; align-items: center; gap: 0.4rem;"><%- include('partials/icon', { name: 'lucide:life-buoy', size: 18 }) %> Samaritans: <a href="tel:116123" style="color: var(--brand-orange);">116 123</a></li>
+          <li style="display: flex; align-items: center; gap: 0.4rem;"><%- include('partials/icon', { name: 'lucide:stethoscope', size: 18 }) %> NHS Crisis: <a href="tel:111" style="color: var(--brand-orange);">111 (press 2)</a></li>
+          <li style="display: flex; align-items: center; gap: 0.4rem;"><%- include('partials/icon', { name: 'lucide:phone', size: 18 }) %> FRANK: <a href="tel:03001236600" style="color: var(--brand-orange);">0300 123 6600</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <%= new Date().getFullYear() %> SUIT Wolverhampton — A project of <a href="https://www.wvca.org.uk/" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.5);">WVCA</a>. All rights reserved.</p>
+      <p style="display: flex; align-items: center; gap: 1rem;">
+        <span style="display: inline-flex; align-items: center; gap: 0.35rem;">Built with hope <%- include('partials/icon', { name: 'lucide:sun', size: 16 }) %></span>
+        <a href="/admin/login" style="color: rgba(255,255,255,0.2); font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center;" aria-label="Admin login" title="Admin"><%- include('partials/icon', { name: 'lucide:settings', size: 14 }) %></a>
+      </p>
+    </div>
+  </div>
+</footer>

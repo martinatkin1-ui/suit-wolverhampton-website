@@ -1,0 +1,51 @@
+<% layout('../admin/admin-layout') -%>
+
+<h2>Community Posts</h2>
+<p style="color: var(--text-mid); margin-bottom: var(--space-lg);">
+  Manage the content that appears on the "SUIT in the Community" page. Posts are shown as a timeline feed.
+</p>
+
+<% if (saved) { %>
+<div class="toast success">Community post saved successfully!</div>
+<% } %>
+
+<div style="margin-bottom: var(--space-lg); display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+  <a href="/admin/community/new" class="btn btn-primary">+ Add New Post</a>
+  <a href="/admin/community/page" class="btn btn-outline">Project windows &amp; social images</a>
+</div>
+
+<div class="admin-table-wrapper">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Category</th>
+        <th>Title</th>
+        <th>Media</th>
+        <th>Pinned</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% posts.forEach(function(post) { %>
+      <tr>
+        <td><%= post.date %></td>
+        <td><span class="feed-category feed-cat-<%= post.category %>"><%= post.category %></span></td>
+        <td><%= post.title.substring(0, 60) %><%= post.title.length > 60 ? '...' : '' %></td>
+        <td style="white-space:nowrap;">
+          <% if (post.imageUrl && String(post.imageUrl).trim()) { %><span title="Has image"><%- include('../partials/icon', { name: 'lucide:image', size: 16 }) %></span><% } %>
+          <% if (post.videoUrl && String(post.videoUrl).trim()) { %><span title="Has video" style="margin-left:0.25rem;"><%- include('../partials/icon', { name: 'lucide:video', size: 16 }) %></span><% } %>
+          <% if (!(post.imageUrl && String(post.imageUrl).trim()) && !(post.videoUrl && String(post.videoUrl).trim())) { %>—<% } %>
+        </td>
+        <td><% if (post.pinned) { %><%- include('../partials/icon', { name: 'lucide:pin', size: 18 }) %><% } %></td>
+        <td class="admin-actions">
+          <a href="/admin/community/edit/<%= post.id %>" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Edit</a>
+          <form method="POST" action="/admin/community/delete/<%= post.id %>" style="display:inline;" onsubmit="return confirm('Delete this post?')">
+            <button type="submit" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: var(--color-crisis); color: #fff;">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,31 @@
+<% layout('layout') -%>
+
+<section class="hero" style="min-height: 36vh; padding: 3.5rem 5% 2rem;">
+  <nav class="outreach-breadcrumb" aria-label="Breadcrumb">
+    <a href="/community">In the Community</a>
+    <span aria-hidden="true"> / </span>
+    <span><%= outreach.hubTitle %></span>
+  </nav>
+  <h1><%= outreach.hubTitle %></h1>
+  <p class="hero-sub"><%= outreach.hubIntro %></p>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <h2>Our programmes</h2>
+    <p>Choose a community to open the full page — same content as our legacy site, in the new SUIT design.</p>
+  </div>
+  <div class="card-grid">
+    <% outreach.cards.forEach(function(card) { %>
+    <a href="/community/outreach/<%= card.slug %>" class="card <%= card.colorClass %> card--link">
+      <span class="card-icon"><%- include('partials/icon', { name: card.icon, size: 28 }) %></span>
+      <h3><%= card.title %></h3>
+      <p><%= card.description %></p>
+      <span class="card-cta-pill">Open full page →</span>
+    </a>
+    <% }); %>
+  </div>
+  <div class="text-center mt-lg">
+    <a href="/community?topic=cultural-outreach#community-feed" class="btn btn-outline">Related timeline stories →</a>
+  </div>
+</section>

@@ -1,0 +1,138 @@
+{
+  "site": {
+    "title": "SUIT Wolverhampton",
+    "tagline": "Wolverhampton's Drug & Alcohol Service User Involvement Team — A project of WVCA",
+    "phone": "01902 328983",
+    "email": "suit@wvca.org.uk",
+    "address": "Paycare House, George Street, Wolverhampton, WV2 4DX",
+    "whatsapp": "https://wa.me/441902328983",
+    "facebook": "http://facebook.com/SUITWolves",
+    "instagram": "http://instagram.com/suit_services/",
+    "twitter": "http://twitter.com/SUITeam",
+    "youtube": "https://www.youtube.com/@ServiceUserInvolvementTeam"
+  },
+  "hero": {
+    "headline": "We've been exactly where you are. Let's walk the road back together.",
+    "subheadline": "SUIT is Wolverhampton's award-winning Lived Experience Recovery Organisation, entirely run by people with first-hand experience of addiction and recovery. Established February 2007. A project of WVCA.",
+    "btnPrimary": "I Need Support Today",
+    "btnPrimaryLink": "/get-help",
+    "btnSecondary": "Read Stories of Hope",
+    "btnSecondaryLink": "/stories"
+  },
+  "steps": [
+    {
+      "number": 1,
+      "title": "Walk In or Reach Out",
+      "description": "Come to Paycare House on George Street or call us on 01902 328983. Drop-in Monday & Friday 10:00-15:00. No referral needed."
+    },
+    {
+      "number": 2,
+      "title": "Meet Our Team",
+      "description": "Every member of staff has lived experience of addiction and recovery. We listen, we understand, and we're here for you."
+    },
+    {
+      "number": 3,
+      "title": "Build Your Recovery",
+      "description": "Access wraparound support including advocacy, SMART groups, creative arts, buddy support, and one-to-one mentoring."
+    }
+  ],
+  "services": [
+    {
+      "id": "peer-mentoring",
+      "icon": "lucide:handshake",
+      "title": "Peer Mentoring & Buddy Support",
+      "description": "Regular check-in calls, guidance, care plans, and someone to listen. Our Buddy Support service pairs you with a peer mentor who truly understands.",
+      "colorClass": "card-orange"
+    },
+    {
+      "id": "advocacy",
+      "icon": "lucide:house",
+      "title": "Advocacy & Wraparound Support",
+      "description": "Help with housing and homelessness, benefits (PIP/UC/ESA/JSA), form filling, debt advice, job searches, CV writing, and signposting to partner organisations.",
+      "colorClass": "card-cyan"
+    },
+    {
+      "id": "drop-in",
+      "icon": "lucide:coffee",
+      "title": "Drop-In Sanctuary",
+      "description": "A safe, warm place to be. Monday & Friday 10:00-15:00. Free tea, coffee, and real support from people who've been there. No appointment needed.",
+      "colorClass": "card-green"
+    },
+    {
+      "id": "creative",
+      "icon": "lucide:palette",
+      "title": "Creative Arts & Recovery",
+      "description": "Art therapy, drama projects with Geese Theatre, spoken word, music sessions, Wolverhampton Literature Festival participation, and community exhibitions.",
+      "colorClass": "card-teal"
+    },
+    {
+      "id": "clinical",
+      "icon": "lucide:pill",
+      "title": "Clinical Treatment Pathway",
+      "description": "We work closely with Recovery Near You to support your clinical treatment. We help remove barriers to healthcare, attend appointments with you, and support prescriptions.",
+      "colorClass": "card-pink"
+    },
+    {
+      "id": "volunteering",
+      "icon": "lucide:award",
+      "title": "Volunteering & Recovery Ambassadors",
+      "description": "Our structured Recovery Ambassador Programme helps people in recovery build skills, gain qualifications, and find purpose through peer-led volunteering.",
+      "colorClass": "card-orange"
+    }
+  ],
+  "impact": {
+    "stat": "17+",
+    "text": "years supporting Wolverhampton's recovery community. Established February 2007. Queen's Award winners. European Model of Good Practice."
+  },
+  "quote": {
+    "text": "Lived experience service-user involvement working alongside clinical treatment is undoubtedly the most important ingredient for the optimum outcome in the battle against addiction.",
+    "author": "Marcus Johnson, SUIT Project Manager"
+  },
+  "about": {
+    "intro": "SUIT (Service User Involvement Team) is Wolverhampton's Lived Experience Recovery Organisation (LERO), providing wraparound support for people struggling with, or in recovery from drugs & alcohol. SUIT are a project of WVCA (Wolverhampton Voluntary & Community Action) and work closely with Wolverhampton's treatment provider Recovery Near You. Established February 2007.",
+    "mission": "We believe that vulnerable people with substance use problems should be treated fairly, have access to services that focus on recovery, and should be able to engage with service providers that will support holistic measures of prevention, treatment and rehabilitation. SUIT provides advocacy and support for people experiencing stigma and complex vulnerabilities from challenges surrounding substance use.",
+    "values": [
+      "Lived Experience First — every staff member and volunteer has first-hand experience of addiction and recovery",
+      "Queen's Award for Voluntary Services (2014) — 'training recovering addicts and empowering those that are suffering from addiction'",
+      "European Model of Good Practice — recognised by the Street Support Project (EU) 2019 and BeTrAd (EU) 2018",
+      "College of Lived Experience (CLERO) Member — connecting with other lived experience organisations nationally",
+      "Creative Recovery — arts, drama, spoken word, and community projects as pathways to healing"
+    ]
+  },
+  "crisis": {
+    "headline": "Are you in crisis right now?",
+    "subtext": "You are not alone. Please reach out — help is available right now.",
+    "numbers": [
+      {
+        "name": "SUIT Direct Line",
+        "number": "01902 328983",
+        "hours": "Mon & Fri 10am-3pm (Drop-In), Tue & Thu 9:30am-4:30pm (by appointment)"
+      },
+      {
+        "name": "Samaritans (24/7)",
+        "number": "116 123",
+        "hours": "Free, any time"
+      },
+      {
+        "name": "Recovery Near You",
+        "number": "01902 444 044",
+        "hours": "Treatment provider"
+      },
+      {
+        "name": "FRANK Drug Helpline",
+        "number": "0300 123 6600",
+        "hours": "24 hours"
+      },
+      {
+        "name": "NHS Mental Health Crisis",
+        "number": "111 (press 2)",
+        "hours": "24 hours"
+      }
+    ]
+  },
+  "contact": {
+    "formIntro": "Send us a message and a member of the SUIT team will get back to you. You can also email us at suit@wvca.org.uk or call 01902 328983.",
+    "successTitle": "You've taken the hardest step.",
+    "successMessage": "We have your message, and we are so proud of you. A member of the SUIT team will be in touch soon."
+  }
+}

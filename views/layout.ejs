@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- SUIT build: outreach + news-more nav fallback2026-04 — view-source to confirm you are on this app -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="<%= typeof pageDescription !== 'undefined' && pageDescription ? pageDescription : 'SUIT Wolverhampton — Lived experience addiction recovery service. Peer mentoring, advocacy, creative arts, and community support in the West Midlands.' %>">
+  <meta name="keywords" content="addiction support wolverhampton, drug help near me, alcohol recovery west midlands, SUIT, peer mentoring, lived experience recovery, LERO, drug and alcohol wolverhampton, recovery near you, WVCA, creative arts recovery, peer support wolverhampton">
+  <% if (typeof pageCanonical !== 'undefined' && pageCanonical) { %><link rel="canonical" href="https://www.suitrecoverywolverhampton.com<%= pageCanonical %>"><% } %>
+  <link rel="alternate" type="application/rss+xml" title="SUIT Wolverhampton — Stories & Updates" href="https://www.suitrecoverywolverhampton.com/feed.xml">
+  <meta name="theme-color" content="#0D1117">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SUIT Wolverhampton — Lived Experience Recovery">
+  <meta property="og:description" content="<%= typeof pageDescription !== 'undefined' && pageDescription ? pageDescription : 'Wolverhampton\'s award-winning Lived Experience Recovery Organisation. Peer mentoring, advocacy, creative arts, and wraparound support for people affected by addiction. Est. 2007. A project of WVCA.' %>">
+  <meta property="og:url" content="https://www.suitrecoverywolverhampton.com/">
+  <meta property="og:image" content="/images/suit-logo.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@SUITeam">
+
+  <!-- Structured Data / Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "NonprofitOrganization",
+    "name": "SUIT — Service User Involvement Team",
+    "alternateName": "SUIT Wolverhampton",
+    "description": "Wolverhampton's Lived Experience Recovery Organisation (LERO), providing wraparound peer-led support for people struggling with drug and alcohol addiction. A project of WVCA.",
+    "url": "https://www.suitrecoverywolverhampton.com",
+    "logo": "/images/suit-logo.webp",
+    "foundingDate": "2007-02",
+    "telephone": "+441902328983",
+    "email": "suit@wvca.org.uk",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Paycare House, George Street",
+      "addressLocality": "Wolverhampton",
+      "addressRegion": "West Midlands",
+      "postalCode": "WV2 4DX",
+      "addressCountry": "GB"
+    },
+    "areaServed": "Wolverhampton",
+    "parentOrganization": {
+      "@type": "Organization",
+      "name": "WVCA — Wolverhampton Voluntary & Community Action",
+      "url": "https://www.wvca.org.uk/"
+    },
+    "award": [
+      "Queen's Award for Voluntary Services 2014",
+      "European Model of Good Practice — Street Support Project EU 2019",
+      "BeTrAd EU Recognition 2018"
+    ],
+    "sameAs": [
+      "http://facebook.com/SUITWolves",
+      "http://instagram.com/suit_services/",
+      "http://twitter.com/SUITeam",
+      "https://www.youtube.com/@ServiceUserInvolvementTeam"
+    ]
+  }
+  </script>
+  <title><%= typeof pageTitle !== 'undefined' && pageTitle ? pageTitle + ' | ' : '' %>SUIT Wolverhampton — Lived Experience Recovery</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <%- include('partials/iconify') %>
+</head>
+<body>
+
+  <!-- Skip to content (accessibility) -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <%- include('partials/a11y-bar') %>
+  <%- include('partials/header') %>
+
+  <main id="main-content">
+    <%- body -%>
+  </main>
+
+  <%- include('partials/footer') %>
+  <%- include('partials/floating-buttons') %>
+  <%- include('partials/ai-bubble') %>
+
+  <!-- Cookie Consent -->
+  <div id="cookieConsent" class="cookie-consent" style="display:none;">
+    <p>We use essential cookies to make this website work. No tracking, no ads.</p>
+    <button onclick="acceptCookies()" class="btn btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.85rem;">Accept</button>
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
