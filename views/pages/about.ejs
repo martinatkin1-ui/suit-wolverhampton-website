@@ -1,0 +1,168 @@
+<% layout('layout') -%>
+
+<section class="hero" style="min-height: 40vh; padding: 4rem 5%;">
+  <h1>About the <em>SUIT Family</em></h1>
+  <p class="hero-sub"><%= content.about.intro %></p>
+</section>
+
+<!-- Mission -->
+<section class="section">
+  <div class="featured-split">
+    <div class="text-side">
+      <h2>Our Mission</h2>
+      <p style="font-size: 1.1rem; color: var(--text-mid); margin-bottom: 1.5rem;">
+        <%= content.about.mission %>
+      </p>
+      <h3 style="margin-bottom: 1rem; color: var(--brand-teal);">Our Values</h3>
+      <ul style="color: var(--text-mid); padding-left: 1.5rem;">
+        <% content.about.values.forEach(function(val) { %>
+        <li style="margin-bottom: 0.75rem;"><%= val %></li>
+        <% }); %>
+      </ul>
+    </div>
+    <div class="media-side">
+      <div class="media-placeholder" style="background: linear-gradient(135deg, var(--brand-orange), var(--brand-pink)); text-align: left; padding: 2.5rem;">
+        <h3 style="color: #fff; font-size: 1.4rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.45rem;"><%- include('partials/icon', { name: 'lucide:trophy', size: 26, iconStyle: 'color: rgba(255,255,255,0.95)' }) %> Awards & Recognition</h3>
+        <ul style="color: rgba(255,255,255,0.9); font-size: 0.95rem; line-height: 1.8; padding-left: 1.2rem;">
+          <li>Queen's Award for Voluntary Services (2014)</li>
+          <li>European Model of Good Practice — Street Support Project EU (2019)</li>
+          <li>BeTrAd EU Recognition (2018)</li>
+          <li>CLERO Member — College of Lived Experience</li>
+          <li>Book chapter in British Library National Archives (2026)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- The Team -->
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>Meet the Team</h2>
+    <p>
+      <strong style="color: var(--brand-teal);">Every person on this page is in sustained recovery.</strong><br>
+      We are proof that it works.
+    </p>
+  </div>
+  <div class="team-grid">
+    <% staff.forEach(function(member) { %>
+    <div class="team-member">
+      <% if (member.image) { %>
+        <img src="<%= member.image %>" alt="<%= member.name %>">
+      <% } else { %>
+        <div class="team-photo-placeholder" style="display:flex;align-items:center;justify-content:center;"><%- include('partials/icon', { name: 'lucide:user', size: 36, iconStyle: 'opacity:0.9' }) %></div>
+      <% } %>
+      <h4><%= member.name %></h4>
+      <p style="color: var(--color-primary); font-weight: 600; margin-bottom: 0.25rem;"><%= member.role %></p>
+      <p><%= member.bio %></p>
+      <% if (member.videoUrl) { %>
+        <a href="<%= member.videoUrl %>" target="_blank" rel="noopener" class="team-video-link">Watch Video →</a>
+      <% } %>
+    </div>
+    <% }); %>
+  </div>
+</section>
+
+<!-- Volunteers -->
+<section class="section">
+  <div class="section-header">
+    <h2>Meet Our Volunteers</h2>
+    <p>
+      Our <strong style="color: var(--brand-orange);">Recovery Ambassadors</strong> use their lived experience to support others.
+      They are the heartbeat of SUIT.
+    </p>
+  </div>
+
+  <% var volunteerTeams = {}; %>
+  <% volunteers.forEach(function(v) { var t = v.team || 'General'; if (!volunteerTeams[t]) volunteerTeams[t] = []; volunteerTeams[t].push(v); }); %>
+
+  <% Object.keys(volunteerTeams).forEach(function(teamName) { %>
+  <div class="volunteer-team-section">
+    <h3 class="volunteer-team-title"><%= teamName %> Volunteers</h3>
+    <div class="volunteer-grid">
+      <% volunteerTeams[teamName].forEach(function(vol) { %>
+      <div class="volunteer-card">
+        <% if (vol.image) { %>
+          <img src="<%= vol.image %>" alt="<%= vol.name %>" class="volunteer-photo">
+        <% } else { %>
+          <div class="volunteer-photo-placeholder" style="display:flex;align-items:center;justify-content:center;"><%- include('partials/icon', { name: 'lucide:user', size: 32, iconStyle: 'opacity:0.9' }) %></div>
+        <% } %>
+        <div class="volunteer-info">
+          <h4><%= vol.name %></h4>
+          <p class="volunteer-role"><%= vol.role %></p>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+  <% }); %>
+
+  <div class="text-center mt-lg" style="margin-top: 2rem;">
+    <div class="volunteer-cta-banner">
+      <p>Want to join our incredible team of Recovery Ambassadors?</p>
+      <a href="/contact?type=volunteer" class="btn btn-cta">Apply to Volunteer →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Get Involved -->
+<section class="section">
+  <div class="section-header">
+    <h2>Get Involved</h2>
+    <p>There are many ways you can support SUIT and the people of Wolverhampton.</p>
+  </div>
+  <div class="card-grid" style="max-width: 900px;">
+    <div class="card card-orange">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:hand-helping', size: 32 }) %></span>
+      <h3>Volunteer With Us</h3>
+      <p>Share your time and skills. Whether you're in recovery or simply want to help, we'd love to have you.</p>
+    </div>
+    <div class="card card-pink">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:coffee', size: 32 }) %></span>
+      <h3>Sponsor a Coffee Morning</h3>
+      <p>Help us keep the kettle on. A small donation goes a long way in keeping our drop-in running.</p>
+    </div>
+    <div class="card card-green">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:shirt', size: 32 }) %></span>
+      <h3>Donate Essentials</h3>
+      <p>Warm clothing, toiletries, and basic necessities — your donations make a real difference.</p>
+    </div>
+  </div>
+  <div class="text-center mt-lg">
+    <a href="/contact" class="btn btn-primary">Get In Touch →</a>
+  </div>
+</section>
+
+<!-- Commission / Collaborate -->
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>Work With SUIT</h2>
+    <p>We work with local authorities, universities, treatment providers, and community organisations.</p>
+  </div>
+  <div class="card-grid" style="max-width: 900px;">
+    <div class="card card-teal">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:clipboard-list', size: 32 }) %></span>
+      <h3>Commission Us</h3>
+      <p>SUIT delivers consultancy, training, and strategic lived experience input for public health, criminal justice, and community programmes.</p>
+    </div>
+    <div class="card card-cyan">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:handshake', size: 32 }) %></span>
+      <h3>Partner on Projects</h3>
+      <p>We collaborate with arts organisations, universities, health providers, and community groups. Let's create something together.</p>
+    </div>
+    <div class="card card-orange">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:mic-2', size: 32 }) %></span>
+      <h3>Book SUIT for Events</h3>
+      <p>Our team delivers powerful talks, immersive theatre, and lived experience shares at conferences, training days, and community events.</p>
+    </div>
+  </div>
+  <div class="text-center mt-lg">
+    <a href="/contact?type=partnership" class="btn btn-cta">Get In Touch About a Partnership →</a>
+  </div>
+</section>
+
+<!-- Quote -->
+<section class="quote-block">
+  <blockquote>"<%= content.quote.text %>"</blockquote>
+  <cite>— <%= content.quote.author %></cite>
+</section>
