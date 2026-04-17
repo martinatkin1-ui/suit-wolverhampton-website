@@ -13,10 +13,13 @@
       <li><a href="/community" class="<%= currentPath === '/community' || (currentPath && currentPath.startsWith('/community/outreach')) ? 'active' : '' %>">In the Community</a></li>
       <li><a href="/stories" class="<%= currentPath === '/stories' ? 'active' : '' %>">Stories of Hope</a></li>
       <li><a href="/timeline" class="<%= currentPath === '/timeline' ? 'active' : '' %>">Our Timeline</a></li>
+      <% var onAnnouncements = currentPath === '/news-more/announcements' || currentPath === '/announcements'; %>
+      <% var onNewsMoreMenu = currentPath && currentPath.startsWith('/news-more') && !onAnnouncements; %>
+      <li><a href="/announcements" class="<%= onAnnouncements ? 'active' : '' %>">Announcements</a></li>
       <% var nmNav = (typeof newsMoreNavCards !== 'undefined' && newsMoreNavCards && newsMoreNavCards.length) ? newsMoreNavCards : []; %>
       <% if (nmNav.length) { %>
       <li class="nav-item--dropdown">
-        <a href="/news-more" class="<%= currentPath && currentPath.startsWith('/news-more') ? 'active' : '' %>">News &amp; More</a>
+        <a href="/news-more" class="<%= onNewsMoreMenu ? 'active' : '' %>">News &amp; More</a>
         <div class="nav-dropdown-panel" role="region" aria-label="News and more sections">
           <div class="nav-dropdown-grid">
             <% nmNav.forEach(function(c) { %>
@@ -33,7 +36,7 @@
         </div>
       </li>
       <% } else { %>
-      <li><a href="/news-more" class="<%= currentPath && currentPath.startsWith('/news-more') ? 'active' : '' %>">News &amp; More</a></li>
+      <li><a href="/news-more" class="<%= onNewsMoreMenu ? 'active' : '' %>">News &amp; More</a></li>
       <% } %>
       <li><a href="/about" class="<%= currentPath === '/about' ? 'active' : '' %>">About the SUIT Family</a></li>
       <li><a href="/socials" class="<%= currentPath === '/socials' ? 'active' : '' %>">Follow Us</a></li>

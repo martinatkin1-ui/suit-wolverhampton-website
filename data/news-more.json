@@ -12,15 +12,6 @@
       "legacyUrl": "https://www.suitrecoverywolverhampton.com/our-vision"
     },
     {
-      "slug": "announcements",
-      "title": "Announcements",
-      "description": "Latest dates for liver scans, exhibitions, consultations, and community gatherings.",
-      "icon": "lucide:megaphone",
-      "colorClass": "card-cyan",
-      "legacyPath": "/announcements",
-      "legacyUrl": "https://www.suitrecoverywolverhampton.com/announcements"
-    },
-    {
       "slug": "gallery",
       "title": "Gallery",
       "description": "Drama, literature festival, Forest Faced, and Asylum Artist Quarter highlights.",
@@ -684,27 +675,33 @@
       "title": "Conferences & Events",
       "heroLead": "From national recovery conferences and Pride to literature festivals and tattoo conventions — SUIT out in the community.",
       "legacyUrl": "https://www.suitrecoverywolverhampton.com/conferences",
+      "relatedCommunityCategory": "events",
+      "relatedCommunityLimit": 8,
+      "relatedCommunitySectionTitle": "Events & conferences (community timeline)",
       "sections": [
         {
           "type": "text",
           "title": "Favor UK National Recovery Conference 2025",
           "paragraphs": [
             "Our team at Molineux for the Favor UK National Conference — artwork from SUIT, Recovery Near You, and Good Shepherd clients, speakers including Pat McFadden MP, Dr Ed Day, Dr Jane Booth, and Alan Jarvis from Base 25, with lived experience shares from across the region."
-          ]
+          ],
+          "communityPostId": "post-favor-uk-conference-2025"
         },
         {
           "type": "text",
           "title": "National Recovery Walk 2025 — West Park",
           "paragraphs": [
             "A celebration of unity, diversity, creativity, and strength in Wolverhampton — SUIT, Recovery Near You, Good Shepherd, and Public Health putting the city at the forefront of addiction support in the UK."
-          ]
+          ],
+          "communityPostId": "post-national-recovery-walk-2025"
         },
         {
           "type": "text",
           "title": "Wolverhampton PRIDE",
           "paragraphs": [
             "Pride celebrates inclusivity, identity, freedom, and LGBT+ rights. We have attended with Recovery Near You with colourful outreach stalls raising awareness of lived experience support."
-          ]
+          ],
+          "communityPostId": "post-wolverhampton-pride-2024"
         },
         {
           "type": "text",
@@ -717,7 +714,8 @@
               "label": "Publications on this site",
               "href": "/news-more/publications"
             }
-          ]
+          ],
+          "communityPostId": "post-british-library-2026"
         },
         {
           "type": "text",
@@ -907,6 +905,10 @@
       "title": "Announcements",
       "heroLead": "Upcoming dates, consultations, liver scan pop-ups, and cultural engagement news.",
       "legacyUrl": "https://www.suitrecoverywolverhampton.com/announcements",
+      "heroCommunityPostId": "post-mental-health-drop-in-2026",
+      "relatedCommunityCategory": "announcements",
+      "relatedCommunityLimit": 8,
+      "relatedCommunitySectionTitle": "Announcement posts (community timeline)",
       "sections": [
         {
           "type": "text",
@@ -914,6 +916,16 @@
           "paragraphs": [
             "Save the date: Wednesday 6th May, 1:00pm–3:00pm, Student Union Luna Lounge — an informal gathering for students, researchers, and staff to learn how SUIT can help, who we work with, and how to refer or get involved.",
             "Posters designed by social science and graphic design students to raise awareness of addiction and reduce stigma."
+          ],
+          "gallery": [
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/87a990e9-f396-4cb5-aba8-6d4b3a30f16e/IMG_4606.JPEG",
+              "alt": "SUIT outreach and engagement"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/aa28e022-39d1-4935-884b-5bd84cebbc22/IMG_5282.JPEG",
+              "alt": "Community event"
+            }
           ]
         },
         {
@@ -926,6 +938,16 @@
             {
               "label": "Legacy announcements (consultation links)",
               "href": "https://www.suitrecoverywolverhampton.com/announcements"
+            }
+          ],
+          "gallery": [
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/fb706c1c-e0b6-4770-bdca-2bf7240be1af/Adult+-+Poster.jpg",
+              "alt": "Gambling harm reduction consultation — adult poster"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/86b40a9a-ea75-4ada-83b2-54ea9bdf6614/CYP+-+Poster.jpg",
+              "alt": "Gambling harm reduction consultation — children and young people poster"
             }
           ]
         },
@@ -941,13 +963,36 @@
               "label": "Cultural outreach — Punjabi project",
               "href": "/community/outreach/punjabi"
             }
+          ],
+          "communityPostId": "post-liver-scans-2025",
+          "gallery": [
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/34436632-96f1-46b0-8ac5-026867689f33/IMG_5274+%281%29.JPEG",
+              "alt": "Community liver scan clinic"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/61c1ff67-0522-40e7-a9c3-4e07f706a2d3/IMG_5275+%281%29.JPEG",
+              "alt": "Community liver scan clinic"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/bdb09999-680c-4e70-adda-0abde18de870/IMG_5276+%281%29.JPEG",
+              "alt": "Community liver scan clinic"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/4ad3cf57-0bb7-4152-8482-e787445d1e6c/IMG_5278.JPEG",
+              "alt": "Community liver scan clinic"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/df74659e-1050-4556-b129-6264059d90b9/IMG_5279.JPEG",
+              "alt": "Community liver scan clinic"
+            }
           ]
         },
         {
           "type": "text",
           "title": "Mental Health Peer Support Drop-Ins",
           "paragraphs": [
-            "First Friday of every month, 10am–12pm, Train Station Hub WV1 1LE — see Mental Health Support for crisis lines and partners."
+            "First Friday of every month, 10am–12pm, Train Station Hub WV1 1LE — see Mental Health Support for crisis lines and partners. The photo in the page header is the same image as this item in the community timeline — update it in Admin → Community."
           ],
           "links": [
             {
@@ -961,67 +1006,17 @@
           "title": "Yoga with Cate",
           "paragraphs": [
             "Gratitude to Cate for continued support and patronage towards SUIT — yoga and wellbeing in Wolverhampton."
-          ]
+          ],
+          "links": [
+            {
+              "label": "Visit Yoga with Cate",
+              "href": "https://www.yogawithcate.com/"
+            }
+          ],
+          "communityPostId": "post-yoga-with-cate"
         }
       ],
-      "gallery": [
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/14eb5d19-eee7-49ad-a5da-7cffa8a6ba48/FB_IMG_1674215219770.jpg",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/bdb09999-680c-4e70-adda-0abde18de870/IMG_5276+%281%29.JPEG",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/61c1ff67-0522-40e7-a9c3-4e07f706a2d3/IMG_5275+%281%29.JPEG",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/34436632-96f1-46b0-8ac5-026867689f33/IMG_5274+%281%29.JPEG",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/aa28e022-39d1-4935-884b-5bd84cebbc22/IMG_5282.JPEG",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/4ad3cf57-0bb7-4152-8482-e787445d1e6c/IMG_5278.JPEG",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/df74659e-1050-4556-b129-6264059d90b9/IMG_5279.JPEG",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/ea2cc9ed-1bce-4fcf-a9bd-5db0494e5650/f928d537-25e7-465e-93b2-d478468cfe8d.JPEG",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/87a990e9-f396-4cb5-aba8-6d4b3a30f16e/IMG_4606.JPEG",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/0e8d7290-5bcd-426c-8394-eac29767e7fb/Profile+logo+black+vector.jpg",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/40007377-9ebc-4494-a183-646240fb651c/Asylum+logo.jpg",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/63a1c73d-5680-4b9e-aa6c-abc7236ad664/WVCA+logo_SUIT+with+credit+-+Copy.jpg",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/86b40a9a-ea75-4ada-83b2-54ea9bdf6614/CYP+-+Poster.jpg",
-          "alt": "SUIT — /announcements"
-        },
-        {
-          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/fb706c1c-e0b6-4770-bdca-2bf7240be1af/Adult+-+Poster.jpg",
-          "alt": "SUIT — /announcements"
-        }
-      ]
+      "gallery": []
     },
     "our-vision": {
       "title": "Our Vision",

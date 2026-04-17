@@ -24,7 +24,7 @@ function galleryFor(pagePath, max = 12) {
 const data = {
   hubTitle: 'News & More',
   hubIntro:
-    'Publications, podcasts, harm reduction, mental health resources, LEAG, conferences, gallery highlights, announcements, and our vision — the same stories as the legacy site, presented in the new SUIT design.',
+    'Publications, podcasts, harm reduction, mental health resources, LEAG, conferences, gallery highlights, and our vision — the same stories as the legacy site, presented in the new SUIT design. Announcements are linked from the main site menu.',
   cards: [
     { slug: 'publications', title: 'Publications', description: 'Books, chapters, poetry, and Performing Recovery — including the British Library LERO volume.', icon: 'lucide:book-open', colorClass: 'card-orange' },
     { slug: 'podcasts', title: 'Podcasts & Radio', description: 'Black Country Xtra, Graham Stubbs, research conversations, and BBC Prison Radio.', icon: 'lucide:mic', colorClass: 'card-cyan' },
@@ -34,7 +34,6 @@ const data = {
     { slug: 'leag', title: 'LEAG', description: 'Lived Experience Advisory Group — shaping services with your voice.', icon: 'lucide:users-round', colorClass: 'card-green' },
     { slug: 'conferences', title: 'Conferences & Events', description: 'Recovery walks, Pride, Favor UK, DDN, literature festivals, and more.', icon: 'lucide:calendar-days', colorClass: 'card-orange' },
     { slug: 'gallery', title: 'Gallery', description: 'Drama, literature festival, Forest Faced, and Asylum Artist Quarter highlights.', icon: 'lucide:images', colorClass: 'card-cyan' },
-    { slug: 'announcements', title: 'Announcements', description: 'Latest dates for liver scans, exhibitions, consultations, and community gatherings.', icon: 'lucide:megaphone', colorClass: 'card-green' },
     { slug: 'our-vision', title: 'Our Vision', description: 'How we help, what we offer, volunteering, and strategic involvement as Wolverhampton’s LERO.', icon: 'lucide:eye', colorClass: 'card-orange' }
   ],
   pages: {}
@@ -323,27 +322,33 @@ data.pages.conferences = {
   title: 'Conferences & Events',
   heroLead: 'From national recovery conferences and Pride to literature festivals and tattoo conventions — SUIT out in the community.',
   legacyUrl: 'https://www.suitrecoverywolverhampton.com/conferences',
+  relatedCommunityCategory: 'events',
+  relatedCommunityLimit: 8,
+  relatedCommunitySectionTitle: 'Events & conferences (community timeline)',
   sections: [
     {
       type: 'text',
       title: 'Favor UK National Recovery Conference 2025',
       paragraphs: [
         'Our team at Molineux for the Favor UK National Conference — artwork from SUIT, Recovery Near You, and Good Shepherd clients, speakers including Pat McFadden MP, Dr Ed Day, Dr Jane Booth, and Alan Jarvis from Base 25, with lived experience shares from across the region.'
-      ]
+      ],
+      communityPostId: 'post-favor-uk-conference-2025'
     },
     {
       type: 'text',
       title: 'National Recovery Walk 2025 — West Park',
       paragraphs: [
         'A celebration of unity, diversity, creativity, and strength in Wolverhampton — SUIT, Recovery Near You, Good Shepherd, and Public Health putting the city at the forefront of addiction support in the UK.'
-      ]
+      ],
+      communityPostId: 'post-national-recovery-walk-2025'
     },
     {
       type: 'text',
       title: 'Wolverhampton PRIDE',
       paragraphs: [
         'Pride celebrates inclusivity, identity, freedom, and LGBT+ rights. We have attended with Recovery Near You with colourful outreach stalls raising awareness of lived experience support.'
-      ]
+      ],
+      communityPostId: 'post-wolverhampton-pride-2024'
     },
     {
       type: 'text',
@@ -351,7 +356,8 @@ data.pages.conferences = {
       paragraphs: [
         'In January 2026, SUIT helped launch “Lived Experience Recovery Organisations” at the British Library with Dame Carol Black and Dr Ed Day — the same story told on our Publications page.'
       ],
-      links: [{ label: 'Publications on this site', href: '/news-more/publications' }]
+      links: [{ label: 'Publications on this site', href: '/news-more/publications' }],
+      communityPostId: 'post-british-library-2026'
     },
     {
       type: 'text',
@@ -394,11 +400,15 @@ data.pages.gallery = {
   gallery: galleryFor('/gallery', 16)
 };
 
-// announcements
+// announcements — hero thumbnail + section media aligned with legacy page; heroCommunityPostId = Admin source of truth
 data.pages.announcements = {
   title: 'Announcements',
   heroLead: 'Upcoming dates, consultations, liver scan pop-ups, and cultural engagement news.',
   legacyUrl: 'https://www.suitrecoverywolverhampton.com/announcements',
+  heroCommunityPostId: 'post-mental-health-drop-in-2026',
+  relatedCommunityCategory: 'announcements',
+  relatedCommunityLimit: 8,
+  relatedCommunitySectionTitle: 'Announcement posts (community timeline)',
   sections: [
     {
       type: 'text',
@@ -406,6 +416,16 @@ data.pages.announcements = {
       paragraphs: [
         'Save the date: Wednesday 6th May, 1:00pm–3:00pm, Student Union Luna Lounge — an informal gathering for students, researchers, and staff to learn how SUIT can help, who we work with, and how to refer or get involved.',
         'Posters designed by social science and graphic design students to raise awareness of addiction and reduce stigma.'
+      ],
+      gallery: [
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/87a990e9-f396-4cb5-aba8-6d4b3a30f16e/IMG_4606.JPEG',
+          alt: 'SUIT outreach and engagement'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/aa28e022-39d1-4935-884b-5bd84cebbc22/IMG_5282.JPEG',
+          alt: 'Community event'
+        }
       ]
     },
     {
@@ -414,7 +434,17 @@ data.pages.announcements = {
       paragraphs: [
         'Wolverhampton Council’s public consultation to shape a new Gambling Harm Reduction Strategy — separate consultations for adults and for children and young people. Check the legacy announcements page for current links and deadlines.'
       ],
-      links: [{ label: 'Legacy announcements (consultation links)', href: 'https://www.suitrecoverywolverhampton.com/announcements' }]
+      links: [{ label: 'Legacy announcements (consultation links)', href: 'https://www.suitrecoverywolverhampton.com/announcements' }],
+      gallery: [
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/fb706c1c-e0b6-4770-bdca-2bf7240be1af/Adult+-+Poster.jpg',
+          alt: 'Gambling harm reduction consultation — adult poster'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/86b40a9a-ea75-4ada-83b2-54ea9bdf6614/CYP+-+Poster.jpg',
+          alt: 'Gambling harm reduction consultation — children and young people poster'
+        }
+      ]
     },
     {
       type: 'text',
@@ -423,12 +453,37 @@ data.pages.announcements = {
         'Pop-up clinics with SUIT and Recovery Near You — see legacy page for the latest dates and venues (e.g. Science Park, Gurdwaras).',
         '“Over 1,200 liver scans have now been completed at pop-up clinics across Wolverhampton…” — Councillor Obaida Ahmed, Cabinet Member for Health, Wellbeing and Community, City of Wolverhampton Council (Dec 2025).'
       ],
-      links: [{ label: 'Cultural outreach — Punjabi project', href: '/community/outreach/punjabi' }]
+      links: [{ label: 'Cultural outreach — Punjabi project', href: '/community/outreach/punjabi' }],
+      communityPostId: 'post-liver-scans-2025',
+      gallery: [
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/34436632-96f1-46b0-8ac5-026867689f33/IMG_5274+%281%29.JPEG',
+          alt: 'Community liver scan clinic'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/61c1ff67-0522-40e7-a9c3-4e07f706a2d3/IMG_5275+%281%29.JPEG',
+          alt: 'Community liver scan clinic'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/bdb09999-680c-4e70-adda-0abde18de870/IMG_5276+%281%29.JPEG',
+          alt: 'Community liver scan clinic'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/4ad3cf57-0bb7-4152-8482-e787445d1e6c/IMG_5278.JPEG',
+          alt: 'Community liver scan clinic'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/df74659e-1050-4556-b129-6264059d90b9/IMG_5279.JPEG',
+          alt: 'Community liver scan clinic'
+        }
+      ]
     },
     {
       type: 'text',
       title: 'Mental Health Peer Support Drop-Ins',
-      paragraphs: ['First Friday of every month, 10am–12pm, Train Station Hub WV1 1LE — see Mental Health Support for crisis lines and partners.' ],
+      paragraphs: [
+        'First Friday of every month, 10am–12pm, Train Station Hub WV1 1LE — see Mental Health Support for crisis lines and partners. The photo in the page header is the same image as this item in the community timeline — update it in Admin → Community.'
+      ],
       links: [{ label: 'Mental Health Support on this site', href: '/news-more/mental-health-support' }]
     },
     {
@@ -436,10 +491,12 @@ data.pages.announcements = {
       title: 'Yoga with Cate',
       paragraphs: [
         'Gratitude to Cate for continued support and patronage towards SUIT — yoga and wellbeing in Wolverhampton.'
-      ]
+      ],
+      links: [{ label: 'Visit Yoga with Cate', href: 'https://www.yogawithcate.com/' }],
+      communityPostId: 'post-yoga-with-cate'
     }
   ],
-  gallery: galleryFor('/announcements', 14)
+  gallery: []
 };
 
 // our vision
@@ -502,7 +559,9 @@ const outPath = path.join(root, 'data', 'news-more.json');
 if (fs.existsSync(outPath)) {
   try {
     const prev = JSON.parse(fs.readFileSync(outPath, 'utf8'));
-    if (Array.isArray(prev.cards) && prev.cards.length) data.cards = prev.cards;
+    if (Array.isArray(prev.cards) && prev.cards.length) {
+      data.cards = prev.cards.filter((c) => c && c.slug !== 'announcements');
+    }
     if (typeof prev.hubTitle === 'string' && prev.hubTitle.trim()) data.hubTitle = prev.hubTitle;
     if (typeof prev.hubIntro === 'string' && prev.hubIntro.trim()) data.hubIntro = prev.hubIntro;
   } catch (e) {

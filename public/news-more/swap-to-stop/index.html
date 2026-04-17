@@ -97,14 +97,11 @@
   </select>
 </div>
 
-  <!-- Sticky Header -->
+  <!-- Sticky Header — wordmark is in the logo image only (no duplicate text). -->
+
 <header class="site-header" role="banner">
-  <a href="/" class="logo-link" aria-label="SUIT Wolverhampton Home">
-    <img src="/images/suit-logo.webp" alt="SUIT Logo — Service User Involvement Team, a project of WVCA">
-    <div class="logo-text">
-      SUIT
-      <span>Service User Involvement Team</span>
-    </div>
+  <a href="/" class="logo-link logo-link--mark-only" aria-label="SUIT Wolverhampton — Home">
+    <img src="/images/suit-logo.webp" alt="" decoding="async" class="logo-mark">
   </a>
 
   <nav class="main-nav" role="navigation" aria-label="Main navigation">
@@ -115,6 +112,9 @@
       <li><a href="/community" class="">In the Community</a></li>
       <li><a href="/stories" class="">Stories of Hope</a></li>
       <li><a href="/timeline" class="">Our Timeline</a></li>
+      
+      
+      <li><a href="/announcements" class="">Announcements</a></li>
       
       
       <li class="nav-item--dropdown">
@@ -129,16 +129,6 @@
               <span class="nav-dd-card-text">
                 <span class="nav-dd-card-title">Our Vision</span>
                 <span class="nav-dd-card-desc">How we help, what we offer, volunteering, and strategic involvement as Wolverhampton’s LERO.</span>
-              </span>
-            </a>
-            
-            <a href="/news-more/announcements" class="nav-dd-card">
-              <span class="nav-dd-card-icon" aria-hidden="true">
-<iconify-icon icon="lucide:megaphone" width="22" height="22" class="ui-icon" aria-hidden="true"></iconify-icon>
-</span>
-              <span class="nav-dd-card-text">
-                <span class="nav-dd-card-title">Announcements</span>
-                <span class="nav-dd-card-desc">Latest dates for liver scans, exhibitions, consultations, and community gatherings.</span>
               </span>
             </a>
             
@@ -233,19 +223,26 @@
 
   <main id="main-content">
     
-<section class="hero" style="min-height: 36vh; padding: 3.5rem 5% 2.5rem;">
-  <nav class="outreach-breadcrumb" aria-label="Breadcrumb">
-    <a href="/news-more">News &amp; More</a>
-    <span aria-hidden="true"> / </span>
-    <span>Swap to Stop</span>
-  </nav>
-  <h1>Swap to Stop</h1>
-  <p class="hero-sub">A Public Health scheme to reduce harm from smoking — vapes and supplies over 12 weeks, delivered with SUIT support.</p>
-  
-  <p class="outreach-legacy-note">
-    <a href="https://www.suitrecoverywolverhampton.com/new-page-1" target="_blank" rel="noopener noreferrer" class="outreach-legacy-link">Original page on suitrecoverywolverhampton.com (reference) →</a>
-  </p>
-  
+<section class="hero nm-hero-page" style="min-height: 36vh; padding: 3.5rem 5% 2.5rem;">
+  <div class="nm-hero-inner">
+    <div class="nm-hero-text">
+      <nav class="outreach-breadcrumb" aria-label="Breadcrumb">
+        
+        <a href="/news-more">News &amp; More</a>
+        <span aria-hidden="true"> / </span>
+        <span>Swap to Stop</span>
+        
+      </nav>
+      <h1>Swap to Stop</h1>
+      <p class="hero-sub">A Public Health scheme to reduce harm from smoking — vapes and supplies over 12 weeks, delivered with SUIT support.</p>
+      
+      <p class="outreach-legacy-note">
+        <a href="https://www.suitrecoverywolverhampton.com/new-page-1" target="_blank" rel="noopener noreferrer" class="outreach-legacy-link">Original page on suitrecoverywolverhampton.com (reference) →</a>
+      </p>
+      
+    </div>
+    
+  </div>
 </section>
 
 
@@ -259,6 +256,8 @@
     <p class="outreach-prose">To be eligible you must be a current smoker, aged 18 or over, and meet medical requirements discussed with your advisor.</p>
     
     <p class="outreach-prose">Swap to Stop is delivered by Public Health to reduce harm, illness, and deaths caused by smoking.</p>
+    
+    
     
     
     
@@ -286,6 +285,8 @@
       <li><a href="https://www.recoverynearyou.org.uk/" target="_blank" rel="noopener noreferrer">Recovery Near You →</a></li>
       
     </ul>
+    
+    
     
     
   </div>
@@ -330,8 +331,12 @@
     </ul>
     
     
+    
+    
   </div>
 </section>
+
+
 
 
 
@@ -376,7 +381,9 @@
     <p style="font-size: 1.1rem; opacity: 0.95; max-width: 560px; margin: 0 auto 1.5rem;">Questions about any of these topics? We’re the same team — get in touch.</p>
     <div class="cta-button-row" style="justify-content: center;">
       <a href="/contact" class="btn btn-cta">Contact SUIT</a>
+      
       <a href="/news-more" class="btn btn-outline-white">Back to News &amp; More →</a>
+      
     </div>
   </div>
 </section>
@@ -400,6 +407,7 @@
           <li><a href="/services">How We Help</a></li>
           <li><a href="/timetable">Weekly Timetable</a></li>
           <li><a href="/community">In the Community</a></li>
+          <li><a href="/announcements">Announcements</a></li>
           <li><a href="/news-more">News &amp; More</a></li>
           <li><a href="/stories">Stories of Hope</a></li>
           <li><a href="/timeline">Our Timeline</a></li>
@@ -464,19 +472,27 @@
   </div>
 </footer>
 
-  <!-- Floating Safety & WhatsApp Buttons -->
-<div class="floating-buttons">
-  <a href="https://wa.me/441902328983" target="_blank" rel="noopener" class="btn btn-whatsapp" aria-label="Message us on WhatsApp">
-    
+  <!-- Floating Safety & WhatsApp — compact FAB on small screens; full buttons on desktop -->
+<div class="floating-buttons" id="floatingSafetyRail">
+  <div class="floating-buttons__panel" id="floatingSafetyPanel" role="group" aria-label="WhatsApp and quick exit">
+    <a href="https://wa.me/441902328983" target="_blank" rel="noopener" class="btn btn-whatsapp floating-buttons__action" aria-label="Message us on WhatsApp">
+      
 <iconify-icon icon="lucide:message-circle" width="20" height="20" class="ui-icon" aria-hidden="true"></iconify-icon>
 
-    WhatsApp Us
-  </a>
-  <button class="btn btn-crisis" style="padding: 0.7rem 1.2rem; font-size: 0.85rem;" type="button" onclick="quickExit()" aria-label="Quick exit — leaves this site immediately">
-    
+      <span class="floating-buttons__label">WhatsApp Us</span>
+    </a>
+    <button class="btn btn-crisis floating-buttons__action" type="button" onclick="quickExit()" aria-label="Quick exit — leaves this site immediately">
+      
 <iconify-icon icon="lucide:log-out" width="18" height="18" class="ui-icon" aria-hidden="true"></iconify-icon>
 
-    Quick Exit
+      <span class="floating-buttons__label">Quick Exit</span>
+    </button>
+  </div>
+  <button type="button" class="floating-buttons__fab" id="floatingSafetyFab" aria-expanded="false" aria-controls="floatingSafetyPanel" aria-haspopup="true" aria-label="Open or close WhatsApp and quick exit" onclick="toggleFloatingSafety(event)">
+    
+<iconify-icon icon="lucide:shield" width="22" height="22" class="ui-icon" aria-hidden="true"></iconify-icon>
+
+    <span class="floating-buttons__fab-text" aria-hidden="true">Safety</span>
   </button>
 </div>
 

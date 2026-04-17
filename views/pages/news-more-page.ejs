@@ -1,18 +1,33 @@
 <% layout('layout') -%>
 
-<section class="hero" style="min-height: 36vh; padding: 3.5rem 5% 2.5rem;">
-  <nav class="outreach-breadcrumb" aria-label="Breadcrumb">
-    <a href="/news-more"><%= nm.hubTitle %></a>
-    <span aria-hidden="true"> / </span>
-    <span><%= page.title %></span>
-  </nav>
-  <h1><%= page.title %></h1>
-  <p class="hero-sub"><%= page.heroLead %></p>
-  <% if (page.legacyUrl) { %>
-  <p class="outreach-legacy-note">
-    <a href="<%= page.legacyUrl %>" target="_blank" rel="noopener noreferrer" class="outreach-legacy-link">Original page on suitrecoverywolverhampton.com (reference) →</a>
-  </p>
-  <% } %>
+<section class="hero nm-hero-page" style="min-height: 36vh; padding: 3.5rem 5% 2.5rem;">
+  <div class="nm-hero-inner">
+    <div class="nm-hero-text">
+      <nav class="outreach-breadcrumb" aria-label="Breadcrumb">
+        <% if (typeof slug !== 'undefined' && slug === 'announcements') { %>
+        <a href="/">Home</a>
+        <span aria-hidden="true"> / </span>
+        <span><%= page.title %></span>
+        <% } else { %>
+        <a href="/news-more"><%= nm.hubTitle %></a>
+        <span aria-hidden="true"> / </span>
+        <span><%= page.title %></span>
+        <% } %>
+      </nav>
+      <h1><%= page.title %></h1>
+      <p class="hero-sub"><%= page.heroLead %></p>
+      <% if (page.legacyUrl) { %>
+      <p class="outreach-legacy-note">
+        <a href="<%= page.legacyUrl %>" target="_blank" rel="noopener noreferrer" class="outreach-legacy-link">Original page on suitrecoverywolverhampton.com (reference) →</a>
+      </p>
+      <% } %>
+    </div>
+    <% if (page.heroImage) { %>
+    <figure class="nm-hero-thumb">
+      <img src="<%= page.heroImage %>" alt="<%= page.heroImageAlt || page.title %>" width="640" height="400" loading="eager" decoding="async">
+    </figure>
+    <% } %>
+  </div>
 </section>
 
 <% if (page.youtubeIds && page.youtubeIds.length) { %>
@@ -58,6 +73,20 @@
       <% }); %>
     </ul>
     <% } %>
+    <% if (block.image) { %>
+    <figure class="nm-section-figure">
+      <img src="<%= block.image %>" alt="<%= block.imageAlt || block.title || page.title %>" loading="lazy" width="800" height="450">
+    </figure>
+    <% } %>
+    <% if (block.gallery && block.gallery.length) { %>
+    <div class="outreach-gallery nm-section-gallery">
+      <% block.gallery.forEach(function(g) { %>
+      <figure class="outreach-gallery-item">
+        <img src="<%= g.src %>" alt="<%= g.alt || block.title || page.title %>" loading="lazy" width="400" height="300">
+      </figure>
+      <% }); %>
+    </div>
+    <% } %>
     <% if (block.youtubeId) { %>
     <div class="outreach-video nm-inline-video">
       <iframe src="https://www.youtube.com/embed/<%= block.youtubeId %>" title="<%= block.title || page.title %> — video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
@@ -66,6 +95,33 @@
   </div>
 </section>
 <% }); %>
+
+<% if (page.relatedCommunityPosts && page.relatedCommunityPosts.length) { %>
+<section class="section">
+  <div class="section-header">
+    <h2><%= page.relatedCommunitySectionTitle || 'Related community updates' %></h2>
+    <p>Posts from <a href="/community?cat=<%= page.relatedCommunityCategory %>#community-feed">In the Community</a> — same images and video fields you edit in Admin.</p>
+  </div>
+  <div class="nm-related-feed">
+    <% page.relatedCommunityPosts.forEach(function(post) { %>
+    <article class="nm-related-card">
+      <% if (post.imageUrl) { %>
+      <a href="/community?cat=<%= post.category %>#community-feed" class="nm-related-card-media" aria-hidden="true" tabindex="-1">
+        <img src="<%= post.imageUrl %>" alt="" loading="lazy" width="320" height="180">
+      </a>
+      <% } %>
+      <div class="nm-related-card-body">
+        <time class="nm-related-date" datetime="<%= post.date %>"><%= post.date %></time>
+        <h3><a href="/community?cat=<%= post.category %>#community-feed"><%= post.title %></a></h3>
+      </div>
+    </article>
+    <% }); %>
+  </div>
+  <p class="text-center" style="margin-top: 1.5rem;">
+    <a href="/community?cat=<%= page.relatedCommunityCategory %>#community-feed" class="btn btn-outline">Full timeline for this category →</a>
+  </p>
+</section>
+<% } %>
 
 <% if (page.gallery && page.gallery.length) { %>
 <section class="section section-alt">
@@ -89,7 +145,11 @@
     <p style="font-size: 1.1rem; opacity: 0.95; max-width: 560px; margin: 0 auto 1.5rem;">Questions about any of these topics? We’re the same team — get in touch.</p>
     <div class="cta-button-row" style="justify-content: center;">
       <a href="/contact" class="btn btn-cta">Contact SUIT</a>
+      <% if (typeof slug !== 'undefined' && slug === 'announcements') { %>
+      <a href="/news-more" class="btn btn-outline-white">News &amp; More topics →</a>
+      <% } else { %>
       <a href="/news-more" class="btn btn-outline-white">Back to <%= nm.hubTitle %> →</a>
+      <% } %>
     </div>
   </div>
 </section>

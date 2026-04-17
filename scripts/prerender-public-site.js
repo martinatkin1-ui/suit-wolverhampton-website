@@ -47,6 +47,8 @@ function sortedCommunityPosts(community) {
   return [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
+const { enrichNewsMorePage, filterHubCards } = require('../lib/news-more-enrich');
+
 function writeToPublic(urlPath, html) {
   const norm = urlPath === '/' || urlPath === '' ? '' : urlPath.replace(/^\//, '').replace(/\/+$/, '');
   if (!norm) {
@@ -61,10 +63,18 @@ function writeToPublic(urlPath, html) {
 
 async function main() {
   const app = require('../server');
-  const nm = readJSON('news-more.json');
+  const nmRaw = readJSON('news-more.json');
   const navFb = readJSON('news-more.nav-fallback.json');
+  const nm =
+    nmRaw && typeof nmRaw === 'object'
+      ? { ...nmRaw, cards: filterHubCards(nmRaw.cards || []) }
+      : nmRaw;
   const navCards =
-    nm && Array.isArray(nm.cards) && nm.cards.length ? nm.cards : navFb && navFb.cards ? navFb.cards : [];
+    nm && Array.isArray(nm.cards) && nm.cards.length
+      ? nm.cards
+      : navFb && navFb.cards
+        ? filterHubCards(navFb.cards)
+        : [];
 
   const render = (view, locals) =>
     new Promise((resolve, reject) => {
@@ -233,12 +243,15 @@ async function main() {
       nm
     });
     for (const slug of Object.keys(nm.pages || {})) {
-      const page = nm.pages[slug];
-      if (!page || typeof page !== 'object') continue;
+      const rawPage = nm.pages[slug];
+      if (!rawPage || typeof rawPage !== 'object') continue;
+      const page = enrichNewsMorePage(rawPage, community);
+      const hub = nm.hubTitle || 'News & More';
+      const pageTitle = slug === 'announcements' ? `${page.title} | SUIT` : `${page.title} — ${hub}`;
       await go(`/news-more/${slug}`, 'pages/news-more-page', {
         ...B({
           currentPath: `/news-more/${slug}`,
-          pageTitle: `${page.title} — ${nm.hubTitle || 'News & More'}`,
+          pageTitle,
           pageDescription: (page.heroLead || '').slice(0, 160),
           pageCanonical: `/news-more/${slug}`
         }),
@@ -247,6 +260,14 @@ async function main() {
         slug
       });
     }
+    const announceRedirect =
+      '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<title>Announcements — SUIT</title><meta http-equiv="refresh" content="0;url=/news-more/announcements">' +
+      '<link rel="canonical" href="/news-more/announcements"></head><body>' +
+      '<p><a href="/news-more/announcements">Continue to Announcements →</a></p></body></html>';
+    writeToPublic('/announcements', announceRedirect);
+    count++;
+    console.log('  ', '/announcements', '→', 'redirect stub');
   }
 
   const teamData = readJSON('team.json') || { staff: [], volunteers: [] };

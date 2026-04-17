@@ -10,15 +10,6 @@
       "legacyUrl": "https://www.suitrecoverywolverhampton.com/our-vision"
     },
     {
-      "slug": "announcements",
-      "title": "Announcements",
-      "description": "Latest dates for liver scans, exhibitions, consultations, and community gatherings.",
-      "icon": "lucide:megaphone",
-      "colorClass": "card-cyan",
-      "legacyPath": "/announcements",
-      "legacyUrl": "https://www.suitrecoverywolverhampton.com/announcements"
-    },
-    {
       "slug": "gallery",
       "title": "Gallery",
       "description": "Drama, literature festival, Forest Faced, and Asylum Artist Quarter highlights.",

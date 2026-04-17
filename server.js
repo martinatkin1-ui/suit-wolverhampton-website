@@ -140,6 +140,8 @@ function sortedCommunityPosts(community) {
   return [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
+const { enrichNewsMorePage, filterHubCards } = require('./lib/news-more-enrich');
+
 /** Normalise pathname for legacy lookup (trailing slash except root). */
 function normalizeLegacyPath(p) {
   if (typeof p !== 'string') return '/';
@@ -359,13 +361,17 @@ app.use(async (req, res, next) => {
     const contentRaw = await readJSON('content.json');
     res.locals.content =
       contentRaw && typeof contentRaw === 'object' ? contentRaw : minimalContentFallback();
-    const nm = await readJSON('news-more.json');
+    const nmRaw = await readJSON('news-more.json');
     const nmNavFb = await readJSON('news-more.nav-fallback.json');
+    const nm =
+      nmRaw && typeof nmRaw === 'object'
+        ? { ...nmRaw, cards: filterHubCards(nmRaw.cards || []) }
+        : nmRaw;
     res.locals.newsMore = nm;
     if (nm && Array.isArray(nm.cards) && nm.cards.length) {
       res.locals.newsMoreNavCards = nm.cards;
     } else if (nmNavFb && Array.isArray(nmNavFb.cards) && nmNavFb.cards.length) {
-      res.locals.newsMoreNavCards = nmNavFb.cards;
+      res.locals.newsMoreNavCards = filterHubCards(nmNavFb.cards);
     } else {
       res.locals.newsMoreNavCards = [];
     }
@@ -588,7 +594,14 @@ app.get('/community/outreach/:slug', async (req, res) => {
 });
 
 app.get('/news-more', async (req, res) => {
-  const nm = res.locals.newsMore || await readJSON('news-more.json');
+  let nm = res.locals.newsMore;
+  if (!nm) {
+    const raw = await readJSON('news-more.json');
+    nm =
+      raw && typeof raw === 'object'
+        ? { ...raw, cards: filterHubCards(raw.cards || []) }
+        : raw;
+  }
   if (!nm || !Array.isArray(nm.cards)) {
     return res.status(500).send('News & More content is not available.');
   }
@@ -602,19 +615,29 @@ app.get('/news-more', async (req, res) => {
 
 app.get('/news-more/:slug', async (req, res) => {
   const slug = req.params.slug;
-  const nm = res.locals.newsMore || await readJSON('news-more.json');
-  const page = nm && nm.pages && nm.pages[slug];
-  if (!page || typeof page !== 'object') {
+  let nm = res.locals.newsMore;
+  if (!nm) {
+    const raw = await readJSON('news-more.json');
+    nm =
+      raw && typeof raw === 'object'
+        ? { ...raw, cards: filterHubCards(raw.cards || []) }
+        : raw;
+  }
+  const rawPage = nm && nm.pages && nm.pages[slug];
+  if (!rawPage || typeof rawPage !== 'object') {
     return res.status(404).render('pages/404', {
       pageTitle: 'Page not found',
       pageCanonical: ''
     });
   }
+  const page = enrichNewsMorePage(rawPage, await loadCommunityForPublic());
+  const hub = nm.hubTitle || 'News & More';
+  const pageTitle = slug === 'announcements' ? `${page.title} | SUIT` : `${page.title} — ${hub}`;
   res.render('pages/news-more-page', {
     nm,
     page,
     slug,
-    pageTitle: `${page.title} — ${nm.hubTitle || 'News & More'}`,
+    pageTitle,
     pageDescription: (page.heroLead || '').slice(0, 160),
     pageCanonical: `/news-more/${slug}`
   });

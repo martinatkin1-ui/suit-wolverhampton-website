@@ -97,14 +97,11 @@
   </select>
 </div>
 
-  <!-- Sticky Header -->
+  <!-- Sticky Header — wordmark is in the logo image only (no duplicate text). -->
+
 <header class="site-header" role="banner">
-  <a href="/" class="logo-link" aria-label="SUIT Wolverhampton Home">
-    <img src="/images/suit-logo.webp" alt="SUIT Logo — Service User Involvement Team, a project of WVCA">
-    <div class="logo-text">
-      SUIT
-      <span>Service User Involvement Team</span>
-    </div>
+  <a href="/" class="logo-link logo-link--mark-only" aria-label="SUIT Wolverhampton — Home">
+    <img src="/images/suit-logo.webp" alt="" decoding="async" class="logo-mark">
   </a>
 
   <nav class="main-nav" role="navigation" aria-label="Main navigation">
@@ -115,6 +112,9 @@
       <li><a href="/community" class="">In the Community</a></li>
       <li><a href="/stories" class="">Stories of Hope</a></li>
       <li><a href="/timeline" class="">Our Timeline</a></li>
+      
+      
+      <li><a href="/announcements" class="">Announcements</a></li>
       
       
       <li class="nav-item--dropdown">
@@ -129,16 +129,6 @@
               <span class="nav-dd-card-text">
                 <span class="nav-dd-card-title">Our Vision</span>
                 <span class="nav-dd-card-desc">How we help, what we offer, volunteering, and strategic involvement as Wolverhampton’s LERO.</span>
-              </span>
-            </a>
-            
-            <a href="/news-more/announcements" class="nav-dd-card">
-              <span class="nav-dd-card-icon" aria-hidden="true">
-<iconify-icon icon="lucide:megaphone" width="22" height="22" class="ui-icon" aria-hidden="true"></iconify-icon>
-</span>
-              <span class="nav-dd-card-text">
-                <span class="nav-dd-card-title">Announcements</span>
-                <span class="nav-dd-card-desc">Latest dates for liver scans, exhibitions, consultations, and community gatherings.</span>
               </span>
             </a>
             
@@ -293,6 +283,7 @@
           <li><a href="/services">How We Help</a></li>
           <li><a href="/timetable">Weekly Timetable</a></li>
           <li><a href="/community">In the Community</a></li>
+          <li><a href="/announcements">Announcements</a></li>
           <li><a href="/news-more">News &amp; More</a></li>
           <li><a href="/stories">Stories of Hope</a></li>
           <li><a href="/timeline">Our Timeline</a></li>
@@ -357,19 +348,27 @@
   </div>
 </footer>
 
-  <!-- Floating Safety & WhatsApp Buttons -->
-<div class="floating-buttons">
-  <a href="https://wa.me/441902328983" target="_blank" rel="noopener" class="btn btn-whatsapp" aria-label="Message us on WhatsApp">
-    
+  <!-- Floating Safety & WhatsApp — compact FAB on small screens; full buttons on desktop -->
+<div class="floating-buttons" id="floatingSafetyRail">
+  <div class="floating-buttons__panel" id="floatingSafetyPanel" role="group" aria-label="WhatsApp and quick exit">
+    <a href="https://wa.me/441902328983" target="_blank" rel="noopener" class="btn btn-whatsapp floating-buttons__action" aria-label="Message us on WhatsApp">
+      
 <iconify-icon icon="lucide:message-circle" width="20" height="20" class="ui-icon" aria-hidden="true"></iconify-icon>
 
-    WhatsApp Us
-  </a>
-  <button class="btn btn-crisis" style="padding: 0.7rem 1.2rem; font-size: 0.85rem;" type="button" onclick="quickExit()" aria-label="Quick exit — leaves this site immediately">
-    
+      <span class="floating-buttons__label">WhatsApp Us</span>
+    </a>
+    <button class="btn btn-crisis floating-buttons__action" type="button" onclick="quickExit()" aria-label="Quick exit — leaves this site immediately">
+      
 <iconify-icon icon="lucide:log-out" width="18" height="18" class="ui-icon" aria-hidden="true"></iconify-icon>
 
-    Quick Exit
+      <span class="floating-buttons__label">Quick Exit</span>
+    </button>
+  </div>
+  <button type="button" class="floating-buttons__fab" id="floatingSafetyFab" aria-expanded="false" aria-controls="floatingSafetyPanel" aria-haspopup="true" aria-label="Open or close WhatsApp and quick exit" onclick="toggleFloatingSafety(event)">
+    
+<iconify-icon icon="lucide:shield" width="22" height="22" class="ui-icon" aria-hidden="true"></iconify-icon>
+
+    <span class="floating-buttons__fab-text" aria-hidden="true">Safety</span>
   </button>
 </div>
 

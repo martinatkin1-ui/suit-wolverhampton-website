@@ -1,7 +1,7 @@
 <% layout('../admin/admin-layout') -%>
 
 <h2><%= post ? 'Edit' : 'New' %> Community Post</h2>
-<p class="admin-hint" style="margin-bottom: var(--space-lg);">Photos and videos appear in the timeline on <a href="/community" target="_blank" rel="noopener">In the Community</a>. Upload files here or paste a link (e.g. from <a href="/admin/gallery">Gallery</a>).</p>
+<p class="admin-hint" style="margin-bottom: var(--space-lg);">Photos and videos appear on <a href="/community" target="_blank" rel="noopener">In the Community</a> (upload or paste a URL, e.g. from <a href="/admin/gallery">Gallery</a>). <strong>Category</strong> sets the timeline filter. To drive a <strong>News &amp; More</strong> page header or section from this post, reference its <code class="nm-inline-mono">id</code> as <code class="nm-inline-mono">heroCommunityPostId</code> or <code class="nm-inline-mono">communityPostId</code> in <code class="nm-inline-mono">data/news-more.json</code>.</p>
 
 <form method="POST" action="/admin/community/save" enctype="multipart/form-data" class="admin-form">
   <%- include('../partials/admin-csrf') %>

@@ -42,7 +42,11 @@
           ],
           "links": [
             {
-              "label": "Announcements — timeline",
+              "label": "Announcements (site page)",
+              "href": "/announcements"
+            },
+            {
+              "label": "Announcements — community timeline",
               "href": "/community?cat=announcements#community-feed"
             },
             {
