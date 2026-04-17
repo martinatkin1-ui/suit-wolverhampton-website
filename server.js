@@ -833,9 +833,19 @@ app.get('/admin/login', async (req, res) => {
 
 app.post('/admin/login', async (req, res) => {
   const admin = await readJSON('admin.json');
-  if (!admin) return res.render('admin/login', { error: 'Admin account not configured' });
-  const match = await bcrypt.compare(req.body.password || '', admin.password);
-  if (req.body.username === admin.username && match) {
+  if (!admin) {
+    return res.render('admin/login', {
+      error:
+        'Admin not configured. Set ADMIN_INITIAL_PASSWORD on the host and redeploy, or run npm run admin:reset-password (see .env.example).'
+    });
+  }
+  if (!admin.password || typeof admin.password !== 'string') {
+    return res.render('admin/login', { error: 'Admin data is invalid. Reset the password with scripts/reset-admin-password.js' });
+  }
+  const userIn = String(req.body.username || '').trim().toLowerCase();
+  const userStored = String(admin.username || 'admin').trim().toLowerCase();
+  const match = await bcrypt.compare(String(req.body.password || ''), admin.password);
+  if (userIn === userStored && match) {
     req.session.regenerate((err) => {
       if (err) return res.render('admin/login', { error: 'Session error, try again' });
       req.session.admin = true;

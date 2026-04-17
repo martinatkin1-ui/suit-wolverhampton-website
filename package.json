@@ -15,7 +15,8 @@
     "start:only": "node server.js",
     "media:inventory": "node scripts/legacy-media-inventory.js",
     "media:inventory:seed": "node scripts/legacy-media-inventory.js --no-sitemap",
-    "db:seed": "node scripts/seed-cms-to-neon.js"
+    "db:seed": "node scripts/seed-cms-to-neon.js",
+    "admin:reset-password": "node scripts/reset-admin-password.js"
   },
   "keywords": [
     "suit",
