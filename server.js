@@ -319,6 +319,16 @@ const pgSessionStore = cms.getSessionStore(session);
 if (pgSessionStore) sessionOptions.store = pgSessionStore;
 app.use(session(sessionOptions));
 
+/** Vercel loads this module without awaiting startServer(); ensure admin exists before handling requests. */
+app.use(async (req, res, next) => {
+  try {
+    await ensureAdminReady();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.use((req, res, next) => {
   if (req.session && req.session.admin) {
     if (!req.session.csrfToken) {
@@ -355,6 +365,20 @@ app.use(async (req, res, next) => {
 
 /** Verify you are running THIS project (public — no auth; safe for uptime checks) */
 app.get('/__suit-health', async (req, res) => {
+  let adminProbe = { configured: false, username: null, hasBcryptHash: false };
+  try {
+    await ensureAdminReady();
+    const a = await readJSON('admin.json');
+    if (a && typeof a === 'object') {
+      adminProbe = {
+        configured: true,
+        username: a.username != null ? String(a.username) : null,
+        hasBcryptHash: typeof a.password === 'string' && a.password.trim().startsWith('$2')
+      };
+    }
+  } catch (e) {
+    adminProbe.error = e && e.message ? e.message : String(e);
+  }
   res.type('json').send(JSON.stringify({
     app: 'suit-wolverhampton-2026',
     serverFile: __filename,
@@ -362,6 +386,8 @@ app.get('/__suit-health', async (req, res) => {
     processCwd: process.cwd(),
     listenPort: PORT,
     cmsBackend: cms.cmsEnabled() ? 'neon' : 'filesystem',
+    sessionStore: pgSessionStore ? 'postgres' : 'memory',
+    admin: adminProbe,
     data: {
       culturalOutreachJson: fs.existsSync(path.join(DATA_DIR, 'cultural-outreach.json')),
       newsMoreJson: fs.existsSync(path.join(DATA_DIR, 'news-more.json')),
@@ -832,29 +858,43 @@ app.get('/admin/login', async (req, res) => {
 });
 
 app.post('/admin/login', async (req, res) => {
-  const admin = await readJSON('admin.json');
-  if (!admin) {
+  try {
+    await ensureAdminReady();
+    const admin = await readJSON('admin.json');
+    if (!admin) {
+      return res.render('admin/login', {
+        error:
+          'Admin not configured. Set ADMIN_INITIAL_PASSWORD on the host and redeploy, or run npm run admin:reset-password (see .env.example).'
+      });
+    }
+    const hash = typeof admin.password === 'string' ? admin.password.trim() : '';
+    if (!hash.startsWith('$2')) {
+      return res.render('admin/login', {
+        error: 'Admin password hash is missing or invalid. Run: npm run admin:reset-password'
+      });
+    }
+    const userIn = String(req.body.username || '').trim().toLowerCase();
+    const userStored = String(admin.username || 'admin').trim().toLowerCase();
+    const passwordOk = await bcrypt.compare(String(req.body.password || ''), hash);
+    if (userIn !== userStored || !passwordOk) {
+      return res.render('admin/login', { error: 'Invalid username or password' });
+    }
+
+    await new Promise((resolve, reject) => {
+      req.session.regenerate((err) => (err ? reject(err) : resolve()));
+    });
+    req.session.admin = true;
+    req.session.csrfToken = crypto.randomBytes(32).toString('hex');
+    await new Promise((resolve, reject) => {
+      req.session.save((err) => (err ? reject(err) : resolve()));
+    });
+    return res.redirect('/admin');
+  } catch (err) {
+    console.error('[admin/login]', err && err.message ? err.message : err);
     return res.render('admin/login', {
-      error:
-        'Admin not configured. Set ADMIN_INITIAL_PASSWORD on the host and redeploy, or run npm run admin:reset-password (see .env.example).'
+      error: 'Could not complete sign-in (session or database error). Check Vercel logs and DATABASE_URL.'
     });
   }
-  if (!admin.password || typeof admin.password !== 'string') {
-    return res.render('admin/login', { error: 'Admin data is invalid. Reset the password with scripts/reset-admin-password.js' });
-  }
-  const userIn = String(req.body.username || '').trim().toLowerCase();
-  const userStored = String(admin.username || 'admin').trim().toLowerCase();
-  const match = await bcrypt.compare(String(req.body.password || ''), admin.password);
-  if (userIn === userStored && match) {
-    req.session.regenerate((err) => {
-      if (err) return res.render('admin/login', { error: 'Session error, try again' });
-      req.session.admin = true;
-      req.session.csrfToken = crypto.randomBytes(32).toString('hex');
-      res.redirect('/admin');
-    });
-    return;
-  }
-  res.render('admin/login', { error: 'Invalid username or password' });
 });
 
 app.get('/admin/logout', async (req, res) => {
