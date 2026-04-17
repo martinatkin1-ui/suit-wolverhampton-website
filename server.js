@@ -12,9 +12,24 @@ const morgan = require('morgan');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
+const pageUpdatesLib = require('./lib/page-updates');
+const { getPageUpdates, loadRaw: loadPageUpdatesRaw } = pageUpdatesLib;
+const { parsePageUpdateExistingOrder } = require('./lib/parse-existing-order');
+const { parsePageUpdateLinks } = require('./lib/page-update-links');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+/** Canonical public origin (no trailing slash). Override in production with PUBLIC_SITE_URL. */
+const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://www.suitrecoverywolverhampton.com').replace(
+  /\/$/,
+  ''
+);
+/** Default meta keywords — recovery, addiction, alcohol, services; pages may override via pageKeywords. */
+const DEFAULT_SEO_KEYWORDS =
+  'addiction recovery Wolverhampton, alcohol help Wolverhampton, drug and alcohol support West Midlands, substance use recovery, peer mentoring addiction, lived experience recovery, LERO Wolverhampton, SMART Recovery Wolverhampton, harm reduction Wolverhampton, recovery near me, alcohol dependency support, drug addiction help free, dual diagnosis recovery, family affected by addiction, culturally sensitive addiction support, Punjabi Polish outreach recovery, SUIT WVCA, Paycare House Wolverhampton';
+app.locals.siteUrl = SITE_URL;
+app.locals.defaultSeoKeywords = DEFAULT_SEO_KEYWORDS;
 
 // ─── Paths ────────────────────────────────────────────
 const DATA_DIR = path.join(__dirname, 'data');
@@ -33,6 +48,24 @@ function readJSON(filename) {
 }
 function writeJSON(filename, data) {
   fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2), 'utf8');
+}
+
+function pageUpdateMediaFromUploadedFile(file) {
+  const base = file && file.filename ? file.filename : path.basename(file.path || '');
+  const url = '/uploads/page-updates/' + base.replace(/\\/g, '/');
+  const m = String((file && file.mimetype) || '');
+  let type = 'file';
+  if (m.startsWith('image/')) type = 'image';
+  else if (m.startsWith('video/')) type = 'video';
+  return { type, url, caption: '' };
+}
+
+/** Value for HTML datetime-local (local wall time). */
+function toDatetimeLocalValue(iso) {
+  const d = new Date(iso || Date.now());
+  if (Number.isNaN(d.getTime())) return '';
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 /** Safe shape for public /community when data file is missing or partial */
@@ -200,6 +233,9 @@ app.use((req, res, next) => {
   }
   res.locals.currentPath = req.path;
   res.locals.isAdmin = !!req.session.admin;
+  res.locals.siteUrl = SITE_URL;
+  res.locals.defaultSeoKeywords = DEFAULT_SEO_KEYWORDS;
+  res.locals.geo = readJSON('geo.json') || {};
   next();
 });
 
@@ -247,10 +283,26 @@ app.get('/', (req, res) => {
 
 // Get Help Now
 app.get('/get-help', (req, res) => {
+  const geo = res.locals.geo || readJSON('geo.json') || {};
+  const faqs = Array.isArray(geo.faqs) ? geo.faqs : [];
+  const faqStructuredData =
+    faqs.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqs.map((f) => ({
+            '@type': 'Question',
+            name: f.question,
+            acceptedAnswer: { '@type': 'Answer', text: f.answer }
+          }))
+        }
+      : null;
   res.render('pages/get-help', {
     pageTitle: 'Get Help Now',
-    pageDescription: 'Need help with addiction in Wolverhampton? Call SUIT on 01902 328983 or walk in to Paycare House. Free, confidential, lived experience support. No referral needed.',
-    pageCanonical: '/get-help'
+    pageDescription:
+      'Need help with addiction in Wolverhampton? Call SUIT on 01902 328983 or walk in to Paycare House. Free, confidential, lived experience support. No referral needed.',
+    pageCanonical: '/get-help',
+    faqStructuredData
   });
 });
 
@@ -292,8 +344,15 @@ app.get('/stories', (req, res) => {
 app.get('/stories/:id', (req, res) => {
   const stories = readJSON('stories.json') || [];
   const story = stories.find(s => s.id === req.params.id);
-  if (!story) return res.status(404).render('pages/404');
-  res.render('pages/story-single', { story });
+  if (!story) return res.status(404).render('pages/404', { noIndex: true });
+  const storyDesc = (story.excerpt || story.fullStory || '').replace(/\s+/g, ' ').trim().slice(0, 160);
+  res.render('pages/story-single', {
+    story,
+    pageTitle: `${story.name}'s story — addiction recovery, Wolverhampton`,
+    pageDescription: storyDesc || `Lived experience recovery story from SUIT Wolverhampton — ${story.title || ''}`,
+    pageCanonical: `/stories/${story.id}`,
+    pageKeywords: `${DEFAULT_SEO_KEYWORDS}, recovery story, lived experience`
+  });
 });
 
 // Our Timeline
@@ -318,6 +377,7 @@ app.get('/community', (req, res) => {
     community,
     culturalOutreach,
     posts,
+    pageUpdates: getPageUpdates('community', null),
     pageTitle: 'SUIT in the Community',
     pageDescription: 'Art, music, drama, events, and five years of SUIT making a difference in Wolverhampton. Exhibitions, conferences, PRIDE, performances, and community partnerships.',
     pageCanonical: '/community'
@@ -333,6 +393,7 @@ function renderCulturalOutreachHub(req, res) {
   }
   res.render('pages/cultural-outreach-hub', {
     outreach,
+    pageUpdates: getPageUpdates('outreach-hub', null),
     pageTitle: `${outreach.hubTitle || 'Cultural Outreach'} | SUIT`,
     pageDescription: outreach.hubIntro || 'Multilingual and culturally sensitive recovery outreach in Wolverhampton.',
     pageCanonical: '/community/outreach'
@@ -375,13 +436,15 @@ app.get('/community/outreach/:slug', (req, res) => {
   if (!programme || typeof programme !== 'object') {
     return res.status(404).render('pages/404', {
       pageTitle: 'Page not found',
-      pageCanonical: ''
+      pageCanonical: '',
+      noIndex: true
     });
   }
   res.render('pages/outreach-programme', {
     outreach,
     programme,
     slug,
+    pageUpdates: getPageUpdates('outreach', slug),
     pageTitle: `${programme.title} — Cultural Outreach | SUIT`,
     pageDescription: programme.heroLead,
     pageCanonical: `/community/outreach/${slug}`
@@ -395,6 +458,7 @@ app.get('/news-more', (req, res) => {
   }
   res.render('pages/news-more-hub', {
     nm,
+    pageUpdates: getPageUpdates('news-more-hub', null),
     pageTitle: nm.hubTitle || 'News & More',
     pageDescription: (nm.hubIntro || '').slice(0, 160),
     pageCanonical: '/news-more'
@@ -408,13 +472,15 @@ app.get('/news-more/:slug', (req, res) => {
   if (!page || typeof page !== 'object') {
     return res.status(404).render('pages/404', {
       pageTitle: 'Page not found',
-      pageCanonical: ''
+      pageCanonical: '',
+      noIndex: true
     });
   }
   res.render('pages/news-more-page', {
     nm,
     page,
     slug,
+    pageUpdates: getPageUpdates('news-more', slug),
     pageTitle: `${page.title} — ${nm.hubTitle || 'News & More'}`,
     pageDescription: (page.heroLead || '').slice(0, 160),
     pageCanonical: `/news-more/${slug}`
@@ -603,7 +669,7 @@ app.get('/sw.js', (req, res) => {
 
 // Sitemap.xml (SEO)
 app.get('/sitemap.xml', (req, res) => {
-  const baseUrl = 'https://www.suitrecoverywolverhampton.com';
+  const baseUrl = SITE_URL;
   const pages = [
     { url: '/', priority: '1.0', freq: 'weekly' },
     { url: '/get-help', priority: '0.9', freq: 'monthly' },
@@ -654,7 +720,9 @@ app.get('/sitemap.xml', (req, res) => {
 // Robots.txt (SEO)
 app.get('/robots.txt', (req, res) => {
   res.set('Content-Type', 'text/plain');
-  res.send(`User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: https://www.suitrecoverywolverhampton.com/sitemap.xml`);
+  res.send(
+    `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE_URL}/sitemap.xml`
+  );
 });
 
 // ═══════════════════════════════════════════════════════
@@ -1093,6 +1161,189 @@ app.post('/admin/community/page', requireAdmin, (req, res) => {
   res.redirect('/admin/community/page?saved=1');
 });
 
+// ─── PAGE UPDATES (timeline on community / outreach / news-more) ───
+app.get('/admin/page-updates', requireAdmin, (req, res) => {
+  const data = loadPageUpdatesRaw();
+  const categoryLabels = pageUpdatesLib.categoryLabelById();
+  const items = [...data.items]
+    .sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0))
+    .map((row) => ({
+      ...row,
+      categoryDisplay: pageUpdatesLib
+        .categoriesForAdminFormItem(row)
+        .map((cid) => categoryLabels[cid] || cid)
+        .join('; ')
+    }));
+  res.render('admin/page-updates-list', {
+    adminTitle: 'Page updates',
+    currentPath: '/admin/page-updates',
+    items,
+    query: req.query
+  });
+});
+
+app.get('/admin/page-updates/new', requireAdmin, (req, res) => {
+  const categoryGroups = pageUpdatesLib.groupCategoryDefinitionsForAdmin();
+  const validIds = new Set(pageUpdatesLib.buildUpdateCategoryDefinitions().map((d) => d.id));
+  let selectedCategories = [];
+  if (typeof req.query.c === 'string' && req.query.c.trim()) {
+    selectedCategories = req.query.c
+      .split(/[,+]/)
+      .map((s) => s.trim())
+      .filter((id) => validIds.has(id));
+  }
+  res.render('admin/page-updates-form', {
+    adminTitle: 'New page update',
+    currentPath: '/admin/page-updates',
+    item: null,
+    categoryGroups,
+    selectedCategories,
+    publishedLocal: toDatetimeLocalValue(),
+    error: null
+  });
+});
+
+app.get('/admin/page-updates/edit/:id', requireAdmin, (req, res) => {
+  const data = loadPageUpdatesRaw();
+  const item = data.items.find((i) => i.id === req.params.id);
+  if (!item) return res.redirect('/admin/page-updates');
+  const categoryGroups = pageUpdatesLib.groupCategoryDefinitionsForAdmin();
+  const linksText =
+    item.links && item.links.length
+      ? item.links.map((l) => (l.label && l.label !== l.href ? `${l.label}|${l.href}` : l.href)).join('\n')
+      : '';
+  res.render('admin/page-updates-form', {
+    adminTitle: 'Edit page update',
+    currentPath: '/admin/page-updates',
+    item: { ...item, linksText },
+    categoryGroups,
+    selectedCategories: pageUpdatesLib.categoriesForAdminFormItem(item),
+    publishedLocal: toDatetimeLocalValue(item.publishedAt),
+    error: null
+  });
+});
+
+app.get('/admin/page-updates/share/:id', requireAdmin, (req, res) => {
+  const data = loadPageUpdatesRaw();
+  const item = data.items.find((i) => i.id === req.params.id);
+  if (!item) return res.redirect('/admin/page-updates');
+  const { buildSocialSnippets } = require('./lib/social-formats');
+  const siteOrigin = (
+    process.env.PUBLIC_SITE_URL || `${req.protocol}://${req.get('host')}`
+  ).replace(/\/$/, '');
+  const snippets = buildSocialSnippets(item, { siteOrigin });
+  res.render('admin/page-updates-share', {
+    adminTitle: 'Share update',
+    currentPath: '/admin/page-updates',
+    item,
+    snippets,
+    siteOrigin
+  });
+});
+
+app.post('/admin/page-updates/save', requireAdmin, (req, res, next) => {
+  req.uploadDest = 'page-updates';
+  upload.array('mediaFiles', 30)(req, res, (err) => {
+    if (err) return next(err);
+    try {
+      const data = loadPageUpdatesRaw();
+      let categories = pageUpdatesLib.normalizeCategoryIdsFromBody(req.body);
+      if (!pageUpdatesLib.validateCategoryIds(categories)) {
+        return res
+          .status(400)
+          .send('Select at least one valid category (where this update should appear).');
+      }
+
+      const title = String(req.body.title || '').trim();
+      if (!title) return res.status(400).send('Title is required.');
+
+      const summary = String(req.body.summary || '').trim();
+      const bodyText = String(req.body.body || '').trim();
+      const publishedRaw = String(req.body.publishedAt || '').trim();
+      let publishedAt = publishedRaw
+        ? new Date(publishedRaw).toISOString()
+        : new Date().toISOString();
+      if (Number.isNaN(new Date(publishedAt).getTime())) publishedAt = new Date().toISOString();
+
+      const links = parsePageUpdateLinks(req.body.linksText);
+      const existingId = String(req.body.id || '').trim();
+      const id = existingId || uuidv4();
+
+      const media = [];
+      if (existingId) {
+        const prev = data.items.find((i) => i.id === existingId);
+        if (prev && Array.isArray(prev.media)) {
+          const order = parsePageUpdateExistingOrder(req.body.existingOrder, prev.media.length);
+          for (const idx of order) {
+            const m = prev.media[idx];
+            if (!m) continue;
+            const remove = req.body[`existing_${idx}_remove`];
+            if (remove === '1' || remove === 'on') {
+              const u = m && m.url;
+              if (u && u.startsWith('/uploads/page-updates/')) {
+                const fp = path.join(__dirname, 'public', u.replace(/^\//, ''));
+                if (fs.existsSync(fp)) try { fs.unlinkSync(fp); } catch (_) {}
+              }
+              continue;
+            }
+            const cap = String(req.body[`existing_${idx}_caption`] || '').trim();
+            media.push({
+              type: m.type || 'image',
+              url: m.url,
+              caption: cap || m.caption || m.alt || ''
+            });
+          }
+        }
+      }
+
+      const bulkCap = String(req.body.newMediaCaption || '').trim();
+      const files = req.files || [];
+      files.forEach((file) => {
+        const row = pageUpdateMediaFromUploadedFile(file);
+        row.caption = bulkCap;
+        media.push(row);
+      });
+
+      const entry = {
+        id,
+        categories,
+        title,
+        summary: summary || undefined,
+        body: bodyText || undefined,
+        publishedAt,
+        links: links.length ? links : undefined,
+        media: media.length ? media : undefined
+      };
+
+      const ix = data.items.findIndex((i) => i.id === id);
+      if (ix >= 0) data.items[ix] = entry;
+      else data.items.push(entry);
+
+      writeJSON('page-updates.json', data);
+      res.redirect('/admin/page-updates?saved=1');
+    } catch (e) {
+      next(e);
+    }
+  });
+});
+
+app.post('/admin/page-updates/delete/:id', requireAdmin, (req, res) => {
+  const data = loadPageUpdatesRaw();
+  const item = data.items.find((i) => i.id === req.params.id);
+  if (item && Array.isArray(item.media)) {
+    item.media.forEach((m) => {
+      const u = m && m.url;
+      if (u && u.startsWith('/uploads/page-updates/')) {
+        const fp = path.join(__dirname, 'public', u.replace(/^\//, ''));
+        if (fs.existsSync(fp)) try { fs.unlinkSync(fp); } catch (_) {}
+      }
+    });
+  }
+  data.items = data.items.filter((i) => i.id !== req.params.id);
+  writeJSON('page-updates.json', data);
+  res.redirect('/admin/page-updates');
+});
+
 app.post('/admin/messages/read/:id', requireAdmin, (req, res) => {
   const messages = readJSON('messages.json') || [];
   const msg = messages.find(m => m.id === req.params.id);
@@ -1354,7 +1605,7 @@ app.use((req, res, next) => {
 
 // ─── 404 ──────────────────────────────────────────────
 app.use((req, res) => {
-  res.status(404).render('pages/404');
+  res.status(404).render('pages/404', { noIndex: true });
 });
 
 // ─── START (only when run directly — allows `require('./server')` for prerender/tests) ─

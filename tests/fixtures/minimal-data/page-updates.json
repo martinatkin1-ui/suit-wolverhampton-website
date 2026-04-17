@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "id": "legacy-outreach",
+      "scope": "outreach",
+      "slug": "punjabi",
+      "title": "Legacy Punjabi post",
+      "publishedAt": "2019-06-01T12:00:00.000Z"
+    },
+    {
+      "id": "old-gallery",
+      "categories": ["nm:gallery"],
+      "title": "Gallery-only post",
+      "publishedAt": "2020-06-01T12:00:00.000Z"
+    },
+    {
+      "id": "mid-both",
+      "categories": ["nm:gallery", "c:general"],
+      "title": "Gallery and community",
+      "publishedAt": "2021-06-01T12:00:00.000Z"
+    },
+    {
+      "id": "new-announce",
+      "categories": ["nm:announcements"],
+      "title": "Announcements topic only",
+      "publishedAt": "2023-06-01T12:00:00.000Z"
+    }
+  ]
+}
