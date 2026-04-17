@@ -1,0 +1,114 @@
+[
+  {
+    "year": "2007",
+    "title": "SUIT is Founded",
+    "description": "The Service User Involvement Team is established in Wolverhampton in February 2007 as a project of WVCA (Wolverhampton Voluntary & Community Action), giving people with lived experience of addiction a voice and platform for peer-led support.",
+    "icon": "lucide:sprout",
+    "color": "green"
+  },
+  {
+    "year": "2014",
+    "title": "Queen's Award for Voluntary Services",
+    "description": "SUIT receives the prestigious Queen's Award for Voluntary Services, signed by Her Majesty the Queen, for \"training recovering addicts and empowering those that are suffering from addiction to move forward with their lives, contributing positively to themselves and society as a whole.\"",
+    "icon": "lucide:crown",
+    "color": "orange"
+  },
+  {
+    "year": "2018",
+    "title": "European Recognition — BeTrAd",
+    "description": "SUIT is recognised by the BeTrAd (EU) as a model of good practice for lived experience recovery support across Europe.",
+    "icon": "lucide:landmark",
+    "color": "cyan"
+  },
+  {
+    "year": "2019",
+    "title": "European Model of Good Practice — Street Support Project",
+    "description": "The Street Support Project (EU) recognises SUIT as a European Model of Good Practice in January 2019, placing Wolverhampton's recovery community on the international stage.",
+    "icon": "lucide:globe",
+    "color": "teal"
+  },
+  {
+    "year": "2018",
+    "title": "Partnership with Recovery Near You",
+    "description": "SUIT begins formally working alongside Recovery Near You, Wolverhampton's clinical treatment provider, combining lived experience with clinical treatment for optimum recovery outcomes.",
+    "icon": "lucide:handshake",
+    "color": "pink"
+  },
+  {
+    "year": "2020",
+    "title": "Cultural Engagement Programme Launches",
+    "description": "SUIT launches its cultural engagement programme, with Punjabi-speaking and Polish-speaking project workers joining the team to break down language barriers and reach diverse communities across Wolverhampton.",
+    "icon": "lucide:earth",
+    "color": "cyan"
+  },
+  {
+    "year": "2021",
+    "title": "Creative Arts & Research Programme",
+    "description": "SUIT establishes its Creative Arts & Research Lead role, embedding arts, drama, spoken word, and community art projects as core recovery pathways. Collaborations with Geese Theatre, Asylum Artist Quarter, and the Wolverhampton Literature Festival begin.",
+    "icon": "lucide:palette",
+    "color": "pink"
+  },
+  {
+    "year": "2022",
+    "title": "Hospital DALT Ward Peer Support",
+    "description": "SUIT establishes peer support presence on the Drug & Alcohol Liaison Team (DALT) ward at New Cross Hospital, bringing lived experience directly to patients with severe complications from alcohol and drugs.",
+    "icon": "lucide:hospital",
+    "color": "teal"
+  },
+  {
+    "year": "2023",
+    "title": "DDN National Conference Speakers",
+    "description": "SUIT staff present at the 15th DDN Conference at the National Motorcycle Museum, Birmingham. Marcus Johnson, Karolina Sowinska, and Christiane Jenkins share SUIT's innovative approach to national audiences. Featured in DDN Magazine.",
+    "icon": "lucide:mic-2",
+    "color": "orange"
+  },
+  {
+    "year": "2023",
+    "title": "CLERO Membership",
+    "description": "SUIT becomes a proud member of the College of Lived Experience Recovery Organisations (CLERO), connecting with other national LEROs and committing to government standards for peer-led support.",
+    "icon": "lucide:graduation-cap",
+    "color": "green"
+  },
+  {
+    "year": "2024",
+    "title": "Recovery Ambassador Programme",
+    "description": "SUIT launches its structured Recovery Ambassador Programme, a formal volunteering pathway that trains people in recovery as peer mentors with qualifications, regular supervisions, and career development support.",
+    "icon": "lucide:award",
+    "color": "orange"
+  },
+  {
+    "year": "2024",
+    "title": "Wolverhampton PRIDE Partnership",
+    "description": "SUIT attends Wolverhampton PRIDE alongside Recovery Near You, raising awareness of addiction support with colourful and creative outreach stalls celebrating inclusivity, identity, and freedom.",
+    "icon": "lucide:heart",
+    "color": "pink"
+  },
+  {
+    "year": "2025",
+    "title": "Favor UK National Recovery Conference",
+    "description": "SUIT delivers a memorable presentation at the Favor UK National Recovery Conference at Molineux Stadium, featuring immersive theatre, lived experience shares, and artwork by SUIT, Recovery Near You, and Good Shepherd clients.",
+    "icon": "lucide:theater",
+    "color": "teal"
+  },
+  {
+    "year": "2025",
+    "title": "National Recovery Walk — Wolverhampton",
+    "description": "Wolverhampton hosts the National Recovery Walk at West Park. The Favor UK event celebrates the unity, diversity, creativity, and strength of the recovery community, with SUIT at the heart of the organisation.",
+    "icon": "lucide:footprints",
+    "color": "green"
+  },
+  {
+    "year": "2025",
+    "title": "LEAG — Lived Experience Advisory Group",
+    "description": "SUIT establishes the Lived Experience Advisory Group (LEAG) — quarterly meetings ensuring service users' views are not just heard, but acted upon. The December LEAG at Molineux Stadium celebrates volunteer achievements in the Recovery Ambassador programme.",
+    "icon": "lucide:clipboard-list",
+    "color": "cyan"
+  },
+  {
+    "year": "2026",
+    "title": "Published in the British Library",
+    "description": "SUIT staff attend the British Library in London for the launch of \"Lived Experience Recovery Organisations\" co-authored by Dame Carol Black and Dr Ed Day. SUIT's chapter contribution is deposited in the National Archives, ensuring their work becomes part of Britain's permanent record.",
+    "icon": "lucide:library",
+    "color": "orange"
+  }
+]
