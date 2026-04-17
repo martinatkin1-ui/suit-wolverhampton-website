@@ -3,6 +3,7 @@ mcps/
 node_modules/
 .env
 .env.*
+!.env.example
 *.log
 npm-debug.log*
 .DS_Store
@@ -12,3 +13,6 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+data/admin.json
+data/messages.json

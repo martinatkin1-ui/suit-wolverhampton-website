@@ -16,16 +16,24 @@
     "media:inventory": "node scripts/legacy-media-inventory.js",
     "media:inventory:seed": "node scripts/legacy-media-inventory.js --no-sitemap"
   },
-  "keywords": ["suit", "wolverhampton", "recovery", "addiction", "peer-support"],
+  "keywords": [
+    "suit",
+    "wolverhampton",
+    "recovery",
+    "addiction",
+    "peer-support"
+  ],
   "author": "SUIT Wolverhampton / WVCA",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
     "ejs": "^4.0.1",
     "ejs-mate": "^4.0.0",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
     "express-session": "^1.19.0",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
