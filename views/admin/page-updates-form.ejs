@@ -1,0 +1,133 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1><%= item ? 'Edit' : 'New' %> page update</h1>
+  <a href="/admin/page-updates" class="btn btn-outline">Back to list</a>
+</div>
+
+<p class="admin-hint" style="margin-bottom: var(--space-lg);">
+  <strong>Announcements</strong> (<a href="/news-more/announcements" target="_blank" rel="noopener">public page</a>) lists <strong>every</strong> update. Tick the <strong>categories</strong> below so the same post also appears on those timelines (community, outreach programmes, News &amp; More topics). Newest first everywhere.
+</p>
+
+<form method="POST" action="/admin/page-updates/save" enctype="multipart/form-data" class="admin-form admin-form-page-update">
+  <% if (item && item.id) { %><input type="hidden" name="id" value="<%= item.id %>"><% } %>
+
+  <div class="admin-card" style="margin-bottom: var(--space-lg);">
+    <h3 style="margin-top: 0;">Where this appears *</h3>
+    <p style="color: var(--text-mid); font-size: 0.95rem;">Select one or more. Community rows all map to the main <a href="/community" target="_blank" rel="noopener">In the Community</a> timeline.</p>
+
+    <fieldset class="page-update-cat-fieldset">
+      <legend class="page-update-cat-legend">In the Community</legend>
+      <div class="page-update-cat-grid">
+        <% categoryGroups.community.forEach(function(d) { %>
+        <label class="page-update-cat-label">
+          <input type="checkbox" name="categories" value="<%= d.id %>" <%= selectedCategories.indexOf(d.id) >= 0 ? 'checked' : '' %>>
+          <%= d.label %>
+        </label>
+        <% }); %>
+      </div>
+    </fieldset>
+
+    <fieldset class="page-update-cat-fieldset">
+      <legend class="page-update-cat-legend">Cultural outreach</legend>
+      <div class="page-update-cat-grid">
+        <% categoryGroups.outreach.forEach(function(d) { %>
+        <label class="page-update-cat-label">
+          <input type="checkbox" name="categories" value="<%= d.id %>" <%= selectedCategories.indexOf(d.id) >= 0 ? 'checked' : '' %>>
+          <%= d.label %>
+        </label>
+        <% }); %>
+      </div>
+    </fieldset>
+
+    <fieldset class="page-update-cat-fieldset">
+      <legend class="page-update-cat-legend">News &amp; More</legend>
+      <div class="page-update-cat-grid">
+        <% categoryGroups.newsMore.forEach(function(d) { %>
+        <label class="page-update-cat-label">
+          <input type="checkbox" name="categories" value="<%= d.id %>" <%= selectedCategories.indexOf(d.id) >= 0 ? 'checked' : '' %>>
+          <%= d.label %>
+        </label>
+        <% }); %>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="publishedAt">Published *</label>
+      <input type="datetime-local" id="publishedAt" name="publishedAt" required value="<%= publishedLocal %>">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="title">Title *</label>
+    <input type="text" id="title" name="title" required value="<%= item ? item.title : '' %>" placeholder="Short headline">
+  </div>
+
+  <div class="form-group">
+    <label for="summary">Summary (optional)</label>
+    <input type="text" id="summary" name="summary" value="<%= item && item.summary ? item.summary : '' %>" placeholder="One line under the title">
+  </div>
+
+  <div class="form-group">
+    <label for="body">Body (optional)</label>
+    <textarea id="body" name="body" rows="8" placeholder="Main text. Blank line = new paragraph."><%= item && item.body ? item.body : '' %></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="linksText">Links (optional)</label>
+    <textarea id="linksText" name="linksText" rows="4" placeholder="One per line: https://example.org&#10;Or: Label|https://example.org"><%= item && item.linksText ? item.linksText : '' %></textarea>
+  </div>
+
+  <div class="form-group admin-page-update-media-group">
+    <label>Images &amp; video</label>
+    <p class="admin-hint admin-page-update-media-hint">
+      On the public <a href="/news-more/announcements" target="_blank" rel="noopener">Announcements</a> feed, the <strong>first</strong> file is the large cover; <strong>any more</strong> appear in a grid below the text. Community, outreach, and topic timelines still show the same files in order (stacked). Use <strong>Move up</strong> / <strong>Move down</strong> to set cover vs gallery order, then save.
+    </p>
+    <% if (item && item.media && item.media.length) { %>
+    <input type="hidden" name="existingOrder" id="existingOrder" value="">
+    <div class="admin-existing-media-feed" id="adminExistingMediaFeed" role="list" aria-label="Media in display order">
+      <% item.media.forEach(function(m, idx) { %>
+      <div class="admin-existing-media-row" data-orig-idx="<%= idx %>" role="listitem">
+        <div class="admin-existing-media-toolbar">
+          <span class="admin-media-role-badge" aria-live="polite">Cover — Announcements</span>
+          <div class="admin-existing-media-reorder">
+            <button type="button" class="btn btn-outline admin-media-move-up" aria-label="Move this file up in the list">Move up</button>
+            <button type="button" class="btn btn-outline admin-media-move-down" aria-label="Move this file down in the list">Move down</button>
+          </div>
+        </div>
+        <% if (m.type === 'video') { %>
+        <video class="admin-existing-media-preview" src="<%= m.url %>" controls muted playsinline preload="metadata"></video>
+        <% } else { %>
+        <img class="admin-existing-media-preview" src="<%= m.url %>" alt="">
+        <% } %>
+        <div class="admin-existing-media-fields">
+          <label for="existing_<%= idx %>_caption">Caption</label>
+          <input type="text" id="existing_<%= idx %>_caption" name="existing_<%= idx %>_caption" value="<%= m.caption || m.alt || '' %>">
+          <label class="admin-existing-media-remove-label">
+            <input type="checkbox" name="existing_<%= idx %>_remove" value="1"> Remove file
+          </label>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <% } %>
+  </div>
+
+  <div class="form-group">
+    <label for="mediaFiles">Add more images or video</label>
+    <input type="file" id="mediaFiles" name="mediaFiles" accept="image/*,video/*,.mp4,.webm,.mov" multiple>
+    <small class="admin-page-update-upload-note">New uploads are added <strong>after</strong> the files above. Images and MP4/WebM/MOV up to 100MB each; you can add several at once.</small>
+  </div>
+
+  <div class="form-group">
+    <label for="newMediaCaption">Caption for newly added files (optional)</label>
+    <input type="text" id="newMediaCaption" name="newMediaCaption" placeholder="Applied to all files uploaded in this save">
+  </div>
+
+  <div class="form-actions" style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.5rem;">
+    <button type="submit" class="btn btn-primary"><%= item ? 'Save changes' : 'Publish update' %></button>
+    <a href="/admin/page-updates" class="btn btn-outline">Cancel</a>
+  </div>
+</form>

@@ -1,0 +1,43 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Share: <%= item.title %></h1>
+  <a href="/admin/page-updates" class="btn btn-outline">Back to list</a>
+</div>
+
+<p class="admin-hint" style="margin-bottom: var(--space-lg);">
+  Public link (announcements anchor): <a href="<%= siteOrigin %>/news-more/announcements#update-<%= item.id %>" target="_blank" rel="noopener"><code><%= siteOrigin %>/news-more/announcements#update-<%= item.id %></code></a>.
+  Copy each block below into the matching platform. Auto-posting via APIs is not configured — use your own tools or paste manually.
+</p>
+
+<% var keys = Object.keys(snippets); %>
+<% keys.forEach(function(key) {
+  var s = snippets[key];
+%>
+<div class="admin-card page-update-share-card" data-share-key="<%= key %>">
+  <div style="display:flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+    <h3 style="margin:0;"><%= s.label %></h3>
+    <button type="button" class="btn btn-primary btn-copy-snippet" data-copy-target="snippet-<%= key %>">Copy text</button>
+  </div>
+  <p style="color: var(--text-mid); font-size: 0.9rem; margin: 0.5rem 0 0.75rem;"><%= s.hint %></p>
+  <textarea id="snippet-<%= key %>" class="page-update-share-textarea" readonly rows="8"><%= s.text %></textarea>
+</div>
+<% }); %>
+
+<script>
+document.querySelectorAll('.btn-copy-snippet').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var id = btn.getAttribute('data-copy-target');
+    var ta = document.getElementById(id);
+    if (!ta) return;
+    ta.select();
+    ta.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(ta.value).then(function() {
+      btn.textContent = 'Copied!';
+      setTimeout(function() { btn.textContent = 'Copy text'; }, 2000);
+    }).catch(function() {
+      btn.textContent = 'Select & Ctrl+C';
+    });
+  });
+});
+</script>

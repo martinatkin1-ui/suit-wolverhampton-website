@@ -176,3 +176,7 @@
   <blockquote>"<%= content.quote.text %>"</blockquote>
   <cite>— <%= content.quote.author %></cite>
 </section>
+
+<section class="section section-alt geo-in-brief-wrap">
+  <%- include('partials/geo-answer-first', { text: geo && geo.answerFirst && geo.answerFirst.home }) %>
+</section>

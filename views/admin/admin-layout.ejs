@@ -27,6 +27,7 @@
         <a href="/admin/stories" class="<%= currentPath === '/admin/stories' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:sunrise', size: 18 }) %> Stories</a>
         <a href="/admin/team" class="<%= currentPath === '/admin/team' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:users', size: 18 }) %> Team</a>
         <a href="/admin/community" class="<%= currentPath.startsWith('/admin/community') ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:palette', size: 18 }) %> Community Posts</a>
+        <a href="/admin/page-updates" class="<%= currentPath.startsWith('/admin/page-updates') ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:newspaper', size: 18 }) %> Page updates (timeline)</a>
         <div class="admin-nav-label">Inbox &amp; media</div>
         <a href="/admin/gallery" class="<%= currentPath === '/admin/gallery' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:image', size: 18 }) %> Gallery / Media</a>
         <a href="/admin/messages" class="<%= currentPath === '/admin/messages' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:mail', size: 18 }) %> Messages</a>

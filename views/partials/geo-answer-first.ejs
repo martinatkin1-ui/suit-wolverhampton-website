@@ -1,0 +1,8 @@
+<% if (typeof text !== 'undefined' && text && String(text).trim()) { %>
+<details class="geo-answer-first geo-answer-first--collapsible" id="citation-summary">
+  <summary class="geo-answer-first__summary">In brief — key facts (click to expand)</summary>
+  <div class="geo-answer-first__body">
+    <p class="geo-answer-first__text"><%= String(text).trim() %></p>
+  </div>
+</details>
+<% } %>
