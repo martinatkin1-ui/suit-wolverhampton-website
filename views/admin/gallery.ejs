@@ -1,0 +1,61 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Gallery & Media</h1>
+  <p style="color: var(--text-mid);">Upload photos and videos to use across the website.</p>
+</div>
+
+<!-- Upload Form -->
+<div class="admin-card">
+  <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:upload', size: 22 }) %> Upload New Media</h3>
+  <form method="POST" action="/admin/gallery/upload" enctype="multipart/form-data">
+    <div class="file-upload-area" onclick="document.getElementById('galleryFiles').click()">
+      <p style="margin-bottom: 0.5rem; display:flex; justify-content:center;"><%- include('../partials/icon', { name: 'lucide:folder-open', size: 40 }) %></p>
+      <p><strong>Click to upload</strong> photos or videos</p>
+      <p style="font-size: 0.85rem;">JPG, PNG, GIF, WebP, MP4, WebM, MOV — Max 100MB per file</p>
+      <input type="file" id="galleryFiles" name="galleryFiles" multiple accept="image/*,video/*" onchange="this.form.submit()">
+    </div>
+  </form>
+</div>
+
+<!-- Gallery Grid -->
+<div class="admin-card">
+  <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:image', size: 22 }) %> Uploaded Media (<%= files.length %> files)</h3>
+  <% if (files.length === 0) { %>
+    <p style="color: var(--text-mid);">No media uploaded yet.</p>
+  <% } else { %>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-top: 1rem;">
+      <% files.forEach(function(file) { %>
+      <div style="position: relative; border-radius: var(--radius-sm); overflow: hidden; box-shadow: 0 2px 8px var(--card-shadow);">
+        <% if (file.isVideo) { %>
+          <video src="<%= file.url %>" style="width: 100%; height: 140px; object-fit: cover; display: block;" muted></video>
+          <div style="position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; display:inline-flex;align-items:center;gap:0.25rem;"><%- include('../partials/icon', { name: 'lucide:video', size: 12 }) %> Video</div>
+        <% } else { %>
+          <img src="<%= file.url %>" style="width: 100%; height: 140px; object-fit: cover; display: block;" alt="<%= file.name %>">
+        <% } %>
+        <div style="padding: 0.5rem; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg);">
+          <span style="font-size: 0.75rem; color: var(--text-mid); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px;"
+            title="<%= file.url %>">
+            <%= file.name %>
+          </span>
+          <form method="POST" action="/admin/gallery/delete" style="display: inline;">
+            <input type="hidden" name="filename" value="<%= file.name %>">
+            <button type="submit" style="background: none; border: none; color: var(--color-crisis); cursor: pointer; font-size: 1rem; line-height:0;" onclick="return confirm('Delete this file?')" title="Delete"><%- include('../partials/icon', { name: 'lucide:trash-2', size: 18 }) %></button>
+          </form>
+        </div>
+        <button type="button" onclick="copyUrl('<%= file.url %>')" style="width: 100%; padding: 0.4rem; border: none; background: var(--bg-warm); cursor: pointer; font-size: 0.75rem; color: var(--text-mid); display:inline-flex;align-items:center;justify-content:center;gap:0.3rem;">
+          <%- include('../partials/icon', { name: 'lucide:copy', size: 14 }) %> Copy URL
+        </button>
+      </div>
+      <% }); %>
+    </div>
+  <% } %>
+</div>
+
+<script>
+function copyUrl(url) {
+  navigator.clipboard.writeText(url).then(() => {
+    alert('URL copied: ' + url);
+  });
+}
+</script>

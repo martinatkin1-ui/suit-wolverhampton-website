@@ -1,0 +1,57 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Messages</h1>
+  <p style="color: var(--text-mid);">Contact form submissions from people visiting the website.</p>
+</div>
+
+<div class="admin-card">
+  <% if (messages.length === 0) { %>
+    <p style="color: var(--text-mid); padding: 1rem 0;">No messages yet.</p>
+  <% } else { %>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Contact</th>
+          <th>Message</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% messages.slice().reverse().forEach(function(msg) { %>
+        <tr style="<%= !msg.read ? 'background: rgba(247,148,29,0.05);' : '' %>">
+          <td>
+            <% if (msg.read) { %>
+              <span style="color: var(--brand-green); display:inline-flex;" title="Read"><%- include('../partials/icon', { name: 'lucide:check', size: 18 }) %></span>
+            <% } else { %>
+              <span style="color: var(--brand-orange); font-weight: 700; display:inline-flex;align-items:center;gap:0.25rem;"><%- include('../partials/icon', { name: 'lucide:circle', size: 10, iconStyle: 'fill: currentColor' }) %> NEW</span>
+            <% } %>
+          </td>
+          <td><strong><%= msg.name %></strong></td>
+          <td><%= msg.type %></td>
+          <td>
+            <% if (msg.phone) { %><a href="tel:<%= msg.phone %>" style="display:inline-flex;align-items:center;gap:0.25rem;"><%- include('../partials/icon', { name: 'lucide:phone', size: 14 }) %> <%= msg.phone %></a><br><% } %>
+            <% if (msg.email) { %><a href="mailto:<%= msg.email %>" style="display:inline-flex;align-items:center;gap:0.25rem;"><%- include('../partials/icon', { name: 'lucide:mail', size: 14 }) %> <%= msg.email %></a><% } %>
+          </td>
+          <td style="max-width: 300px;"><%= msg.message.substring(0, 100) %><%= msg.message.length > 100 ? '…' : '' %></td>
+          <td><%= new Date(msg.date).toLocaleDateString('en-GB') %></td>
+          <td class="admin-actions" style="flex-direction: column;">
+            <% if (!msg.read) { %>
+            <form method="POST" action="/admin/messages/read/<%= msg.id %>" style="display: inline;">
+              <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; display:inline-flex;align-items:center;gap:0.3rem;"><%- include('../partials/icon', { name: 'lucide:check', size: 14 }) %> Mark Read</button>
+            </form>
+            <% } %>
+            <form method="POST" action="/admin/messages/delete/<%= msg.id %>" style="display: inline;">
+              <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; color: var(--color-crisis); border-color: var(--color-crisis);" onclick="return confirm('Delete this message?')" title="Delete"><%- include('../partials/icon', { name: 'lucide:trash-2', size: 16 }) %></button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</div>

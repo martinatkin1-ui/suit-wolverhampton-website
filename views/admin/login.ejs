@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in | SUIT Content Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <%- include('../partials/iconify') %>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <div class="sunrise-icon" style="margin-bottom: 1rem;"><%- include('../partials/icon', { name: 'lucide:sun', size: 48 }) %></div>
+      <h1>Content Manager</h1>
+      <p>Sign in to update the SUIT Wolverhampton website. Layout and design stay fixed — you edit text, images, and schedules.</p>
+
+      <% if (error) { %>
+        <div class="login-error"><%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/admin/login">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required autofocus>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-cta" style="width: 100%; margin-top: 0.5rem;">Log In</button>
+      </form>
+
+      <p style="margin-top: 2rem; font-size: 0.8rem; color: var(--text-light);">
+        Forgot your password? Contact your website administrator.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
