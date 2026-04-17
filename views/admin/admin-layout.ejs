@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof adminTitle !== 'undefined' ? adminTitle + ' | ' : '' %>SUIT Content Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <%- include('../partials/iconify') %>
+</head>
+<body>
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <h2 style="display:flex;align-items:center;gap:0.5rem;"><%- include('../partials/icon', { name: 'lucide:sun', size: 22 }) %> Content Manager</h2>
+      <nav>
+        <a href="/admin" class="<%= currentPath === '/admin' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:layout-dashboard', size: 18 }) %> Dashboard</a>
+        <div class="admin-nav-label">Website pages</div>
+        <a href="/admin/content" class="<%= currentPath === '/admin/content' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:file-pen-line', size: 18 }) %> Homepage &amp; contact</a>
+        <a href="/admin/services" class="<%= currentPath === '/admin/services' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:handshake', size: 18 }) %> Services grid</a>
+        <a href="/admin/timetable" class="<%= currentPath === '/admin/timetable' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:calendar', size: 18 }) %> Timetable</a>
+        <a href="/admin/timeline" class="<%= currentPath === '/admin/timeline' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:history', size: 18 }) %> Timeline — milestones</a>
+        <a href="/admin/timeline-culture" class="<%= currentPath === '/admin/timeline-culture' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:images', size: 18 }) %> Timeline — photos</a>
+        <a href="/admin/programmes" class="<%= currentPath.startsWith('/admin/programmes') ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:layout-grid', size: 18 }) %> Programme details</a>
+        <div class="admin-nav-label">Stories &amp; people</div>
+        <a href="/admin/stories" class="<%= currentPath === '/admin/stories' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:sunrise', size: 18 }) %> Stories</a>
+        <a href="/admin/team" class="<%= currentPath === '/admin/team' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:users', size: 18 }) %> Team</a>
+        <a href="/admin/community" class="<%= currentPath.startsWith('/admin/community') ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:palette', size: 18 }) %> Community Posts</a>
+        <div class="admin-nav-label">Inbox &amp; media</div>
+        <a href="/admin/gallery" class="<%= currentPath === '/admin/gallery' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:image', size: 18 }) %> Gallery / Media</a>
+        <a href="/admin/messages" class="<%= currentPath === '/admin/messages' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:mail', size: 18 }) %> Messages</a>
+        <div class="admin-nav-label">Account</div>
+        <a href="/admin/settings" class="<%= currentPath === '/admin/settings' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:settings', size: 18 }) %> Settings</a>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 1rem 0;">
+        <a href="/" target="_blank" rel="noopener"><%- include('../partials/icon', { name: 'lucide:globe', size: 18 }) %> View Website</a>
+        <a href="/admin/logout"><%- include('../partials/icon', { name: 'lucide:log-out', size: 18 }) %> Log Out</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="admin-main">
+      <%- body -%>
+    </div>
+
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
