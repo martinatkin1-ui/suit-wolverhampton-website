@@ -1,0 +1,25 @@
+version: "2"
+
+language: en-US
+
+reviews:
+  profile: chill
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+  path_filters:
+    - "!public/**/*.html"
+    - "!public/uploads/**"
+    - "!public/images/**"
+    - "!scripts/legacy-urls.json"
+    - "!data/legacy-media-manifest.json"
+    - "!package-lock.json"
+    - "!node_modules/**"
+  finishing_touches:
+    docstrings:
+      enabled: false
+
+chat:
+  auto_reply: true
