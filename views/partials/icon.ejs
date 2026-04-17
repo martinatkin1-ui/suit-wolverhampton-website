@@ -1,0 +1,8 @@
+<% 
+  var w = typeof size !== 'undefined' ? size : 20;
+  var h = typeof height !== 'undefined' ? height : w;
+  var klass = 'ui-icon' + (typeof cls !== 'undefined' ? ' ' + cls : '');
+  var st = typeof iconStyle !== 'undefined' ? iconStyle : '';
+  var ah = typeof ariaHidden !== 'undefined' ? ariaHidden : true;
+%>
+<iconify-icon icon="<%= name %>" width="<%= w %>" height="<%= h %>" class="<%= klass %>"<% if (st) { %> style="<%= st %>"<% } %><% if (ah) { %> aria-hidden="true"<% } %>></iconify-icon>

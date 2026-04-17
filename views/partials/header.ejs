@@ -1,0 +1,52 @@
+<!-- Sticky Header -->
+<header class="site-header" role="banner">
+  <a href="/" class="logo-link" aria-label="SUIT Wolverhampton Home">
+    <img src="/images/suit-logo.webp" alt="SUIT Logo — Service User Involvement Team, a project of WVCA">
+    <div class="logo-text">
+      SUIT
+      <span>Service User Involvement Team</span>
+    </div>
+  </a>
+
+  <nav class="main-nav" role="navigation" aria-label="Main navigation">
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a></li>
+      <li><a href="/services" class="<%= currentPath === '/services' ? 'active' : '' %>">How We Help</a></li>
+      <li><a href="/timetable" class="<%= currentPath === '/timetable' ? 'active' : '' %>">The Timetable</a></li>
+      <li><a href="/community" class="<%= currentPath === '/community' || (currentPath && currentPath.startsWith('/community/outreach')) ? 'active' : '' %>">In the Community</a></li>
+      <li><a href="/stories" class="<%= currentPath === '/stories' ? 'active' : '' %>">Stories of Hope</a></li>
+      <li><a href="/timeline" class="<%= currentPath === '/timeline' ? 'active' : '' %>">Our Timeline</a></li>
+      <% var nmNav = (typeof newsMoreNavCards !== 'undefined' && newsMoreNavCards && newsMoreNavCards.length) ? newsMoreNavCards : []; %>
+      <% if (nmNav.length) { %>
+      <li class="nav-item--dropdown">
+        <a href="/news-more" class="<%= currentPath && currentPath.startsWith('/news-more') ? 'active' : '' %>">News &amp; More</a>
+        <div class="nav-dropdown-panel" role="region" aria-label="News and more sections">
+          <div class="nav-dropdown-grid">
+            <% nmNav.forEach(function(c) { %>
+            <a href="/news-more/<%= c.slug %>" class="nav-dd-card">
+              <span class="nav-dd-card-icon" aria-hidden="true"><%- include('partials/icon', { name: c.icon, size: 22 }) %></span>
+              <span class="nav-dd-card-text">
+                <span class="nav-dd-card-title"><%= c.title %></span>
+                <span class="nav-dd-card-desc"><%= c.description %></span>
+              </span>
+            </a>
+            <% }); %>
+          </div>
+          <a href="/news-more" class="nav-dd-all">Browse all topics →</a>
+        </div>
+      </li>
+      <% } else { %>
+      <li><a href="/news-more" class="<%= currentPath && currentPath.startsWith('/news-more') ? 'active' : '' %>">News &amp; More</a></li>
+      <% } %>
+      <li><a href="/about" class="<%= currentPath === '/about' ? 'active' : '' %>">About the SUIT Family</a></li>
+      <li><a href="/socials" class="<%= currentPath === '/socials' ? 'active' : '' %>">Follow Us</a></li>
+    </ul>
+    <div class="nav-cta-group">
+      <a href="/contact" class="btn btn-outline" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">Contact Us</a>
+      <a href="/get-help" class="btn btn-cta" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">GET HELP NOW</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
