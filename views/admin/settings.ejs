@@ -1,0 +1,32 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Account Settings</h1>
+  <p style="color: var(--text-mid);">Change your admin login credentials.</p>
+</div>
+
+<% if (saved) { %>
+  <div class="toast success">Password updated successfully!</div>
+<% } %>
+<% if (error) { %>
+  <div class="toast error"><%= error %></div>
+<% } %>
+
+<div class="admin-card" style="max-width: 500px;">
+  <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:lock', size: 22 }) %> Change Password</h3>
+  <form method="POST" action="/admin/settings" class="admin-form">
+    <div class="form-group">
+      <label for="newUsername">Username (leave blank to keep current)</label>
+      <input type="text" id="newUsername" name="newUsername" placeholder="Current username">
+    </div>
+    <div class="form-group">
+      <label for="currentPassword">Current Password *</label>
+      <input type="password" id="currentPassword" name="currentPassword" required>
+    </div>
+    <div class="form-group">
+      <label for="newPassword">New Password * (min 6 characters)</label>
+      <input type="password" id="newPassword" name="newPassword" required minlength="6">
+    </div>
+    <button type="submit" class="btn btn-cta">Update Password</button>
+  </form>
+</div>
