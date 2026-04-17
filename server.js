@@ -17,6 +17,11 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+/* Behind Vercel / other reverse proxies: needed for secure cookies, rate limits, req.ip */
+if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // ─── Paths ────────────────────────────────────────────
 const DATA_DIR = path.join(__dirname, 'data');
 const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
@@ -136,12 +141,20 @@ function loadLegacyRedirectMap() {
 
 const LEGACY_REDIRECT_MAP = loadLegacyRedirectMap();
 
-// Create default admin account if not exists
+// Create default admin account if not exists (skip if filesystem is read-only, e.g. some serverless mounts)
 const ADMIN_FILE = path.join(DATA_DIR, 'admin.json');
 if (!fs.existsSync(ADMIN_FILE)) {
-  const initialPw = process.env.ADMIN_INITIAL_PASSWORD || 'ChangeMe!2026';
-  const hash = bcrypt.hashSync(initialPw, 10);
-  writeJSON('admin.json', { username: 'admin', password: hash });
+  try {
+    const initialPw = process.env.ADMIN_INITIAL_PASSWORD || 'ChangeMe!2026';
+    const hash = bcrypt.hashSync(initialPw, 10);
+    writeJSON('admin.json', { username: 'admin', password: hash });
+  } catch (err) {
+    console.warn(
+      '[admin] Could not create data/admin.json:',
+      err && err.message ? err.message : err,
+      '— commit admin.json in repo or use a writable data store.'
+    );
+  }
 }
 
 // ─── Multer (File Uploads) ────────────────────────────
@@ -198,8 +211,18 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
+const sessionSecret =
+  process.env.SESSION_SECRET ||
+  (process.env.NODE_ENV !== 'production'
+    ? 'dev-only-insecure-session-secret'
+    : 'insecure-fallback-set-SESSION_SECRET-in-vercel');
+if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
+  console.error(
+    '[config] SESSION_SECRET is not set. Admin sessions are insecure. Vercel → Settings → Environment Variables → add SESSION_SECRET (long random string) for Production, Preview, and Build.'
+  );
+}
 app.use(session({
-  secret: process.env.SESSION_SECRET || (() => { throw new Error('SESSION_SECRET env var is required'); })(),
+  secret: sessionSecret,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -228,8 +251,8 @@ app.use((req, res, next) => {
   next();
 });
 
-/** Verify you are running THIS project: open http://localhost:PORT/__suit-health */
-app.get('/__suit-health', requireAdmin, (req, res) => {
+/** Verify you are running THIS project (public — no auth; safe for uptime checks) */
+app.get('/__suit-health', (req, res) => {
   res.type('json').send(JSON.stringify({
     app: 'suit-wolverhampton-2026',
     serverFile: __filename,
