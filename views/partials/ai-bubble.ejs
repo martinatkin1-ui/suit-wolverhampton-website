@@ -1,0 +1,19 @@
+<!-- AI Signposting Chat Bubble -->
+<div class="ai-bubble">
+  <button type="button" class="ai-bubble-toggle" onclick="toggleAIChat()" aria-label="Open SUIT guide"><%- include('partials/icon', { name: 'lucide:messages-square', size: 22 }) %></button>
+  <div class="ai-chat-popup" id="aiChat">
+    <div class="ai-chat-header">
+      <span style="display:inline-flex;align-items:center;gap:0.35rem;"><%- include('partials/icon', { name: 'lucide:circle-help', size: 18 }) %> Hi, I'm the SUIT Guide</span>
+      <button type="button" onclick="toggleAIChat()" style="float:right; background:none; border:none; color:#fff; cursor:pointer; font-size:1.2rem; line-height:0; padding:0.25rem;" aria-label="Close"><%- include('partials/icon', { name: 'lucide:x', size: 20 }) %></button>
+    </div>
+    <div class="ai-chat-body">
+      <p>Are you looking for support for yourself, or a loved one?</p>
+    </div>
+    <div class="ai-chat-options">
+      <button type="button" onclick="aiRespond('self')">I need support for myself</button>
+      <button type="button" onclick="aiRespond('loved')">I'm worried about someone</button>
+      <button type="button" onclick="aiRespond('timetable')">What's on today?</button>
+      <button type="button" onclick="aiRespond('crisis')">I'm in crisis right now</button>
+    </div>
+  </div>
+</div>
