@@ -1,0 +1,91 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Edit Website Content</h1>
+  <p style="color: var(--text-mid);">Change text, phone numbers, and key messages across the site.</p>
+</div>
+
+<% if (saved) { %>
+  <div class="toast success">Content saved successfully!</div>
+<% } %>
+
+<form method="POST" action="/admin/content" class="admin-form">
+
+  <!-- Hero Section -->
+  <div class="admin-card">
+    <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:house', size: 22 }) %> Homepage Hero</h3>
+    <div class="form-group">
+      <label for="heroHeadline">Main Headline</label>
+      <input type="text" id="heroHeadline" name="heroHeadline" value="<%= content.hero.headline %>">
+    </div>
+    <div class="form-group">
+      <label for="heroSubheadline">Sub-headline</label>
+      <textarea id="heroSubheadline" name="heroSubheadline" rows="3"><%= content.hero.subheadline %></textarea>
+    </div>
+  </div>
+
+  <!-- Impact Stats -->
+  <div class="admin-card">
+    <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:bar-chart-2', size: 22 }) %> Impact Banner</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="impactStat">Big Number (e.g. "800+")</label>
+        <input type="text" id="impactStat" name="impactStat" value="<%= content.impact.stat %>">
+      </div>
+      <div class="form-group">
+        <label for="impactText">Supporting Text</label>
+        <input type="text" id="impactText" name="impactText" value="<%= content.impact.text %>">
+      </div>
+    </div>
+  </div>
+
+  <!-- Quote -->
+  <div class="admin-card">
+    <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:message-circle', size: 22 }) %> Quote Section</h3>
+    <div class="form-group">
+      <label for="quoteText">Quote Text</label>
+      <textarea id="quoteText" name="quoteText" rows="3"><%= content.quote.text %></textarea>
+    </div>
+    <div class="form-group">
+      <label for="quoteAuthor">Quote Author</label>
+      <input type="text" id="quoteAuthor" name="quoteAuthor" value="<%= content.quote.author %>">
+    </div>
+  </div>
+
+  <!-- Contact Details -->
+  <div class="admin-card">
+    <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:phone', size: 22 }) %> Contact Information</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="sitePhone">Phone Number</label>
+        <input type="text" id="sitePhone" name="sitePhone" value="<%= content.site.phone %>">
+      </div>
+      <div class="form-group">
+        <label for="siteEmail">Email Address</label>
+        <input type="email" id="siteEmail" name="siteEmail" value="<%= content.site.email %>">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="siteAddress">Address</label>
+      <input type="text" id="siteAddress" name="siteAddress" value="<%= content.site.address %>">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="siteWhatsapp">WhatsApp Link</label>
+        <input type="url" id="siteWhatsapp" name="siteWhatsapp" value="<%= content.site.whatsapp %>">
+      </div>
+      <div class="form-group">
+        <label for="siteFacebook">Facebook URL</label>
+        <input type="url" id="siteFacebook" name="siteFacebook" value="<%= content.site.facebook %>">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="siteInstagram">Instagram URL</label>
+      <input type="url" id="siteInstagram" name="siteInstagram" value="<%= content.site.instagram %>">
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-cta" style="font-size: 1.1rem; padding: 1rem 2.5rem; display:inline-flex;align-items:center;gap:0.45rem;">
+    <%- include('../partials/icon', { name: 'lucide:save', size: 20 }) %> Save All Changes
+  </button>
+</form>
