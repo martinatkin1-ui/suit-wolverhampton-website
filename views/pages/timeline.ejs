@@ -1,0 +1,120 @@
+<% layout('layout') -%>
+
+<section class="hero">
+  <h1>Our <em>Timeline</em></h1>
+  <p class="hero-sub">From a small community project in 2007 to a nationally recognised Lived Experience Recovery Organisation. This is our journey — with a glimpse of the creativity that runs through it.</p>
+  <div class="hero-buttons">
+    <a href="#timeline-culture" class="btn btn-cta">Art, drama &amp; music</a>
+    <a href="#timeline-milestones" class="btn btn-outline">Jump to milestones</a>
+  </div>
+</section>
+
+<% if (timelineCulture && timelineCulture.pillars && timelineCulture.pillars.length) { %>
+<section class="section section-alt" id="timeline-culture">
+  <div class="section-header">
+    <h2><%= timelineCulture.heading %></h2>
+    <p><%= timelineCulture.subheading %></p>
+  </div>
+  <div class="timeline-culture-grid">
+    <% timelineCulture.pillars.forEach(function(p) { %>
+    <article class="card timeline-culture-pillar <%= p.cardClass %>">
+      <span class="card-icon" aria-hidden="true"><%- include('partials/icon', { name: p.icon, size: 28 }) %></span>
+      <h3><%= p.title %></h3>
+      <p class="timeline-culture-caption"><%= p.caption %></p>
+      <% if (p.sourceNote) { %>
+      <p class="timeline-culture-source"><%= p.sourceNote %></p>
+      <% } %>
+      <% if (p.youtubeId) { %>
+      <div class="timeline-culture-video">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/<%= p.youtubeId %>"
+          title="<%= (p.youtubeTitle || p.title + ' video').replace(/"/g, '&quot;') %>"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <% } %>
+      <div class="timeline-culture-strip" role="list">
+        <% (p.images || []).forEach(function(img) { %>
+        <a class="timeline-culture-thumb" href="<%= img.src %>" target="_blank" rel="noopener noreferrer" role="listitem">
+          <img src="<%= img.src %>" alt="<%= img.alt.replace(/"/g, '&quot;') %>" loading="lazy" width="280" height="200">
+        </a>
+        <% }); %>
+      </div>
+    </article>
+    <% }); %>
+  </div>
+  <% if (timelineCulture.credit) { %>
+  <p class="timeline-culture-credit text-center mt-lg"><%= timelineCulture.credit %></p>
+  <% } %>
+</section>
+<% } %>
+
+<!-- Timeline -->
+<section class="section timeline-section" id="timeline-milestones">
+  <div class="section-header">
+    <h2>Milestones</h2>
+    <p>Key moments in SUIT’s growth and recognition.</p>
+  </div>
+  <div class="timeline-container">
+    <div class="timeline-line"></div>
+    <% timeline.forEach(function(item, index) { %>
+    <div class="timeline-item <%= index % 2 === 0 ? 'left' : 'right' %>" data-year="<%= item.year %>">
+      <div class="timeline-dot color-<%= item.color %>"></div>
+      <div class="timeline-content card-<%= item.color %>">
+        <span class="timeline-year"><%= item.year %></span>
+        <span class="timeline-icon"><%- include('partials/icon', { name: item.icon, size: 26 }) %></span>
+        <h3><%= item.title %></h3>
+        <p><%= item.description %></p>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</section>
+
+<!-- Partners -->
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>Our Partners & Affiliations</h2>
+    <p>SUIT works alongside these incredible organisations to deliver comprehensive recovery support.</p>
+  </div>
+  <div class="partners-grid">
+    <a href="https://www.wvca.org.uk/" target="_blank" rel="noopener" class="partner-card">
+      <span class="partner-icon"><%- include('partials/icon', { name: 'lucide:building-2', size: 40 }) %></span>
+      <strong>WVCA</strong>
+      <p>Wolverhampton Voluntary & Community Action — SUIT's host charity</p>
+    </a>
+    <a href="https://www.recoverynearyou.org.uk/" target="_blank" rel="noopener" class="partner-card">
+      <span class="partner-icon"><%- include('partials/icon', { name: 'lucide:pill', size: 40 }) %></span>
+      <strong>Recovery Near You</strong>
+      <p>Wolverhampton's clinical treatment provider</p>
+    </a>
+    <a href="https://www.clero.co.uk/" target="_blank" rel="noopener" class="partner-card">
+      <span class="partner-icon"><%- include('partials/icon', { name: 'lucide:graduation-cap', size: 40 }) %></span>
+      <strong>CLERO</strong>
+      <p>College of Lived Experience Recovery Organisations</p>
+    </a>
+    <a href="https://www.facesandvoicesofrecoveryuk.org/" target="_blank" rel="noopener" class="partner-card">
+      <span class="partner-icon"><%- include('partials/icon', { name: 'lucide:megaphone', size: 40 }) %></span>
+      <strong>Favor UK</strong>
+      <p>Faces & Voices of Recovery UK</p>
+    </a>
+    <a href="https://www.geese.co.uk/" target="_blank" rel="noopener" class="partner-card">
+      <span class="partner-icon"><%- include('partials/icon', { name: 'lucide:theater', size: 40 }) %></span>
+      <strong>Geese Theatre</strong>
+      <p>Drama & creative arts partnership</p>
+    </a>
+    <a href="https://foundation.wolves.co.uk/" target="_blank" rel="noopener" class="partner-card">
+      <span class="partner-icon"><%- include('partials/icon', { name: 'lucide:heart-handshake', size: 40 }) %></span>
+      <strong>Wolves Foundation</strong>
+      <p>Head4Health mental health programme</p>
+    </a>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="quote-block">
+  <blockquote>"This is a significant milestone in the journey of lived experience models of support with regard to recovery from addiction. To have our work recognised in such a prestigious publication really does validate, not only what we do here in Wolverhampton, but what the LERO movement is achieving nationally."</blockquote>
+  <cite>— Marcus Johnson, on SUIT's chapter in the British Library</cite>
+</section>
