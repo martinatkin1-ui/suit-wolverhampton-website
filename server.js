@@ -271,7 +271,15 @@ app.set('views', path.join(ROOT_DIR, 'views'));
 app.set('view options', {
   views: [path.join(ROOT_DIR, 'views')]
 });
-app.use(express.static(path.join(ROOT_DIR, 'public')));
+app.use(
+  express.static(path.join(ROOT_DIR, 'public'), {
+    setHeaders(res, filePath) {
+      if (filePath.endsWith('.css')) {
+        res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+      }
+    }
+  })
+);
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');

@@ -1463,8 +1463,10 @@ body.light-mode .login-error {
 }
 .admin-sidebar {
   width: 260px;
-  background: var(--text-dark);
-  color: #fff;
+  /* Intentional dark rail — do not use --text-dark here (that token is *foreground* on dark UI). */
+  background: #0d1117;
+  color: #e6edf3;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
   padding: var(--space-lg) var(--space-md);
   position: fixed;
   top: 0; left: 0; bottom: 0;
@@ -1477,7 +1479,7 @@ body.light-mode .login-error {
 }
 .admin-sidebar nav a {
   display: flex; align-items: center; gap: 0.5rem;
-  color: rgba(255,255,255,0.7);
+  color: #c9d1d9;
   padding: 0.75rem var(--space-md);
   border-radius: var(--radius-sm);
   margin-bottom: 0.25rem;
@@ -1486,8 +1488,8 @@ body.light-mode .login-error {
 }
 .admin-sidebar nav a:hover,
 .admin-sidebar nav a.active {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
 }
 .admin-sidebar nav .sidebar-logout-form {
   margin: 0;
@@ -1499,7 +1501,7 @@ body.light-mode .login-error {
   gap: 0.5rem;
   width: 100%;
   text-align: left;
-  color: rgba(255,255,255,0.7);
+  color: #c9d1d9;
   padding: 0.75rem var(--space-md);
   border-radius: var(--radius-sm);
   margin-bottom: 0.25rem;
@@ -1512,8 +1514,8 @@ body.light-mode .login-error {
   transition: all var(--transition-fast);
 }
 .admin-sidebar nav button.sidebar-nav-link:hover {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
 }
 .admin-main {
   flex: 1;
@@ -1566,7 +1568,7 @@ body.light-mode .login-error {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.4);
+  color: #8b949e;
   margin: 1rem 0 0.35rem 0.65rem;
 }
 .admin-sidebar nav .admin-nav-label:first-of-type {
@@ -3119,5 +3121,28 @@ iconify-icon.ui-icon {
   .tt-week-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* --- Admin app: sidebar & nav contrast (end of file — wins cascade; never use --text-dark as a surface) --- */
+body.admin-app .admin-sidebar {
+  background-color: #0d1117;
+  color: #e6edf3;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+body.admin-app .admin-sidebar h2 {
+  color: var(--brand-orange);
+}
+body.admin-app .admin-sidebar nav a,
+body.admin-app .admin-sidebar nav button.sidebar-nav-link {
+  color: #c9d1d9;
+}
+body.admin-app .admin-sidebar nav a:hover,
+body.admin-app .admin-sidebar nav a.active,
+body.admin-app .admin-sidebar nav button.sidebar-nav-link:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+body.admin-app .admin-nav-label {
+  color: #8b949e;
 }
 

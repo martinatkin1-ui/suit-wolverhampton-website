@@ -5,14 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= typeof adminTitle !== 'undefined' ? adminTitle + ' | ' : '' %>SUIT Content Manager</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css?v=suit-admin-20260416">
+  <%#
+    Inlined so the sidebar stays readable on Vercel even if /css/style.css is cached or an older
+    bundle is served. CSP allows style-src 'unsafe-inline' (see server.js).
+  %>
+  <style id="admin-sidebar-contrast">
+    body.admin-app .admin-sidebar {
+      background-color: #0d1117 !important;
+      color: #e6edf3 !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+    }
+    body.admin-app .admin-sidebar h2 {
+      color: #f7941d !important;
+    }
+    body.admin-app .admin-sidebar nav a,
+    body.admin-app .admin-sidebar nav button.sidebar-nav-link {
+      color: #c9d1d9 !important;
+    }
+    body.admin-app .admin-sidebar nav a:hover,
+    body.admin-app .admin-sidebar nav a.active,
+    body.admin-app .admin-sidebar nav button.sidebar-nav-link:hover {
+      background: rgba(255, 255, 255, 0.14) !important;
+      color: #ffffff !important;
+    }
+    body.admin-app .admin-nav-label {
+      color: #8b949e !important;
+    }
+    body.admin-app .admin-sidebar iconify-icon.ui-icon {
+      color: inherit !important;
+    }
+  </style>
   <%- include('../partials/iconify') %>
 </head>
-<body>
+<body class="admin-app">
   <div class="admin-layout">
 
     <!-- Sidebar -->
-    <aside class="admin-sidebar">
+    <aside class="admin-sidebar" style="background-color:#0d1117;color:#e6edf3">
       <h2 style="display:flex;align-items:center;gap:0.5rem;"><%- include('../partials/icon', { name: 'lucide:sun', size: 22 }) %> Content Manager</h2>
       <nav>
         <a href="/admin" class="<%= currentPath === '/admin' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:layout-dashboard', size: 18 }) %> Dashboard</a>
