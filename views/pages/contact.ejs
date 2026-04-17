@@ -1,0 +1,94 @@
+<% layout('layout') -%>
+
+<section class="hero" style="min-height: 35vh; padding: 4rem 5%;">
+  <h1>Contact <em>Us</em></h1>
+  <p class="hero-sub"><%= content.contact.formIntro %></p>
+</section>
+
+<section class="section">
+  <% if (sent) { %>
+    <!-- Success Animation -->
+    <div class="form-success show">
+      <div class="sunrise-icon"><%- include('partials/icon', { name: 'lucide:sunrise', size: 64 }) %></div>
+      <h3><%= content.contact.successTitle %></h3>
+      <p><%= content.contact.successMessage %></p>
+      <div style="margin-top: 2rem;">
+        <a href="/" class="btn btn-primary">Back to Home</a>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="contact-form">
+      <form method="POST" action="/contact">
+        <div class="form-group">
+          <label for="name">Your Name *</label>
+          <input type="text" id="name" name="name" required placeholder="What should we call you?">
+        </div>
+
+        <div class="form-group">
+          <label for="type">What are you reaching out about?</label>
+          <select id="type" name="type">
+            <option value="support">I need support for myself</option>
+            <option value="loved-one">I'm worried about a loved one</option>
+            <option value="referral">I'm a professional — I'd like to refer a client</option>
+            <option value="partnership">Partnership or collaboration enquiry</option>
+            <option value="volunteer">I'd like to volunteer</option>
+            <option value="donate">I'd like to donate or sponsor</option>
+            <option value="story">I'd like to share my story</option>
+            <option value="general">General enquiry</option>
+            <option value="media">Media / Press enquiry</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number (optional)</label>
+          <input type="tel" id="phone" name="phone" placeholder="If you'd like us to call you back">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email (optional)</label>
+          <input type="email" id="email" name="email" placeholder="Your email address">
+        </div>
+
+        <div class="form-group">
+          <label for="message">Your Message *</label>
+          <textarea id="message" name="message" required placeholder="Tell us what's on your mind. No pressure — write as much or as little as you like."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-cta" style="width: 100%; font-size: 1.1rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;">
+          Send Message <%- include('partials/icon', { name: 'lucide:sun', size: 22 }) %>
+        </button>
+
+        <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-light); text-align: center;">
+          Your message is completely confidential. A peer mentor will reach out within 24 hours.
+        </p>
+      </form>
+    </div>
+  <% } %>
+</section>
+
+<!-- Alternative Contact -->
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>Other Ways to Reach Us</h2>
+  </div>
+  <div class="card-grid" style="max-width: 900px;">
+    <div class="card card-orange">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:phone', size: 32 }) %></span>
+      <h3>Call Us</h3>
+      <p><a href="tel:<%= content.site.phone.replace(/\s/g,'') %>" style="font-size: 1.3rem; font-weight: 700;"><%= content.site.phone %></a></p>
+      <p>Mon-Fri 9am-5pm</p>
+    </div>
+    <div class="card card-green">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:message-circle', size: 32 }) %></span>
+      <h3>WhatsApp</h3>
+      <p><a href="<%= content.site.whatsapp %>" target="_blank" rel="noopener" style="font-weight: 700;">Message a Peer Mentor</a></p>
+      <p>Quick, private, and easy</p>
+    </div>
+    <div class="card card-cyan">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:footprints', size: 32 }) %></span>
+      <h3>Walk In</h3>
+      <p><strong><%= content.site.address %></strong></p>
+      <p>Open Mon-Fri, 10am-4pm</p>
+    </div>
+  </div>
+</section>
