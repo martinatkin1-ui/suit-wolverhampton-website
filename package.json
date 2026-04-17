@@ -1,0 +1,35 @@
+{
+  "name": "suit-wolverhampton-2026",
+  "version": "2.0.0",
+  "description": "SUIT Wolverhampton — Lived Experience Recovery Website with Admin CMS",
+  "main": "server.js",
+  "scripts": {
+    "prestart": "node scripts/prerender-public-site.js",
+    "start": "node server.js",
+    "predev": "node scripts/prerender-public-site.js",
+    "dev": "node --watch server.js",
+    "build:static": "node scripts/prerender-public-site.js",
+    "build:static-sections": "node scripts/prerender-public-site.js",
+    "build:news": "node scripts/prerender-public-site.js",
+    "build:outreach": "node scripts/prerender-public-site.js",
+    "start:only": "node server.js",
+    "media:inventory": "node scripts/legacy-media-inventory.js",
+    "media:inventory:seed": "node scripts/legacy-media-inventory.js --no-sitemap"
+  },
+  "keywords": ["suit", "wolverhampton", "recovery", "addiction", "peer-support"],
+  "author": "SUIT Wolverhampton / WVCA",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "ejs": "^4.0.1",
+    "ejs-mate": "^4.0.0",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "sharp": "^0.34.5",
+    "uuid": "^13.0.0"
+  }
+}
