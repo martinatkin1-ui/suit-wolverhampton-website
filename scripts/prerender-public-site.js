@@ -4,6 +4,8 @@
  *
  * Manual: node scripts/prerender-public-site.js
  */
+process.env.CMS_USE_FILES_ONLY = '1';
+
 const fs = require('fs');
 const path = require('path');
 
