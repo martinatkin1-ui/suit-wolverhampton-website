@@ -1,0 +1,44 @@
+<% layout('layout') -%>
+
+<section class="hero" style="min-height: 40vh; padding: 4rem 5%;">
+  <h1>Stories of <em>Hope</em></h1>
+  <p class="hero-sub">Real people from Wolverhampton sharing their recovery journeys. Their words, not ours.</p>
+</section>
+
+<section class="section">
+  <div class="story-grid">
+    <% stories.forEach(function(story) { %>
+    <a href="/stories/<%= story.id %>" class="story-card" style="text-decoration:none; color:inherit;">
+      <div class="story-media">
+        <% if (story.video) { %>
+          <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;">
+            <source src="<%= story.video %>" type="video/mp4">
+          </video>
+        <% } else if (story.image) { %>
+          <img src="<%= story.image %>" alt="<%= story.name %>'s photo" style="width:100%;height:100%;object-fit:cover;">
+        <% } else { %>
+          <span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><%- include('partials/icon', { name: 'lucide:sunrise', size: 64, iconStyle: 'opacity:0.85' }) %></span>
+        <% } %>
+      </div>
+      <div class="story-body">
+        <h3><%= story.name %>'s Story</h3>
+        <p><%= story.title %></p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-light);">
+          <%= story.excerpt.substring(0, 120) %>…
+        </p>
+        <span class="read-more">Read the full story →</span>
+      </div>
+    </a>
+    <% }); %>
+  </div>
+</section>
+
+<!-- Share Your Story CTA -->
+<section class="section band-teal text-center">
+  <h2>Want to Share Your Story?</h2>
+  <p style="max-width: 600px; margin: 1rem auto 2rem; opacity: 0.9; font-size: 1.1rem;">
+    Your story could be the spark that changes someone's life. If you're a SUIT member and would like to share
+    your recovery journey, we'd love to hear from you.
+  </p>
+  <a href="/contact" class="btn btn-outline-white">Get In Touch →</a>
+</section>
