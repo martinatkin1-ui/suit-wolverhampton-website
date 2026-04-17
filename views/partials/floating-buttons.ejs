@@ -1,0 +1,11 @@
+<!-- Floating Safety & WhatsApp Buttons -->
+<div class="floating-buttons">
+  <a href="<%= content.site.whatsapp %>" target="_blank" rel="noopener" class="btn btn-whatsapp" aria-label="Message us on WhatsApp">
+    <%- include('partials/icon', { name: 'lucide:message-circle', size: 20 }) %>
+    WhatsApp Us
+  </a>
+  <button class="btn btn-crisis" style="padding: 0.7rem 1.2rem; font-size: 0.85rem;" type="button" onclick="quickExit()" aria-label="Quick exit — leaves this site immediately">
+    <%- include('partials/icon', { name: 'lucide:log-out', size: 18 }) %>
+    Quick Exit
+  </button>
+</div>

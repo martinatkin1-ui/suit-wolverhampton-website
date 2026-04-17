@@ -1,0 +1,6 @@
+<% 
+  var icons = { art: 'lucide:palette', music: 'lucide:music-2', drama: 'lucide:theater', events: 'lucide:calendar', pride: 'lucide:heart', cultural: 'lucide:globe', announcements: 'lucide:megaphone' };
+  var nm = icons[category] || 'lucide:dot';
+  var sz = typeof size !== 'undefined' ? size : 16;
+%>
+<%- include('partials/icon', { name: nm, size: sz }) %>
