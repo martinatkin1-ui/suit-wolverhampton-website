@@ -1,0 +1,47 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Page updates</h1>
+  <a href="/admin/page-updates/new" class="btn btn-primary">New update</a>
+</div>
+
+<% if (query && query.saved) { %>
+<p class="admin-hint">Saved. Updates appear on the <a href="/news-more/announcements" target="_blank" rel="noopener">Announcements</a> page and on every timeline matching the categories you selected.</p>
+<% } %>
+
+<p class="admin-hint" style="margin-bottom: var(--space-lg);">
+  Use <strong>categories</strong> to push one post to several pages (e.g. Polish outreach + Podcasts + Art). All entries still appear on <strong>Announcements</strong>. Use <strong>Share</strong> on a row to copy platform-ready text for social posts.
+</p>
+
+<div class="admin-card">
+  <% if (!items.length) { %>
+  <p style="color: var(--text-mid);">No updates yet. <a href="/admin/page-updates/new">Create the first one</a>.</p>
+  <% } else { %>
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Categories / pages</th>
+        <th>Title</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% items.forEach(function(row) { %>
+      <tr>
+        <td><%= row.publishedAt ? new Date(row.publishedAt).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' }) : '—' %></td>
+        <td style="max-width: 22rem; font-size: 0.9rem;"><%= row.categoryDisplay || '—' %></td>
+        <td><%= row.title %></td>
+        <td class="admin-actions">
+          <a href="/admin/page-updates/share/<%= row.id %>" class="btn btn-outline">Share</a>
+          <a href="/admin/page-updates/edit/<%= row.id %>" class="btn btn-outline">Edit</a>
+          <form method="post" action="/admin/page-updates/delete/<%= row.id %>" style="display:inline;" onsubmit="return confirm('Delete this update and its uploaded files?');">
+            <button type="submit" class="btn btn-outline" style="border-color: var(--brand-pink); color: var(--brand-pink);">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <% } %>
+</div>

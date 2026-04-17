@@ -1,0 +1,14 @@
+<% if (faqs && faqs.length) { %>
+<section class="section section-alt geo-faq-section" aria-label="Common questions">
+  <div class="section-header">
+    <h2>Common questions</h2>
+    <p>Factual answers for people searching for addiction and alcohol support in Wolverhampton.</p>
+  </div>
+  <dl class="geo-faq-list">
+    <% faqs.forEach(function(f) { if (!f || !f.question) return; %>
+    <dt class="geo-faq-q"><%= f.question %></dt>
+    <dd class="geo-faq-a"><%= f.answer %></dd>
+    <% }); %>
+  </dl>
+</section>
+<% } %>

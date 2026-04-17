@@ -1,0 +1,83 @@
+<% if (typeof pageUpdates !== 'undefined' && pageUpdates && pageUpdates.length) { %>
+<% var _t = typeof updatesSectionTitle !== 'undefined' && updatesSectionTitle ? updatesSectionTitle : 'Latest updates'; %>
+<% var _s = typeof updatesSectionSub !== 'undefined' && updatesSectionSub ? updatesSectionSub : 'New posts from the SUIT team appear here first.'; %>
+<% var _feed = typeof feedLayout !== 'undefined' && feedLayout; %>
+<section class="section section-alt page-updates-section<%= _feed ? ' page-updates-section--feed' : '' %>" aria-label="<%= _t %>">
+  <div class="section-header">
+    <h2><%= _t %></h2>
+    <p><%= _s %></p>
+  </div>
+  <div class="page-updates-stack">
+    <% pageUpdates.forEach(function(item) { %>
+    <article class="page-update-card<%= _feed ? ' page-update-card--feed' : '' %>" id="update-<%= item.id %>">
+      <% if (_feed && item.media && item.media.length) {
+        var m0 = item.media[0];
+      %>
+      <div class="page-update-card__cover">
+        <% if (m0.type === 'video') { %>
+        <video class="page-update-card__cover-video" controls playsinline preload="metadata" src="<%= m0.url %>" title="<%= m0.caption || 'Video' %>"></video>
+        <% } else { %>
+        <img class="page-update-card__cover-img" src="<%= m0.url %>" alt="<%= m0.caption || m0.alt || item.title %>" loading="lazy" width="1200" height="675">
+        <% } %>
+        <% if (m0.caption) { %><p class="page-update-card__cover-caption"><%= m0.caption %></p><% } %>
+      </div>
+      <% } %>
+      <% if (_feed) { %><div class="page-update-card__inner"><% } %>
+        <header class="page-update-card__head">
+          <time class="page-update-card__date" datetime="<%= item.publishedAt %>"><%= new Date(item.publishedAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) %></time>
+          <h3 class="page-update-card__title"><%= item.title %></h3>
+          <% if (item.summary) { %><p class="page-update-card__summary"><%= item.summary %></p><% } %>
+        </header>
+        <% if (item.body) { %>
+        <div class="page-update-card__body">
+          <% item.body.split(/\n\n+/).forEach(function(para) { if (para.trim()) { %>
+          <p class="outreach-prose"><%= para.trim() %></p>
+          <% } }); %>
+        </div>
+        <% } %>
+        <% if (_feed && item.media && item.media.length > 1) { %>
+        <div class="page-update-card__media page-update-card__media--gallery">
+          <% item.media.slice(1).forEach(function(m) { %>
+          <% if (m.type === 'video') { %>
+          <figure class="page-update-card__figure page-update-card__figure--tile">
+            <video class="page-update-card__video" controls playsinline preload="metadata" src="<%= m.url %>" title="<%= m.caption || 'Video' %>"></video>
+            <% if (m.caption) { %><figcaption><%= m.caption %></figcaption><% } %>
+          </figure>
+          <% } else { %>
+          <figure class="page-update-card__figure page-update-card__figure--tile">
+            <img src="<%= m.url %>" alt="<%= m.caption || m.alt || '' %>" loading="lazy" width="600" height="450">
+            <% if (m.caption) { %><figcaption><%= m.caption %></figcaption><% } %>
+          </figure>
+          <% } %>
+          <% }); %>
+        </div>
+        <% } else if (!_feed && item.media && item.media.length) { %>
+        <div class="page-update-card__media">
+          <% item.media.forEach(function(m) { %>
+          <% if (m.type === 'video') { %>
+          <figure class="page-update-card__figure">
+            <video class="page-update-card__video" controls playsinline preload="metadata" src="<%= m.url %>" title="<%= m.caption || 'Video' %>"></video>
+            <% if (m.caption) { %><figcaption><%= m.caption %></figcaption><% } %>
+          </figure>
+          <% } else { %>
+          <figure class="page-update-card__figure">
+            <img src="<%= m.url %>" alt="<%= m.caption || m.alt || '' %>" loading="lazy" width="800" height="600">
+            <% if (m.caption) { %><figcaption><%= m.caption %></figcaption><% } %>
+          </figure>
+          <% } %>
+          <% }); %>
+        </div>
+        <% } %>
+        <% if (item.links && item.links.length) { %>
+        <ul class="outreach-link-list page-update-card__links">
+          <% item.links.forEach(function(l) { if (l && l.href) { %>
+          <li><a href="<%= l.href %>" <% if (/^https?:/.test(l.href)) { %>target="_blank" rel="noopener noreferrer"<% } %>><%= l.label || l.href %> →</a></li>
+          <% } }); %>
+        </ul>
+        <% } %>
+      <% if (_feed) { %></div><% } %>
+    </article>
+    <% }); %>
+  </div>
+</section>
+<% } %>

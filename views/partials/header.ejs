@@ -1,11 +1,7 @@
 <!-- Sticky Header -->
 <header class="site-header" role="banner">
-  <a href="/" class="logo-link" aria-label="SUIT Wolverhampton Home">
-    <img src="/images/suit-logo.webp" alt="SUIT Logo — Service User Involvement Team, a project of WVCA">
-    <div class="logo-text">
-      SUIT
-      <span>Service User Involvement Team</span>
-    </div>
+  <a href="/" class="logo-link" aria-label="SUIT Wolverhampton — home">
+    <img src="/images/suit-logo.webp" alt="SUIT — Service User Involvement Team, a project of WVCA">
   </a>
 
   <nav class="main-nav" role="navigation" aria-label="Main navigation">
@@ -13,6 +9,7 @@
       <li><a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a></li>
       <li><a href="/services" class="<%= currentPath === '/services' ? 'active' : '' %>">How We Help</a></li>
       <li><a href="/timetable" class="<%= currentPath === '/timetable' ? 'active' : '' %>">The Timetable</a></li>
+      <li><a href="/news-more/announcements" class="<%= currentPath === '/news-more/announcements' ? 'active' : '' %>">Announcements</a></li>
       <li><a href="/community" class="<%= currentPath === '/community' || (currentPath && currentPath.startsWith('/community/outreach')) ? 'active' : '' %>">In the Community</a></li>
       <li><a href="/stories" class="<%= currentPath === '/stories' ? 'active' : '' %>">Stories of Hope</a></li>
       <li><a href="/timeline" class="<%= currentPath === '/timeline' ? 'active' : '' %>">Our Timeline</a></li>

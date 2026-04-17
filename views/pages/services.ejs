@@ -1,7 +1,7 @@
 <% layout('layout') -%>
 
 <section class="hero" style="min-height: 40vh; padding: 4rem 5%;">
-  <h1>How We <em>Help</em></h1>
+   <h1>How We <em>Help</em></h1>
   <p class="hero-sub">No jargon. No waiting lists. Just real people providing real support. Here's what we do.</p>
 </section>
 
@@ -114,4 +114,8 @@
   <div style="margin-top: 2rem;">
     <a href="/get-help" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem;">Get Help Now →</a>
   </div>
+</section>
+
+<section class="section section-alt geo-in-brief-wrap">
+  <%- include('partials/geo-answer-first', { text: geo && geo.answerFirst && geo.answerFirst.services }) %>
 </section>

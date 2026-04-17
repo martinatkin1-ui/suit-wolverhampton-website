@@ -15,6 +15,10 @@
   <% } %>
 </section>
 
+<% var _puTitle = (typeof slug !== 'undefined' && slug === 'announcements') ? 'All updates' : 'Latest updates'; %>
+<% var _puSub = (typeof slug !== 'undefined' && slug === 'announcements') ? 'Every SUIT post in one place, newest first. The same items can appear on topic and community pages when tagged there.' : 'New posts from the SUIT team appear here first.'; %>
+<%- include('partials/page-updates-timeline', { updatesSectionTitle: _puTitle, updatesSectionSub: _puSub, feedLayout: typeof slug !== 'undefined' && slug === 'announcements' }) %>
+
 <% if (page.youtubeIds && page.youtubeIds.length) { %>
 <section class="section section-alt">
   <div class="section-header">
