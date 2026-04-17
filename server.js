@@ -1,6 +1,7 @@
-require('dotenv').config({
-  quiet: process.env.VERCEL === '1' || process.env.NODE_ENV === 'production'
-});
+/* Vercel sets VERCEL=1; use dashboard env only — skip dotenv (no .env reads / injection logs) */
+if (!process.env.VERCEL) {
+  require('dotenv').config({ quiet: true });
+}
 /**
  * SUIT Wolverhampton 2026 — Main Server
  * Express + EJS + JSON flat-file CMS
@@ -27,11 +28,19 @@ if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
 // ─── Paths ────────────────────────────────────────────
 /** Vercel may place the traced server file under api/; data/views live at repo root. */
 function resolveProjectRoot() {
-  const candidates = [__dirname, path.join(__dirname, '..')];
+  const candidates = [...new Set([__dirname, path.join(__dirname, '..'), process.cwd()])];
   for (const root of candidates) {
+    if (!root) continue;
     const hasCms = fs.existsSync(path.join(root, 'data', 'content.json'));
     const hasViews = fs.existsSync(path.join(root, 'views', 'layout.ejs'));
     if (hasCms && hasViews) return root;
+  }
+   if (process.env.VERCEL) {
+    console.error(
+      '[vercel] CMS paths not found. Checked:',
+      candidates.join(' | '),
+      '— ensure data/ and views/ are deployed (vercel.json includeFiles).'
+    );
   }
   return __dirname;
 }
@@ -55,6 +64,37 @@ function writeJSON(filename, data) {
   const tmp = filePath + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
   fs.renameSync(tmp, filePath);
+}
+
+/** Avoid500s when content.json is missing (e.g. bad serverless bundle) */
+function minimalContentFallback() {
+  return {
+    site: {
+      title: 'SUIT Wolverhampton',
+      tagline: '',
+      phone: '01902 328983',
+      email: 'suit@wvca.org.uk',
+      address: 'Paycare House, George Street, Wolverhampton',
+      whatsapp: 'https://wa.me/441902328983',
+      facebook: '',
+      instagram: '',
+      twitter: '',
+      youtube: ''
+    },
+    hero: {
+      headline: 'SUIT Wolverhampton',
+      subheadline: 'If you see this message, the live site could not load its content file. Please try again later or contact us.',
+      btnPrimary: 'Get help',
+      btnPrimaryLink: '/get-help',
+      btnSecondary: 'Contact',
+      btnSecondaryLink: '/contact'
+    },
+    steps: [],
+    services: [],
+    about: { intro: '', mission: '', values: [] },
+    quote: { text: '', author: '' },
+    impact: { stat: '', text: '' }
+  };
 }
 
 /** Safe shape for public /community when data file is missing or partial */
@@ -248,7 +288,9 @@ app.use(session({
 
 // Make data available to all templates
 app.use((req, res, next) => {
-  res.locals.content = readJSON('content.json');
+  const contentRaw = readJSON('content.json');
+  res.locals.content =
+    contentRaw && typeof contentRaw === 'object' ? contentRaw : minimalContentFallback();
   const nm = readJSON('news-more.json');
   const nmNavFb = readJSON('news-more.nav-fallback.json');
   res.locals.newsMore = nm;
@@ -1444,12 +1486,20 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   console.error('[server error]', err.stack || err.message || err);
   if (res.headersSent) return next(err);
-  res.status(500).render('pages/404', { pageTitle: 'Server Error', pageCanonical: '' });
+  try {
+    res.status(500).render('pages/404', { pageTitle: 'Server Error', pageCanonical: '' });
+  } catch (renderErr) {
+    res.status(500).type('text/plain').send('Server error');
+  }
 });
 
 // ─── 404 ──────────────────────────────────────────────
 app.use((req, res) => {
-  res.status(404).render('pages/404');
+  try {
+    res.status(404).render('pages/404');
+  } catch (renderErr) {
+    res.status(404).type('text/plain').send('Not found');
+  }
 });
 
 // ─── START (only when run directly — allows `require('./server')` for prerender/tests) ─
