@@ -62,7 +62,8 @@ function minimalContentFallback() {
       title: 'SUIT Wolverhampton',
       headerTitle: '',
       headerSubtitle: '',
-      tagline: '',
+      tagline:
+        "Wolverhampton's Drug & Alcohol Service User Involvement Team — A project of WVCA",
       phone: '01902 328983',
       email: 'suit@wvca.org.uk',
       address: 'Paycare House, George Street, Wolverhampton',
@@ -732,7 +733,7 @@ app.get('/feed.xml', async (req, res) => {
   xml += '  <channel>\n';
   xml += '    <title>SUIT Wolverhampton — Stories &amp; Updates</title>\n';
   xml += '    <link>' + baseUrl + '</link>\n';
-  xml += '    <description>Recovery stories, community updates, and the latest from SUIT Wolverhampton.</description>\n';
+  xml += '    <description>Recovery stories, community updates, and the latest from the Service User Involvement Team, Wolverhampton.</description>\n';
   xml += '    <language>en-gb</language>\n';
   xml += '    <lastBuildDate>' + new Date().toUTCString() + '</lastBuildDate>\n';
   xml += '    <atom:link href="' + baseUrl + '/feed.xml" rel="self" type="application/rss+xml"/>\n';

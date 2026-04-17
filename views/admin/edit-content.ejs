@@ -53,17 +53,17 @@
     </div>
   </div>
 
-  <!-- Site name & optional footer line -->
+  <!-- Site name & footer (header is logo-only on the public site) -->
   <div class="admin-card">
     <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:building-2', size: 22 }) %> Site name &amp; footer</h3>
-    <p class="admin-hint" style="margin-top:0;">The <strong>organisation name</strong> is used for the footer heading, page metadata, and the “home” link label. The <strong>footer tagline</strong> is optional — leave blank to hide. The header shows your logo image only.</p>
+    <p class="admin-hint" style="margin-top:0;">The <strong>organisation name</strong> is used for the footer heading, metadata, and the home link label. The <strong>footer tagline</strong> appears under that heading in the footer. The <strong>header</strong> shows your logo image only — no extra text beside it.</p>
     <div class="form-group">
       <label for="siteTitle">Organisation name</label>
       <input type="text" id="siteTitle" name="siteTitle" value="<%= content.site.title || '' %>">
     </div>
     <div class="form-group">
-      <label for="siteTagline">Footer tagline (optional)</label>
-      <input type="text" id="siteTagline" name="siteTagline" value="<%= content.site.tagline || '' %>" placeholder="Leave blank for no tagline under the footer heading">
+      <label for="siteTagline">Footer tagline</label>
+      <input type="text" id="siteTagline" name="siteTagline" value="<%= content.site.tagline || '' %>">
     </div>
   </div>
 
