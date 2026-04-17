@@ -1,3 +1,4 @@
+require('dotenv').config();
 /**
  * SUIT Wolverhampton 2026 — Main Server
  * Express + EJS + JSON flat-file CMS
@@ -7,8 +8,8 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const session = require('express-session');
-const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
@@ -32,7 +33,10 @@ function readJSON(filename) {
   }
 }
 function writeJSON(filename, data) {
-  fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2), 'utf8');
+  const filePath = path.join(DATA_DIR, filename);
+  const tmp = filePath + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
+  fs.renameSync(tmp, filePath);
 }
 
 /** Safe shape for public /community when data file is missing or partial */
@@ -135,7 +139,8 @@ const LEGACY_REDIRECT_MAP = loadLegacyRedirectMap();
 // Create default admin account if not exists
 const ADMIN_FILE = path.join(DATA_DIR, 'admin.json');
 if (!fs.existsSync(ADMIN_FILE)) {
-  const hash = bcrypt.hashSync('SUITadmin2026!', 10);
+  const initialPw = process.env.ADMIN_INITIAL_PASSWORD || 'ChangeMe!2026';
+  const hash = bcrypt.hashSync(initialPw, 10);
   writeJSON('admin.json', { username: 'admin', password: hash });
 }
 
@@ -156,7 +161,7 @@ const upload = multer({
   storage,
   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB for video
   fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|gif|webp|mp4|webm|mov|svg/;
+    const allowed = /jpeg|jpg|png|gif|webp|mp4|webm|mov/;
     const extOk = allowed.test(path.extname(file.originalname).toLowerCase());
     const mimeOk = allowed.test(file.mimetype) || file.mimetype.startsWith('video/') || file.mimetype.startsWith('image/');
     if (extOk || mimeOk) return cb(null, true);
@@ -174,15 +179,35 @@ app.set('view options', {
   views: [path.join(__dirname, 'views')]
 });
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' https://code.iconify.design https://api.iconify.design; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "font-src 'self' https://fonts.gstatic.com; " +
+    "img-src 'self' data: https://images.squarespace-cdn.com https://*.ytimg.com; " +
+    "frame-src https://www.youtube.com https://www.google.com; " +
+    "connect-src 'self' https://api.iconify.design;"
+  );
+  next();
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(session({
-  secret: 'suit-wolverhampton-2026-secret-key',
+  secret: process.env.SESSION_SECRET || (() => { throw new Error('SESSION_SECRET env var is required'); })(),
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 24 * 60 * 60 * 1000 } // 24h
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax'
+  }
 }));
 
 // Make data available to all templates
@@ -204,7 +229,7 @@ app.use((req, res, next) => {
 });
 
 /** Verify you are running THIS project: open http://localhost:PORT/__suit-health */
-app.get('/__suit-health', (req, res) => {
+app.get('/__suit-health', requireAdmin, (req, res) => {
   res.type('json').send(JSON.stringify({
     app: 'suit-wolverhampton-2026',
     serverFile: __filename,
@@ -429,7 +454,7 @@ app.get('/community/cultural-outreach', (req, res) => res.redirect(301, '/commun
 
 // About Us
 app.get('/about', (req, res) => {
-  const teamData = readJSON('team.json');
+  const teamData = readJSON('team.json') || { staff: [], volunteers: [] };
   const staff = teamData.staff || [];
   const volunteers = teamData.volunteers || [];
   res.render('pages/about', {
@@ -445,6 +470,7 @@ app.get('/about', (req, res) => {
 app.get('/contact', (req, res) => {
   res.render('pages/contact', {
     sent: false,
+    error: null,
     pageTitle: 'Contact Us',
     pageDescription: 'Contact SUIT Wolverhampton. Call 01902 328983, email suit@wvca.org.uk, or fill in our form. Paycare House, George Street, WV2 4DX.',
     pageCanonical: '/contact'
@@ -562,21 +588,26 @@ app.get('/feed.xml', (req, res) => {
   res.send(xml);
 });
 
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: 'Too many messages sent. Please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
 // Contact form submission
-app.post('/contact', (req, res) => {
+app.post('/contact', contactLimiter, (req, res) => {
+  const name = String(req.body.name || '').trim().slice(0, 200);
+  const email = String(req.body.email || '').trim().slice(0, 200);
+  const phone = String(req.body.phone || '').trim().slice(0, 50);
+  const message = String(req.body.message || '').trim().slice(0, 5000);
+  const type = ['general', 'referral', 'volunteer', 'other'].includes(req.body.type) ? req.body.type : 'general';
+  if (!name || !message) return res.render('pages/contact', { sent: false, error: 'Name and message are required.' });
   const messages = readJSON('messages.json') || [];
-  messages.push({
-    id: uuidv4(),
-    name: req.body.name,
-    email: req.body.email || '',
-    phone: req.body.phone || '',
-    message: req.body.message,
-    type: req.body.type || 'general',
-    date: new Date().toISOString(),
-    read: false
-  });
+  messages.push({ id: uuidv4(), name, email, phone, message, type, date: new Date().toISOString(), read: false });
   writeJSON('messages.json', messages);
-  res.render('pages/contact', { sent: true });
+  res.render('pages/contact', { sent: true, error: null });
 });
 
 // PWA manifest
@@ -666,16 +697,22 @@ app.get('/admin/login', (req, res) => {
   res.render('admin/login', { error: null });
 });
 
-app.post('/admin/login', (req, res) => {
+app.post('/admin/login', async (req, res) => {
   const admin = readJSON('admin.json');
-  if (req.body.username === admin.username && bcrypt.compareSync(req.body.password, admin.password)) {
-    req.session.admin = true;
-    return res.redirect('/admin');
+  if (!admin) return res.render('admin/login', { error: 'Admin account not configured' });
+  const match = await bcrypt.compare(req.body.password || '', admin.password);
+  if (req.body.username === admin.username && match) {
+    req.session.regenerate((err) => {
+      if (err) return res.render('admin/login', { error: 'Session error, try again' });
+      req.session.admin = true;
+      res.redirect('/admin');
+    });
+    return;
   }
   res.render('admin/login', { error: 'Invalid username or password' });
 });
 
-app.get('/admin/logout', (req, res) => {
+app.post('/admin/logout', (req, res) => {
   req.session.destroy();
   res.redirect('/');
 });
@@ -700,6 +737,7 @@ app.get('/admin/content', requireAdmin, (req, res) => {
 
 app.post('/admin/content', requireAdmin, (req, res) => {
   const content = readJSON('content.json');
+  if (!content) return res.status(500).send('content.json is missing or invalid');
   // Update hero
   content.hero.headline = req.body.heroHeadline || content.hero.headline;
   content.hero.subheadline = req.body.heroSubheadline || content.hero.subheadline;
@@ -716,6 +754,11 @@ app.post('/admin/content', requireAdmin, (req, res) => {
   content.site.whatsapp = req.body.siteWhatsapp || content.site.whatsapp;
   content.site.facebook = req.body.siteFacebook || content.site.facebook;
   content.site.instagram = req.body.siteInstagram || content.site.instagram;
+
+  ['facebook','instagram','whatsapp'].forEach(k => {
+    const v = content.site[k];
+    if (v && !/^https?:\/\//i.test(v)) content.site[k] = '';
+  });
 
   writeJSON('content.json', content);
   res.render('admin/edit-content', { content, saved: true });
@@ -799,7 +842,9 @@ app.post('/admin/timetable', requireAdmin, (req, res) => {
       }
     }
   } else {
-    const dayKey = day.toLowerCase();
+    const VALID_DAYS = new Set(['monday','tuesday','wednesday','thursday','friday','saturday','sunday']);
+    const dayKey = String(day || '').toLowerCase();
+    if (!VALID_DAYS.has(dayKey)) return res.render('admin/edit-timetable', { timetable, programmeOptions, saved: false });
     if (!timetable[dayKey]) timetable[dayKey] = [];
 
     const newEvent = {
@@ -1300,15 +1345,17 @@ app.get('/admin/settings', requireAdmin, (req, res) => {
   res.render('admin/settings', { saved: false, error: null });
 });
 
-app.post('/admin/settings', requireAdmin, (req, res) => {
+app.post('/admin/settings', requireAdmin, async (req, res) => {
   const admin = readJSON('admin.json');
-  if (!bcrypt.compareSync(req.body.currentPassword, admin.password)) {
+  if (!admin) return res.render('admin/settings', { saved: false, error: 'Admin file missing' });
+  const currentOk = await bcrypt.compare(req.body.currentPassword || '', admin.password);
+  if (!currentOk) {
     return res.render('admin/settings', { saved: false, error: 'Current password is incorrect' });
   }
-  if (req.body.newPassword.length < 6) {
-    return res.render('admin/settings', { saved: false, error: 'New password must be at least 6 characters' });
+  if ((req.body.newPassword || '').length < 12) {
+    return res.render('admin/settings', { saved: false, error: 'New password must be at least 12 characters' });
   }
-  admin.password = bcrypt.hashSync(req.body.newPassword, 10);
+  admin.password = await bcrypt.hash(req.body.newPassword, 12);
   if (req.body.newUsername) admin.username = req.body.newUsername;
   writeJSON('admin.json', admin);
   res.render('admin/settings', { saved: true, error: null });
@@ -1336,8 +1383,13 @@ app.post('/admin/gallery/upload', requireAdmin, (req, res, next) => {
 });
 
 app.post('/admin/gallery/delete', requireAdmin, (req, res) => {
-  const file = req.body.filename;
-  const filePath = path.join(UPLOAD_DIR, 'gallery', file);
+  const file = path.basename(req.body.filename || '');
+  if (!file) return res.redirect('/admin/gallery');
+  const galleryDir = path.resolve(UPLOAD_DIR, 'gallery');
+  const filePath = path.resolve(galleryDir, file);
+  if (!filePath.startsWith(galleryDir + path.sep) && filePath !== galleryDir) {
+    return res.status(400).send('Invalid filename');
+  }
   if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
   res.redirect('/admin/gallery');
 });
@@ -1350,6 +1402,13 @@ app.use((req, res, next) => {
   const target = LEGACY_REDIRECT_MAP.get(key);
   if (target) return res.redirect(301, target);
   next();
+});
+
+// ─── Global error handler ─────────────────────────────
+app.use((err, req, res, next) => {
+  console.error('[server error]', err.stack || err.message || err);
+  if (res.headersSent) return next(err);
+  res.status(500).render('pages/404', { pageTitle: 'Server Error', pageCanonical: '' });
 });
 
 // ─── 404 ──────────────────────────────────────────────
@@ -1370,7 +1429,7 @@ function startServer() {
     console.log(`  If Chrome says "invalid response", you are probably using https:// — switch to http://`);
     console.log(`  Verify this build: http://localhost:${PORT}/__suit-health`);
     console.log(`  Content Manager: http://localhost:${PORT}/admin/login`);
-    console.log(`      Default login: admin / SUITadmin2026!`);
+    console.log(`      Admin panel: /admin/login (change password after first login)`);
     console.log(`\n  Project folder: ${__dirname}`);
     console.log(`  data/cultural-outreach.json — ${fs.existsSync(coFile) ? 'found' : 'MISSING (cultural outreach will 500)'}`);
     console.log(`  data/news-more.json — ${fs.existsSync(nmFile) ? 'found' : 'MISSING (subpages500; nav uses fallback if present)'}`);
