@@ -1,0 +1,80 @@
+<% layout('layout') -%>
+
+<section class="hero" style="min-height: 36vh; padding: 3.5rem 5% 2.5rem;">
+  <nav class="outreach-breadcrumb" aria-label="Breadcrumb">
+    <a href="/community">In the Community</a>
+    <span aria-hidden="true"> / </span>
+    <span><%= programme.title %></span>
+  </nav>
+  <h1><%= programme.title %></h1>
+  <p class="hero-sub"><%= programme.heroLead %></p>
+  <p class="outreach-legacy-note">
+    <a href="<%= programme.legacyUrl %>" target="_blank" rel="noopener noreferrer" class="outreach-legacy-link">View the original Squarespace page (reference) →</a>
+  </p>
+</section>
+
+<% if (programme.youtubeIds && programme.youtubeIds.length) { %>
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>Video</h2>
+  </div>
+  <div class="outreach-video-grid">
+    <% programme.youtubeIds.forEach(function(ytId) { %>
+    <div class="outreach-video">
+      <iframe src="https://www.youtube.com/embed/<%= ytId %>" title="<%= programme.title %> — video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
+<% (programme.sections || []).forEach(function(block) { %>
+<section class="section <%= block.type === 'notice' ? 'section-alt' : '' %>">
+  <div class="outreach-section-inner">
+    <% if (block.title) { %><h2><%= block.title %></h2><% } %>
+    <% if (block.paragraphs) { block.paragraphs.forEach(function(p) { %>
+    <p class="outreach-prose"><%= p %></p>
+    <% }); } %>
+    <% if (block.quote) { %>
+    <blockquote class="outreach-quote">
+      “<%= block.quote %>”
+      <% if (block.cite) { %><cite>— <%= block.cite %></cite><% } %>
+    </blockquote>
+    <% } %>
+    <% if (block.links && block.links.length) { %>
+    <ul class="outreach-link-list">
+      <% block.links.forEach(function(l) { %>
+      <li><a href="<%= l.href %>" <% if (/^https?:/.test(l.href)) { %>target="_blank" rel="noopener noreferrer"<% } %>><%= l.label %> →</a></li>
+      <% }); %>
+    </ul>
+    <% } %>
+  </div>
+</section>
+<% }); %>
+
+<% if (programme.gallery && programme.gallery.length) { %>
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>Gallery</h2>
+    <p>Photos from our community work (legacy site media).</p>
+  </div>
+  <div class="outreach-gallery">
+    <% programme.gallery.forEach(function(g) { %>
+    <figure class="outreach-gallery-item">
+      <img src="<%= g.src %>" alt="<%= g.alt || programme.title %>" loading="lazy" width="400" height="300">
+    </figure>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
+<section class="section band-teal">
+  <div class="cta-involved" style="text-align: center;">
+    <h2>Get in touch</h2>
+    <p style="font-size: 1.1rem; opacity: 0.95; max-width: 560px; margin: 0 auto 1.5rem;">We’re here for you — same team, same values, on this site.</p>
+    <div class="cta-button-row" style="justify-content: center;">
+      <a href="/contact" class="btn btn-cta">Contact SUIT</a>
+      <a href="/community" class="btn btn-outline-white">Back to Community →</a>
+    </div>
+  </div>
+</section>

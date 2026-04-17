@@ -1,0 +1,117 @@
+<% layout('layout') -%>
+
+<section class="hero" style="min-height: 40vh; padding: 4rem 5%;">
+  <h1>How We <em>Help</em></h1>
+  <p class="hero-sub">No jargon. No waiting lists. Just real people providing real support. Here's what we do.</p>
+</section>
+
+<section class="section">
+  <div class="card-grid">
+    <% content.services.forEach(function(svc) { %>
+    <div class="card <%= svc.colorClass %>">
+      <span class="card-icon"><%- include('partials/icon', { name: svc.icon, size: 28 }) %></span>
+      <h3><%= svc.title %></h3>
+      <p><%= svc.description %></p>
+    </div>
+    <% }); %>
+  </div>
+</section>
+
+<!-- More Detail Sections -->
+<section class="section band-teal">
+  <div class="featured-split">
+    <div class="text-side">
+      <h2>Peer Mentoring & Buddy Support</h2>
+      <p style="font-size: 1.1rem; margin-bottom: 1rem; opacity: 0.9;">
+        Talk to someone who has actually beaten addiction. Every peer mentor at SUIT has lived experience of recovery.
+        Regular check-in calls, guidance, care plans, and someone to listen.
+      </p>
+      <p style="opacity: 0.85; margin-bottom: 2rem;">
+        Our Recovery Ambassadors provide empathy and genuine connection. They offer practical, first-hand insights
+        and inspire hope by demonstrating that recovery is possible.
+      </p>
+      <a href="/contact" class="btn btn-outline-white">Request a Peer Mentor →</a>
+    </div>
+    <div class="media-side">
+      <div class="media-placeholder" style="text-align: left; padding: 2.5rem;">
+        <h3 style="color: #fff; font-size: 1.4rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.45rem;"><%- include('partials/icon', { name: 'lucide:handshake', size: 24, iconStyle: 'color: rgba(255,255,255,0.95)' }) %> Buddy Support</h3>
+        <p style="color: rgba(255,255,255,0.9); font-size: 0.95rem; line-height: 1.6;">"Until you become inspired by someone else, the change can't happen. We have to see it through our own eyes." — Jason Spreckley, Outreach Lead</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="featured-split" style="flex-direction: row-reverse;">
+    <div class="text-side">
+      <h2>Advocacy & Wraparound Support</h2>
+      <p style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-mid);">
+        Navigating housing, benefits, and services is overwhelming — especially when you're in recovery.
+        Our advocacy team will champion your rights and fight your corner.
+      </p>
+      <ul style="color: var(--text-mid); margin-bottom: 2rem; padding-left: 1.5rem;">
+        <li>Housing support and homeless issues</li>
+        <li>Benefits support — PIP, UC, ESA, JSA applications & appeals</li>
+        <li>Form filling including UC50, Housing, Job applications</li>
+        <li>Debt advice and setting up payment plans</li>
+        <li>Job searches and CV writing support</li>
+        <li>Referrals to Changing Lives, Good Shepherd, Wolves Foundation, Rethink</li>
+        <li>Support for prison leavers</li>
+        <li>Outreach support & home visits</li>
+      </ul>
+      <a href="/contact" class="btn btn-primary">Get Advocacy Help →</a>
+    </div>
+    <div class="media-side">
+      <div class="media-placeholder" style="background: linear-gradient(135deg, var(--brand-cyan), var(--brand-teal)); text-align: left; padding: 2.5rem;">
+        <h3 style="color: #fff; font-size: 1.4rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.45rem;"><%- include('partials/icon', { name: 'lucide:house', size: 24, iconStyle: 'color: rgba(255,255,255,0.95)' }) %> Wraparound Support</h3>
+        <p style="color: rgba(255,255,255,0.9); font-size: 0.95rem; line-height: 1.6;">"I am strongly embedded in our community. SUIT offers crucial help to the people and families struggling through addiction." — Fallon Burnett, Shared Care Lead</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="featured-split">
+    <div class="text-side">
+      <h2>Drop-In Sanctuary</h2>
+      <p style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-mid);">
+        A safe, warm place to be. No appointment, no pressure. Just come in for free tea, coffee,
+        and a listening ear from people who've been there.
+      </p>
+      <p style="color: var(--text-mid); margin-bottom: 2rem;">
+        <strong>Monday 10:00–15:00 (Drop-In)</strong><br>
+        <strong>Tuesday 9:30–16:30 (By Appointment)</strong><br>
+        <strong>Wednesday — Currently closed for training</strong><br>
+        <strong>Thursday 9:30–16:30 (By Appointment)</strong><br>
+        <strong>Friday 10:00–15:00 (Drop-In)</strong><br>
+        <br><span style="display:inline-flex;align-items:flex-start;gap:0.35rem;vertical-align:top;"><%- include('partials/icon', { name: 'lucide:map-pin', size: 18 }) %> Paycare House, George Street, Wolverhampton, WV2 4DX</span>
+      </p>
+      <a href="/get-help" class="btn btn-cta">Find Our Location →</a>
+    </div>
+    <div class="media-side">
+      <div class="media-placeholder" style="background: linear-gradient(135deg, var(--brand-orange), var(--brand-pink)); text-align: left; padding: 2.5rem;">
+        <h3 style="color: #fff; font-size: 1.4rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.45rem;"><%- include('partials/icon', { name: 'lucide:coffee', size: 24, iconStyle: 'color: rgba(255,255,255,0.95)' }) %> Paycare House</h3>
+        <p style="color: rgba(255,255,255,0.9); font-size: 0.95rem; line-height: 1.6;">George Street, Wolverhampton, WV2 4DX. Walk in — no referral needed. Call 01902 328983 for more info.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <div class="referral-banner">
+    <h3 style="display:flex;align-items:center;justify-content:center;gap:0.5rem;flex-wrap:wrap;"><%- include('partials/icon', { name: 'lucide:clipboard-list', size: 26 }) %> Professionals: Refer a Client to SUIT</h3>
+    <p>If you're a healthcare worker, social worker, probation officer, or support worker — you can refer clients directly to SUIT. No waiting list. We accept self-referrals too.</p>
+    <div class="cta-button-row">
+      <a href="/contact?type=referral" class="btn btn-primary">Make a Referral →</a>
+      <a href="tel:01902328983" class="btn btn-outline" style="display:inline-flex;align-items:center;gap:0.4rem;"><%- include('partials/icon', { name: 'lucide:phone', size: 20 }) %> Call 01902 328 983</a>
+    </div>
+  </div>
+</section>
+
+<section class="impact-banner">
+  <h2>Whatever you're going through, you don't have to face it alone.</h2>
+  <div style="margin-top: 2rem;">
+    <a href="/get-help" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem;">Get Help Now →</a>
+  </div>
+</section>

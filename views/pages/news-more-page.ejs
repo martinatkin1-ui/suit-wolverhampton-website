@@ -1,0 +1,95 @@
+<% layout('layout') -%>
+
+<section class="hero" style="min-height: 36vh; padding: 3.5rem 5% 2.5rem;">
+  <nav class="outreach-breadcrumb" aria-label="Breadcrumb">
+    <a href="/news-more"><%= nm.hubTitle %></a>
+    <span aria-hidden="true"> / </span>
+    <span><%= page.title %></span>
+  </nav>
+  <h1><%= page.title %></h1>
+  <p class="hero-sub"><%= page.heroLead %></p>
+  <% if (page.legacyUrl) { %>
+  <p class="outreach-legacy-note">
+    <a href="<%= page.legacyUrl %>" target="_blank" rel="noopener noreferrer" class="outreach-legacy-link">Original page on suitrecoverywolverhampton.com (reference) →</a>
+  </p>
+  <% } %>
+</section>
+
+<% if (page.youtubeIds && page.youtubeIds.length) { %>
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>Video</h2>
+  </div>
+  <div class="outreach-video-grid">
+    <% page.youtubeIds.forEach(function(ytId) { %>
+    <div class="outreach-video">
+      <iframe src="https://www.youtube.com/embed/<%= ytId %>" title="<%= page.title %> — video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
+<% (page.sections || []).forEach(function(block) { %>
+<section class="section <%= block.type === 'notice' ? 'section-alt' : '' %>">
+  <div class="outreach-section-inner nm-section">
+    <% if (block.title) { %><h2><%= block.title %></h2><% } %>
+    <% if (block.subtitle) { %><p class="nm-subtitle"><%= block.subtitle %></p><% } %>
+    <% if (block.paragraphs) { block.paragraphs.forEach(function(p) { %>
+    <p class="outreach-prose"><%= p %></p>
+    <% }); } %>
+    <% if (block.items && block.items.length) { %>
+    <ul class="nm-bullet-list">
+      <% block.items.forEach(function(item) { %>
+      <li><%= item %></li>
+      <% }); %>
+    </ul>
+    <% } %>
+    <% if (block.quote) { %>
+    <blockquote class="outreach-quote">
+      “<%= block.quote %>”
+      <% if (block.cite) { %><cite>— <%= block.cite %></cite><% } %>
+    </blockquote>
+    <% } %>
+    <% if (block.links && block.links.length) { %>
+    <ul class="outreach-link-list">
+      <% block.links.forEach(function(l) { %>
+      <li><a href="<%= l.href %>" <% if (/^https?:/.test(l.href)) { %>target="_blank" rel="noopener noreferrer"<% } %>><%= l.label %> →</a></li>
+      <% }); %>
+    </ul>
+    <% } %>
+    <% if (block.youtubeId) { %>
+    <div class="outreach-video nm-inline-video">
+      <iframe src="https://www.youtube.com/embed/<%= block.youtubeId %>" title="<%= block.title || page.title %> — video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <% } %>
+  </div>
+</section>
+<% }); %>
+
+<% if (page.gallery && page.gallery.length) { %>
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>Gallery</h2>
+    <p>Photos from this story (legacy site media).</p>
+  </div>
+  <div class="outreach-gallery">
+    <% page.gallery.forEach(function(g) { %>
+    <figure class="outreach-gallery-item">
+      <img src="<%= g.src %>" alt="<%= g.alt || page.title %>" loading="lazy" width="400" height="300">
+    </figure>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
+<section class="section band-teal">
+  <div class="cta-involved" style="text-align: center;">
+    <h2>Stay connected</h2>
+    <p style="font-size: 1.1rem; opacity: 0.95; max-width: 560px; margin: 0 auto 1.5rem;">Questions about any of these topics? We’re the same team — get in touch.</p>
+    <div class="cta-button-row" style="justify-content: center;">
+      <a href="/contact" class="btn btn-cta">Contact SUIT</a>
+      <a href="/news-more" class="btn btn-outline-white">Back to <%= nm.hubTitle %> →</a>
+    </div>
+  </div>
+</section>
