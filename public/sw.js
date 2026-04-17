@@ -3,7 +3,7 @@
  * Enables offline access to key pages and timetable
  */
 
-const CACHE_NAME = 'suit-2026-v5';
+const CACHE_NAME = 'suit-2026-v6';
 const OFFLINE_URLS = [
   '/',
   '/get-help',

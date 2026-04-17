@@ -60,6 +60,8 @@ function minimalContentFallback() {
   return {
     site: {
       title: 'SUIT Wolverhampton',
+      headerTitle: 'SUIT',
+      headerSubtitle: '',
       tagline: '',
       phone: '01902 328983',
       email: 'suit@wvca.org.uk',
@@ -273,6 +275,9 @@ app.set('view options', {
 });
 app.use(
   express.static(path.join(ROOT_DIR, 'public'), {
+    /* Do not auto-serve index.html under public/ for document URLs (build-time prerenders).
+     * Otherwise GET / and similar skip Express routes and CMS updates never show. */
+    index: false,
     setHeaders(res, filePath) {
       if (filePath.endsWith('.css')) {
         res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
@@ -947,6 +952,20 @@ app.post('/admin/content', requireAdmin, requireAdminCsrf, async (req, res) => {
   // Update quote
   content.quote.text = req.body.quoteText || content.quote.text;
   content.quote.author = req.body.quoteAuthor || content.quote.author;
+  // Site identity (header + footer)
+  if (req.body.siteTitle !== undefined) {
+    const t = String(req.body.siteTitle || '').trim();
+    if (t) content.site.title = t;
+  }
+  if (req.body.siteTagline !== undefined) {
+    content.site.tagline = String(req.body.siteTagline || '').trim();
+  }
+  if (req.body.siteHeaderTitle !== undefined) {
+    content.site.headerTitle = String(req.body.siteHeaderTitle || '').trim();
+  }
+  if (req.body.siteHeaderSub !== undefined) {
+    content.site.headerSubtitle = String(req.body.siteHeaderSub || '').trim();
+  }
   // Update contact info
   content.site.phone = req.body.sitePhone || content.site.phone;
   content.site.email = req.body.siteEmail || content.site.email;
