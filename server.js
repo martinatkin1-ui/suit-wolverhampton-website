@@ -60,7 +60,7 @@ function minimalContentFallback() {
   return {
     site: {
       title: 'SUIT Wolverhampton',
-      headerTitle: 'SUIT',
+      headerTitle: '',
       headerSubtitle: '',
       tagline: '',
       phone: '01902 328983',
@@ -732,7 +732,7 @@ app.get('/feed.xml', async (req, res) => {
   xml += '  <channel>\n';
   xml += '    <title>SUIT Wolverhampton — Stories &amp; Updates</title>\n';
   xml += '    <link>' + baseUrl + '</link>\n';
-  xml += '    <description>Recovery stories, community updates, and the latest from the Service User Involvement Team, Wolverhampton.</description>\n';
+  xml += '    <description>Recovery stories, community updates, and the latest from SUIT Wolverhampton.</description>\n';
   xml += '    <language>en-gb</language>\n';
   xml += '    <lastBuildDate>' + new Date().toUTCString() + '</lastBuildDate>\n';
   xml += '    <atom:link href="' + baseUrl + '/feed.xml" rel="self" type="application/rss+xml"/>\n';
@@ -959,12 +959,6 @@ app.post('/admin/content', requireAdmin, requireAdminCsrf, async (req, res) => {
   }
   if (req.body.siteTagline !== undefined) {
     content.site.tagline = String(req.body.siteTagline || '').trim();
-  }
-  if (req.body.siteHeaderTitle !== undefined) {
-    content.site.headerTitle = String(req.body.siteHeaderTitle || '').trim();
-  }
-  if (req.body.siteHeaderSub !== undefined) {
-    content.site.headerSubtitle = String(req.body.siteHeaderSub || '').trim();
   }
   // Update contact info
   content.site.phone = req.body.sitePhone || content.site.phone;

@@ -1,25 +1,8 @@
-<!-- Sticky Header -->
-<% 
-  var logoMain = (content.site.headerTitle && String(content.site.headerTitle).trim())
-    || (content.site.title && String(content.site.title).trim())
-    || 'SUIT';
-  var rawHeaderSub = content.site.headerSubtitle;
-  var logoSub = null;
-  if (rawHeaderSub !== undefined && rawHeaderSub !== null) {
-    var _st = String(rawHeaderSub).trim();
-    logoSub = _st.length ? _st : null;
-  } else {
-    logoSub = 'Service User Involvement Team';
-  }
-  var logoAlt = (content.site.title && String(content.site.title).trim()) || 'SUIT Wolverhampton';
-%>
+<!-- Sticky Header — wordmark is in the logo image only (no duplicate text). -->
+<% var _homeLabel = ((content.site.title && String(content.site.title).trim()) || 'SUIT') + ' — Home'; %>
 <header class="site-header" role="banner">
-  <a href="/" class="logo-link" aria-label="<%= logoMain %> — Home">
-    <img src="/images/suit-logo.webp" alt="<%= logoAlt %> logo">
-    <div class="logo-text">
-      <%= logoMain %>
-      <% if (logoSub) { %><span class="logo-text__strap"><%= logoSub %></span><% } %>
-    </div>
+  <a href="/" class="logo-link logo-link--mark-only" aria-label="<%= _homeLabel %>">
+    <img src="/images/suit-logo.webp" alt="" decoding="async" class="logo-mark">
   </a>
 
   <nav class="main-nav" role="navigation" aria-label="Main navigation">

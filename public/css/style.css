@@ -303,23 +303,19 @@ img { max-width: 100%; height: auto; display: block; }
   display: flex; align-items: center; gap: 0.75rem;
   text-decoration: none;
 }
+.logo-link--mark-only {
+  gap: 0;
+}
+.logo-link .logo-mark {
+  height: 50px;
+  width: auto;
+  max-width: min(58vw, 220px);
+  object-fit: contain;
+  display: block;
+}
 .logo-link img {
   height: 50px;
   width: auto;
-}
-.logo-text {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.6rem;
-  color: var(--text-dark);
-}
-.logo-text .logo-text__strap {
-  display: block;
-  font-size: 0.55rem;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--brand-teal);
 }
 
 .main-nav { display: flex; align-items: center; gap: 1rem; }
@@ -1223,16 +1219,9 @@ body.light-mode .site-footer {
   .floating-buttons.is-open .floating-buttons__fab {
     background: var(--text-mid);
   }
-  .logo-text {
-    font-size: 1.25rem;
-    line-height: 1.15;
-    max-width: min(52vw, 14rem);
-  }
-  .logo-text .logo-text__strap {
-    display: none;
-  }
-  .logo-link img {
+  .logo-link .logo-mark {
     height: 44px;
+    max-width: min(62vw, 200px);
   }
   .ai-bubble { bottom: 80px; left: 12px; }
   .ai-chat-popup { width: 280px; }
