@@ -10,12 +10,12 @@ if (!process.env.VERCEL) {
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const session = require('express-session');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,23 +48,12 @@ const ROOT_DIR = resolveProjectRoot();
 const DATA_DIR = path.join(ROOT_DIR, 'data');
 const UPLOAD_DIR = path.join(ROOT_DIR, 'public', 'uploads');
 
+const cms = require('./lib/cms-store');
+cms.init(ROOT_DIR);
+const readJSON = cms.readJSON;
+const writeJSON = cms.writeJSON;
+
 // ─── Helpers ──────────────────────────────────────────
-function readJSON(filename) {
-  const p = path.join(DATA_DIR, filename);
-  if (!fs.existsSync(p)) return null;
-  try {
-    return JSON.parse(fs.readFileSync(p, 'utf8'));
-  } catch (err) {
-    console.error(`[readJSON] Invalid JSON: ${filename}`, err.message);
-    return null;
-  }
-}
-function writeJSON(filename, data) {
-  const filePath = path.join(DATA_DIR, filename);
-  const tmp = filePath + '.tmp';
-  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
-  fs.renameSync(tmp, filePath);
-}
 
 /** Avoid500s when content.json is missing (e.g. bad serverless bundle) */
 function minimalContentFallback() {
@@ -93,13 +82,26 @@ function minimalContentFallback() {
     services: [],
     about: { intro: '', mission: '', values: [] },
     quote: { text: '', author: '' },
-    impact: { stat: '', text: '' }
+    impact: { stat: '', text: '' },
+    crisis: {
+      headline: 'Are you in crisis right now?',
+      subtext: 'Please reach out — help is available.',
+      numbers: []
+    }
   };
 }
 
+/** Allow only http(s) URLs for site social / external links (stored strings may be edited in JSON). */
+function sanitizeSocialSiteUrl(v) {
+  const s = String(v || '').trim();
+  if (!s) return '';
+  if (!/^https?:\/\//i.test(s)) return '';
+  return s;
+}
+
 /** Safe shape for public /community when data file is missing or partial */
-function loadCommunityForPublic() {
-  const raw = readJSON('community.json');
+async function loadCommunityForPublic() {
+  const raw = await readJSON('community.json');
   if (!raw || typeof raw !== 'object') {
     return {
       intro: { subtext: 'Community updates will appear here soon.' },
@@ -118,8 +120,8 @@ function loadCommunityForPublic() {
 }
 
 /** Admin / persistence: require real file or initialise empty shell */
-function loadCommunityForAdmin() {
-  let c = readJSON('community.json');
+async function loadCommunityForAdmin() {
+  let c = await readJSON('community.json');
   if (!c || typeof c !== 'object') {
     c = { intro: { subtext: '' }, projects: {}, posts: [], socialWindows: {} };
   }
@@ -194,21 +196,37 @@ function loadLegacyRedirectMap() {
 
 const LEGACY_REDIRECT_MAP = loadLegacyRedirectMap();
 
-// Create default admin account if not exists (skip if filesystem is read-only, e.g. some serverless mounts)
-const ADMIN_FILE = path.join(DATA_DIR, 'admin.json');
-if (!fs.existsSync(ADMIN_FILE)) {
+async function ensureInitialAdminFile() {
+  const existing = await readJSON('admin.json');
+  if (existing) return;
   try {
-    const initialPw = process.env.ADMIN_INITIAL_PASSWORD || 'ChangeMe!2026';
-    const hash = bcrypt.hashSync(initialPw, 10);
-    writeJSON('admin.json', { username: 'admin', password: hash });
+    const isProd = process.env.NODE_ENV === 'production';
+    const initialPw = isProd
+      ? process.env.ADMIN_INITIAL_PASSWORD
+      : (process.env.ADMIN_INITIAL_PASSWORD || 'ChangeMe!2026');
+    if (!initialPw) {
+      console.warn(
+        '[admin] No admin account yet. Set ADMIN_INITIAL_PASSWORD in the environment to create one on startup, or seed admin via data/admin.json (file mode only).'
+      );
+      return;
+    }
+    const hash = await bcrypt.hash(initialPw, 10);
+    await writeJSON('admin.json', { username: 'admin', password: hash });
   } catch (err) {
     console.warn(
-      '[admin] Could not create data/admin.json:',
+      '[admin] Could not create admin account:',
       err && err.message ? err.message : err,
-      '— commit admin.json in repo or use a writable data store.'
+      '— check DATABASE_URL / Neon or use a writable data directory.'
     );
   }
 }
+
+let adminBootstrapPromise;
+function ensureAdminReady() {
+  if (!adminBootstrapPromise) adminBootstrapPromise = ensureInitialAdminFile();
+  return adminBootstrapPromise;
+}
+ensureAdminReady();
 
 // ─── Multer (File Uploads) ────────────────────────────
 const storage = multer.diskStorage({
@@ -220,18 +238,27 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    cb(null, `${uuidv4()}${ext}`);
+    cb(null, `${crypto.randomUUID()}${ext}`);
   }
 });
 const upload = multer({
   storage,
   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB for video
   fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|gif|webp|mp4|webm|mov/;
-    const extOk = allowed.test(path.extname(file.originalname).toLowerCase());
-    const mimeOk = allowed.test(file.mimetype) || file.mimetype.startsWith('video/') || file.mimetype.startsWith('image/');
-    if (extOk || mimeOk) return cb(null, true);
-    cb(new Error('Only image and video files are allowed'));
+    const ext = path.extname(file.originalname).toLowerCase();
+    const m = String(file.mimetype || '').toLowerCase();
+    if (ext === '.svg' || m === 'image/svg+xml') {
+      return cb(new Error('SVG uploads are not allowed'));
+    }
+    const imageExt = ['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext);
+    const videoExt = ['.mp4', '.webm', '.mov'].includes(ext);
+    const imageMime = /^image\/(jpeg|pjpeg|png|gif|webp)$/i.test(m);
+    const videoMime = /^video\/(mp4|webm|quicktime|x-msvideo)$/i.test(m);
+    if (imageExt && (imageMime || !m)) return cb(null, true);
+    if (videoExt && (videoMime || !m)) return cb(null, true);
+    if (imageMime && imageExt) return cb(null, true);
+    if (videoMime && videoExt) return cb(null, true);
+    cb(new Error('Only image (JPEG, PNG, GIF, WebP) and video (MP4, WebM, MOV) files are allowed'));
   }
 });
 
@@ -274,46 +301,67 @@ if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
     '[config] SESSION_SECRET is not set. Admin sessions are insecure. Vercel → Settings → Environment Variables → add SESSION_SECRET (long random string) for Production, Preview, and Build.'
   );
 }
-app.use(session({
+if (cms.cmsEnabled()) {
+  console.log('[cms] Persistence: Neon PostgreSQL (DATABASE_URL). Sessions stored in Postgres via connect-pg-simple.');
+}
+const sessionOptions = {
   secret: sessionSecret,
   resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production' || process.env.VERCEL === '1',
     sameSite: 'lax'
   }
-}));
+};
+const pgSessionStore = cms.getSessionStore(session);
+if (pgSessionStore) sessionOptions.store = pgSessionStore;
+app.use(session(sessionOptions));
 
-// Make data available to all templates
 app.use((req, res, next) => {
-  const contentRaw = readJSON('content.json');
-  res.locals.content =
-    contentRaw && typeof contentRaw === 'object' ? contentRaw : minimalContentFallback();
-  const nm = readJSON('news-more.json');
-  const nmNavFb = readJSON('news-more.nav-fallback.json');
-  res.locals.newsMore = nm;
-  if (nm && nm.cards && nm.cards.length) {
-    res.locals.newsMoreNavCards = nm.cards;
-  } else if (nmNavFb && nmNavFb.cards && nmNavFb.cards.length) {
-    res.locals.newsMoreNavCards = nmNavFb.cards;
-  } else {
-    res.locals.newsMoreNavCards = [];
+  if (req.session && req.session.admin) {
+    if (!req.session.csrfToken) {
+      req.session.csrfToken = crypto.randomBytes(32).toString('hex');
+    }
+    res.locals.csrfToken = req.session.csrfToken;
   }
-  res.locals.currentPath = req.path;
-  res.locals.isAdmin = !!req.session.admin;
   next();
 });
 
+// Make data available to all templates
+app.use(async (req, res, next) => {
+  try {
+    const contentRaw = await readJSON('content.json');
+    res.locals.content =
+      contentRaw && typeof contentRaw === 'object' ? contentRaw : minimalContentFallback();
+    const nm = await readJSON('news-more.json');
+    const nmNavFb = await readJSON('news-more.nav-fallback.json');
+    res.locals.newsMore = nm;
+    if (nm && Array.isArray(nm.cards) && nm.cards.length) {
+      res.locals.newsMoreNavCards = nm.cards;
+    } else if (nmNavFb && Array.isArray(nmNavFb.cards) && nmNavFb.cards.length) {
+      res.locals.newsMoreNavCards = nmNavFb.cards;
+    } else {
+      res.locals.newsMoreNavCards = [];
+    }
+    res.locals.currentPath = req.path;
+    res.locals.isAdmin = !!req.session.admin;
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 /** Verify you are running THIS project (public — no auth; safe for uptime checks) */
-app.get('/__suit-health', (req, res) => {
+app.get('/__suit-health', async (req, res) => {
   res.type('json').send(JSON.stringify({
     app: 'suit-wolverhampton-2026',
     serverFile: __filename,
     serverRoot: ROOT_DIR,
     processCwd: process.cwd(),
     listenPort: PORT,
+    cmsBackend: cms.cmsEnabled() ? 'neon' : 'filesystem',
     data: {
       culturalOutreachJson: fs.existsSync(path.join(DATA_DIR, 'cultural-outreach.json')),
       newsMoreJson: fs.existsSync(path.join(DATA_DIR, 'news-more.json')),
@@ -330,14 +378,22 @@ function requireAdmin(req, res, next) {
   res.redirect('/admin/login');
 }
 
+function requireAdminCsrf(req, res, next) {
+  const token = req.body && req.body._csrf;
+  if (!token || !req.session.csrfToken || token !== req.session.csrfToken) {
+    return res.status(403).type('text/plain').send('Invalid or missing security token. Refresh the page and try again.');
+  }
+  next();
+}
+
 // ═══════════════════════════════════════════════════════
 // PUBLIC ROUTES
 // ═══════════════════════════════════════════════════════
 
 // Homepage
-app.get('/', (req, res) => {
-  const timetable = readJSON('timetable.json') || {};
-  const stories = readJSON('stories.json') || [];
+app.get('/', async (req, res) => {
+  const timetable = await readJSON('timetable.json') || {};
+  const stories = await readJSON('stories.json') || [];
   const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const today = days[new Date().getDay()];
   const todayEvents = timetable[today] || [];
@@ -349,7 +405,7 @@ app.get('/', (req, res) => {
 });
 
 // Get Help Now
-app.get('/get-help', (req, res) => {
+app.get('/get-help', async (req, res) => {
   res.render('pages/get-help', {
     pageTitle: 'Get Help Now',
     pageDescription: 'Need help with addiction in Wolverhampton? Call SUIT on 01902 328983 or walk in to Paycare House. Free, confidential, lived experience support. No referral needed.',
@@ -358,7 +414,7 @@ app.get('/get-help', (req, res) => {
 });
 
 // How We Help (Services)
-app.get('/services', (req, res) => {
+app.get('/services', async (req, res) => {
   res.render('pages/services', {
     pageTitle: 'How We Help',
     pageDescription: 'SUIT offers peer mentoring, advocacy, drop-in sanctuary, creative arts therapy, clinical treatment pathways, and volunteering. Free wraparound support in Wolverhampton.',
@@ -367,9 +423,9 @@ app.get('/services', (req, res) => {
 });
 
 // Timetable
-app.get('/timetable', (req, res) => {
-  const timetable = readJSON('timetable.json') || {};
-  const progFile = readJSON('programmes.json');
+app.get('/timetable', async (req, res) => {
+  const timetable = await readJSON('timetable.json') || {};
+  const progFile = await readJSON('programmes.json');
   const programmes = (progFile && progFile.programmes) ? progFile.programmes : [];
   res.render('pages/timetable', {
     timetable,
@@ -381,8 +437,8 @@ app.get('/timetable', (req, res) => {
 });
 
 // Stories of Hope
-app.get('/stories', (req, res) => {
-  const stories = readJSON('stories.json') || [];
+app.get('/stories', async (req, res) => {
+  const stories = await readJSON('stories.json') || [];
   res.render('pages/stories', {
     stories,
     pageTitle: 'Stories of Hope',
@@ -392,17 +448,17 @@ app.get('/stories', (req, res) => {
 });
 
 // Individual Story
-app.get('/stories/:id', (req, res) => {
-  const stories = readJSON('stories.json') || [];
+app.get('/stories/:id', async (req, res) => {
+  const stories = await readJSON('stories.json') || [];
   const story = stories.find(s => s.id === req.params.id);
   if (!story) return res.status(404).render('pages/404');
   res.render('pages/story-single', { story });
 });
 
 // Our Timeline
-app.get('/timeline', (req, res) => {
-  const timeline = readJSON('timeline.json') || [];
-  const timelineCulture = readJSON('timeline-culture.json');
+app.get('/timeline', async (req, res) => {
+  const timeline = await readJSON('timeline.json') || [];
+  const timelineCulture = await readJSON('timeline-culture.json');
   res.render('pages/timeline', {
     timeline,
     timelineCulture,
@@ -413,9 +469,9 @@ app.get('/timeline', (req, res) => {
 });
 
 // Community
-app.get('/community', (req, res) => {
-  const community = loadCommunityForPublic();
-  const culturalOutreach = readJSON('cultural-outreach.json');
+app.get('/community', async (req, res) => {
+  const community = await loadCommunityForPublic();
+  const culturalOutreach = await readJSON('cultural-outreach.json');
   const posts = sortedCommunityPosts(community);
   res.render('pages/community', {
     community,
@@ -427,8 +483,8 @@ app.get('/community', (req, res) => {
   });
 });
 
-function renderCulturalOutreachHub(req, res) {
-  const outreach = readJSON('cultural-outreach.json');
+async function renderCulturalOutreachHub(req, res) {
+  const outreach = await readJSON('cultural-outreach.json');
   if (!outreach || !outreach.cards) {
     return res.status(500).send(
       'Cultural outreach content is not available. Ensure data/cultural-outreach.json exists in this project folder (same place as server.js) and restart the server.'
@@ -466,9 +522,9 @@ app.use((req, res, next) => {
 
 app.get('/community/outreach', renderCulturalOutreachHub);
 
-app.get('/community/outreach/:slug', (req, res) => {
+app.get('/community/outreach/:slug', async (req, res) => {
   const slug = req.params.slug;
-  const outreach = readJSON('cultural-outreach.json');
+  const outreach = await readJSON('cultural-outreach.json');
   if (!outreach || !outreach.programmes) {
     return res.status(500).send(
       'Cultural outreach content is not available. Ensure data/cultural-outreach.json is valid and restart the server.'
@@ -491,9 +547,9 @@ app.get('/community/outreach/:slug', (req, res) => {
   });
 });
 
-app.get('/news-more', (req, res) => {
-  const nm = res.locals.newsMore || readJSON('news-more.json');
-  if (!nm || !nm.cards) {
+app.get('/news-more', async (req, res) => {
+  const nm = res.locals.newsMore || await readJSON('news-more.json');
+  if (!nm || !Array.isArray(nm.cards)) {
     return res.status(500).send('News & More content is not available.');
   }
   res.render('pages/news-more-hub', {
@@ -504,9 +560,9 @@ app.get('/news-more', (req, res) => {
   });
 });
 
-app.get('/news-more/:slug', (req, res) => {
+app.get('/news-more/:slug', async (req, res) => {
   const slug = req.params.slug;
-  const nm = res.locals.newsMore || readJSON('news-more.json');
+  const nm = res.locals.newsMore || await readJSON('news-more.json');
   const page = nm && nm.pages && nm.pages[slug];
   if (!page || typeof page !== 'object') {
     return res.status(404).render('pages/404', {
@@ -531,8 +587,8 @@ app.get('/cultural-outreach', (req, res) => res.redirect(301, '/community/outrea
 app.get('/community/cultural-outreach', (req, res) => res.redirect(301, '/community/outreach'));
 
 // About Us
-app.get('/about', (req, res) => {
-  const teamData = readJSON('team.json') || { staff: [], volunteers: [] };
+app.get('/about', async (req, res) => {
+  const teamData = await readJSON('team.json') || { staff: [], volunteers: [] };
   const staff = teamData.staff || [];
   const volunteers = teamData.volunteers || [];
   res.render('pages/about', {
@@ -545,7 +601,7 @@ app.get('/about', (req, res) => {
 });
 
 // Contact Us
-app.get('/contact', (req, res) => {
+app.get('/contact', async (req, res) => {
   res.render('pages/contact', {
     sent: false,
     error: null,
@@ -556,9 +612,9 @@ app.get('/contact', (req, res) => {
 });
 
 // Socials - unified feed page
-app.get('/socials', (req, res) => {
-  const stories = readJSON('stories.json') || [];
-  const community = loadCommunityForPublic();
+app.get('/socials', async (req, res) => {
+  const stories = await readJSON('stories.json') || [];
+  const community = await loadCommunityForPublic();
   const communityPosts = community.posts;
 
   // Build unified feed from stories + community posts
@@ -602,10 +658,10 @@ app.get('/socials', (req, res) => {
 });
 
 // RSS Feed (XML)
-app.get('/feed.xml', (req, res) => {
+app.get('/feed.xml', async (req, res) => {
   const baseUrl = 'https://www.suitrecoverywolverhampton.com';
-  const stories = readJSON('stories.json') || [];
-  const community = loadCommunityForPublic();
+  const stories = await readJSON('stories.json') || [];
+  const community = await loadCommunityForPublic();
   const communityPosts = community.posts;
 
   const items = [];
@@ -675,21 +731,21 @@ const contactLimiter = rateLimit({
 });
 
 // Contact form submission
-app.post('/contact', contactLimiter, (req, res) => {
+app.post('/contact', contactLimiter, async (req, res) => {
   const name = String(req.body.name || '').trim().slice(0, 200);
   const email = String(req.body.email || '').trim().slice(0, 200);
   const phone = String(req.body.phone || '').trim().slice(0, 50);
   const message = String(req.body.message || '').trim().slice(0, 5000);
   const type = ['general', 'referral', 'volunteer', 'other'].includes(req.body.type) ? req.body.type : 'general';
   if (!name || !message) return res.render('pages/contact', { sent: false, error: 'Name and message are required.' });
-  const messages = readJSON('messages.json') || [];
-  messages.push({ id: uuidv4(), name, email, phone, message, type, date: new Date().toISOString(), read: false });
-  writeJSON('messages.json', messages);
+  const messages = await readJSON('messages.json') || [];
+  messages.push({ id: crypto.randomUUID(), name, email, phone, message, type, date: new Date().toISOString(), read: false });
+  await writeJSON('messages.json', messages);
   res.render('pages/contact', { sent: true, error: null });
 });
 
 // PWA manifest
-app.get('/manifest.json', (req, res) => {
+app.get('/manifest.json', async (req, res) => {
   res.json({
     name: 'SUIT Wolverhampton',
     short_name: 'SUIT',
@@ -706,12 +762,12 @@ app.get('/manifest.json', (req, res) => {
 });
 
 // Service Worker
-app.get('/sw.js', (req, res) => {
+app.get('/sw.js', async (req, res) => {
   res.sendFile(path.join(ROOT_DIR, 'public', 'sw.js'));
 });
 
 // Sitemap.xml (SEO)
-app.get('/sitemap.xml', (req, res) => {
+app.get('/sitemap.xml', async (req, res) => {
   const baseUrl = 'https://www.suitrecoverywolverhampton.com';
   const pages = [
     { url: '/', priority: '1.0', freq: 'weekly' },
@@ -727,7 +783,7 @@ app.get('/sitemap.xml', (req, res) => {
     { url: '/contact', priority: '0.7', freq: 'yearly' },
     { url: '/news-more', priority: '0.72', freq: 'weekly' }
   ];
-  const outreachData = readJSON('cultural-outreach.json');
+  const outreachData = await readJSON('cultural-outreach.json');
   const outreachSlugs =
     outreachData && outreachData.programmes && typeof outreachData.programmes === 'object'
       ? Object.keys(outreachData.programmes)
@@ -735,7 +791,7 @@ app.get('/sitemap.xml', (req, res) => {
   outreachSlugs.forEach(slug => {
     pages.push({ url: `/community/outreach/${slug}`, priority: '0.7', freq: 'monthly' });
   });
-  const nmData = readJSON('news-more.json');
+  const nmData = await readJSON('news-more.json');
   const nmSlugs =
     nmData && nmData.pages && typeof nmData.pages === 'object' ? Object.keys(nmData.pages) : [];
   nmSlugs.forEach(slug => {
@@ -747,7 +803,7 @@ app.get('/sitemap.xml', (req, res) => {
     });
   });
   // Add individual stories
-  const stories = readJSON('stories.json') || [];
+  const stories = await readJSON('stories.json') || [];
   stories.forEach(s => pages.push({ url: `/stories/${s.id}`, priority: '0.5', freq: 'yearly' }));
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -761,7 +817,7 @@ app.get('/sitemap.xml', (req, res) => {
 });
 
 // Robots.txt (SEO)
-app.get('/robots.txt', (req, res) => {
+app.get('/robots.txt', async (req, res) => {
   res.set('Content-Type', 'text/plain');
   res.send(`User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: https://www.suitrecoverywolverhampton.com/sitemap.xml`);
 });
@@ -771,18 +827,19 @@ app.get('/robots.txt', (req, res) => {
 // ═══════════════════════════════════════════════════════
 
 // Admin login
-app.get('/admin/login', (req, res) => {
+app.get('/admin/login', async (req, res) => {
   res.render('admin/login', { error: null });
 });
 
 app.post('/admin/login', async (req, res) => {
-  const admin = readJSON('admin.json');
+  const admin = await readJSON('admin.json');
   if (!admin) return res.render('admin/login', { error: 'Admin account not configured' });
   const match = await bcrypt.compare(req.body.password || '', admin.password);
   if (req.body.username === admin.username && match) {
     req.session.regenerate((err) => {
       if (err) return res.render('admin/login', { error: 'Session error, try again' });
       req.session.admin = true;
+      req.session.csrfToken = crypto.randomBytes(32).toString('hex');
       res.redirect('/admin');
     });
     return;
@@ -790,31 +847,38 @@ app.post('/admin/login', async (req, res) => {
   res.render('admin/login', { error: 'Invalid username or password' });
 });
 
-app.post('/admin/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
+app.get('/admin/logout', async (req, res) => {
+  res.redirect('/admin');
+});
+
+app.post('/admin/logout', requireAdmin, requireAdminCsrf, async (req, res) => {
+  req.session.destroy((destroyErr) => {
+    if (destroyErr) console.error('[admin] session destroy', destroyErr);
+    res.redirect('/');
+  });
 });
 
 // Admin dashboard
-app.get('/admin', requireAdmin, (req, res) => {
-  const messages = readJSON('messages.json') || [];
-  const stories = readJSON('stories.json') || [];
-  const teamData = readJSON('team.json') || { staff: [], volunteers: [] };
+app.get('/admin', requireAdmin, async (req, res) => {
+  const messages = await readJSON('messages.json') || [];
+  const stories = await readJSON('stories.json') || [];
+  const teamData = await readJSON('team.json') || { staff: [], volunteers: [] };
   const team = teamData.staff || [];
-  const community = loadCommunityForAdmin();
+  const community = await loadCommunityForAdmin();
   const communityPosts = community.posts.length;
   const unread = messages.filter(m => !m.read).length;
   res.render('admin/dashboard', { messages, stories, team, unread, communityPosts, volunteers: teamData.volunteers || [] });
 });
 
 // ─── CONTENT EDITING ──────────────────────────────────
-app.get('/admin/content', requireAdmin, (req, res) => {
-  const content = readJSON('content.json');
+app.get('/admin/content', requireAdmin, async (req, res) => {
+  const content = await readJSON('content.json');
+  if (!content) return res.status(500).send('content.json is missing or invalid');
   res.render('admin/edit-content', { content, saved: false });
 });
 
-app.post('/admin/content', requireAdmin, (req, res) => {
-  const content = readJSON('content.json');
+app.post('/admin/content', requireAdmin, requireAdminCsrf, async (req, res) => {
+  const content = await readJSON('content.json');
   if (!content) return res.status(500).send('content.json is missing or invalid');
   // Update hero
   content.hero.headline = req.body.heroHeadline || content.hero.headline;
@@ -829,32 +893,32 @@ app.post('/admin/content', requireAdmin, (req, res) => {
   content.site.phone = req.body.sitePhone || content.site.phone;
   content.site.email = req.body.siteEmail || content.site.email;
   content.site.address = req.body.siteAddress || content.site.address;
-  content.site.whatsapp = req.body.siteWhatsapp || content.site.whatsapp;
-  content.site.facebook = req.body.siteFacebook || content.site.facebook;
-  content.site.instagram = req.body.siteInstagram || content.site.instagram;
+  content.site.whatsapp = sanitizeSocialSiteUrl(req.body.siteWhatsapp ?? content.site.whatsapp);
+  content.site.facebook = sanitizeSocialSiteUrl(req.body.siteFacebook ?? content.site.facebook);
+  content.site.instagram = sanitizeSocialSiteUrl(req.body.siteInstagram ?? content.site.instagram);
+  content.site.twitter = sanitizeSocialSiteUrl(req.body.siteTwitter ?? content.site.twitter);
+  content.site.youtube = sanitizeSocialSiteUrl(req.body.siteYoutube ?? content.site.youtube);
 
-  ['facebook','instagram','whatsapp'].forEach(k => {
-    const v = content.site[k];
-    if (v && !/^https?:\/\//i.test(v)) content.site[k] = '';
-  });
-
-  writeJSON('content.json', content);
+  await writeJSON('content.json', content);
   res.render('admin/edit-content', { content, saved: true });
 });
 
 // ─── SERVICES EDITING ─────────────────────────────────
-app.get('/admin/services', requireAdmin, (req, res) => {
-  const content = readJSON('content.json');
-  res.render('admin/edit-services', { services: content.services, saved: false });
+app.get('/admin/services', requireAdmin, async (req, res) => {
+  const content = await readJSON('content.json');
+  const services = content && Array.isArray(content.services) ? content.services : [];
+  res.render('admin/edit-services', { services, saved: false });
 });
 
-app.post('/admin/services', requireAdmin, (req, res) => {
-  const content = readJSON('content.json');
+app.post('/admin/services', requireAdmin, requireAdminCsrf, async (req, res) => {
+  const content = await readJSON('content.json');
+  if (!content) return res.status(500).send('content.json is missing or invalid');
+  if (!Array.isArray(content.services)) content.services = [];
   const { serviceId, serviceIcon, serviceTitle, serviceDescription, serviceColor } = req.body;
 
   if (Array.isArray(serviceId)) {
     content.services = serviceId.map((id, i) => ({
-      id: id || `service-${uuidv4().slice(0,8)}`,
+      id: id || `service-${crypto.randomUUID().slice(0,8)}`,
       icon: serviceIcon[i] || '🔹',
       title: serviceTitle[i] || 'Service',
       description: serviceDescription[i] || '',
@@ -862,22 +926,22 @@ app.post('/admin/services', requireAdmin, (req, res) => {
     }));
   }
 
-  writeJSON('content.json', content);
+  await writeJSON('content.json', content);
   res.render('admin/edit-services', { services: content.services, saved: true });
 });
 
 // ─── TIMETABLE EDITING ────────────────────────────────
-app.get('/admin/timetable', requireAdmin, (req, res) => {
-  const timetable = readJSON('timetable.json');
-  const progFile = readJSON('programmes.json');
+app.get('/admin/timetable', requireAdmin, async (req, res) => {
+  const timetable = (await readJSON('timetable.json')) || {};
+  const progFile = await readJSON('programmes.json');
   const programmeOptions = (progFile && progFile.programmes) ? progFile.programmes : [];
   res.render('admin/edit-timetable', { timetable, programmeOptions, saved: false });
 });
 
-app.post('/admin/timetable', requireAdmin, (req, res) => {
+app.post('/admin/timetable', requireAdmin, requireAdminCsrf, async (req, res) => {
   const { day, time, title, category, description, eventId } = req.body;
-  const timetable = readJSON('timetable.json');
-  const progFile = readJSON('programmes.json');
+  const timetable = (await readJSON('timetable.json')) || {};
+  const progFile = await readJSON('programmes.json');
   const programmeOptions = (progFile && progFile.programmes) ? progFile.programmes : [];
 
   if (req.body.action === 'delete') {
@@ -926,7 +990,7 @@ app.post('/admin/timetable', requireAdmin, (req, res) => {
     if (!timetable[dayKey]) timetable[dayKey] = [];
 
     const newEvent = {
-      id: eventId || `evt-${uuidv4().slice(0, 8)}`,
+      id: eventId || `evt-${crypto.randomUUID().slice(0, 8)}`,
       time,
       title,
       category,
@@ -952,22 +1016,22 @@ app.post('/admin/timetable', requireAdmin, (req, res) => {
     timetable[dayKey].sort((a, b) => a.time.localeCompare(b.time));
   }
 
-  writeJSON('timetable.json', timetable);
+  await writeJSON('timetable.json', timetable);
   res.render('admin/edit-timetable', { timetable, programmeOptions, saved: true });
 });
 
 // ─── STORIES EDITING ──────────────────────────────────
-app.get('/admin/stories', requireAdmin, (req, res) => {
-  const stories = readJSON('stories.json');
+app.get('/admin/stories', requireAdmin, async (req, res) => {
+  const stories = (await readJSON('stories.json')) || [];
   res.render('admin/edit-stories', { stories, saved: false, editing: null });
 });
 
-app.get('/admin/stories/new', requireAdmin, (req, res) => {
+app.get('/admin/stories/new', requireAdmin, async (req, res) => {
   res.render('admin/story-form', { story: null });
 });
 
-app.get('/admin/stories/edit/:id', requireAdmin, (req, res) => {
-  const stories = readJSON('stories.json');
+app.get('/admin/stories/edit/:id', requireAdmin, async (req, res) => {
+  const stories = (await readJSON('stories.json')) || [];
   const story = stories.find(s => s.id === req.params.id);
   if (!story) return res.redirect('/admin/stories');
   res.render('admin/story-form', { story });
@@ -979,12 +1043,12 @@ app.post('/admin/stories/save', requireAdmin, (req, res, next) => {
 }, upload.fields([
   { name: 'storyImage', maxCount: 1 },
   { name: 'storyVideo', maxCount: 1 }
-]), (req, res) => {
-  const stories = readJSON('stories.json');
+]), requireAdminCsrf, async (req, res) => {
+  const stories = (await readJSON('stories.json')) || [];
   const { storyId, name, title, excerpt, fullStory, featured } = req.body;
 
   const storyData = {
-    id: storyId || `story-${uuidv4().slice(0,8)}`,
+    id: storyId || `story-${crypto.randomUUID().slice(0,8)}`,
     name: name || 'Anonymous',
     title: title || '',
     excerpt: excerpt || '',
@@ -1002,31 +1066,31 @@ app.post('/admin/stories/save', requireAdmin, (req, res, next) => {
     stories.push(storyData);
   }
 
-  writeJSON('stories.json', stories);
+  await writeJSON('stories.json', stories);
   res.redirect('/admin/stories');
 });
 
-app.post('/admin/stories/delete/:id', requireAdmin, (req, res) => {
-  let stories = readJSON('stories.json');
+app.post('/admin/stories/delete/:id', requireAdmin, requireAdminCsrf, async (req, res) => {
+  let stories = (await readJSON('stories.json')) || [];
   stories = stories.filter(s => s.id !== req.params.id);
-  writeJSON('stories.json', stories);
+  await writeJSON('stories.json', stories);
   res.redirect('/admin/stories');
 });
 
 // ─── TEAM EDITING ─────────────────────────────────────
-app.get('/admin/team', requireAdmin, (req, res) => {
-  const teamData = readJSON('team.json');
+app.get('/admin/team', requireAdmin, async (req, res) => {
+  const teamData = (await readJSON('team.json')) || { staff: [], volunteers: [] };
   const team = teamData.staff || [];
   const volunteers = teamData.volunteers || [];
   res.render('admin/edit-team', { team, volunteers, saved: false });
 });
 
-app.get('/admin/team/new', requireAdmin, (req, res) => {
+app.get('/admin/team/new', requireAdmin, async (req, res) => {
   res.render('admin/team-form', { member: null, isVolunteer: false });
 });
 
-app.get('/admin/team/edit/:id', requireAdmin, (req, res) => {
-  const teamData = readJSON('team.json');
+app.get('/admin/team/edit/:id', requireAdmin, async (req, res) => {
+  const teamData = (await readJSON('team.json')) || { staff: [], volunteers: [] };
   const allMembers = [...(teamData.staff || []), ...(teamData.volunteers || [])];
   const member = allMembers.find(m => m.id === req.params.id);
   if (!member) return res.redirect('/admin/team');
@@ -1038,14 +1102,14 @@ app.get('/admin/team/edit/:id', requireAdmin, (req, res) => {
 app.post('/admin/team/save', requireAdmin, (req, res, next) => {
   req.uploadDest = 'team';
   next();
-}, upload.single('memberImage'), (req, res) => {
-  const teamData = readJSON('team.json');
+}, upload.single('memberImage'), requireAdminCsrf, async (req, res) => {
+  const teamData = (await readJSON('team.json')) || { staff: [], volunteers: [] };
   const { memberId, name, role, bio, videoUrl, memberType, volunteerTeam } = req.body;
 
   const isVolunteer = memberType === 'volunteer';
 
   const memberDataBase = {
-    id: memberId || `member-${uuidv4().slice(0,8)}`,
+    id: memberId || `member-${crypto.randomUUID().slice(0,8)}`,
     name: name || 'Team Member',
     role: role || '',
     bio: bio || '',
@@ -1074,37 +1138,37 @@ app.post('/admin/team/save', requireAdmin, (req, res, next) => {
     teamData.staff = staff;
   }
 
-  writeJSON('team.json', teamData);
+  await writeJSON('team.json', teamData);
   res.redirect('/admin/team');
 });
 
-app.post('/admin/team/delete/:id', requireAdmin, (req, res) => {
-  const teamData = readJSON('team.json');
+app.post('/admin/team/delete/:id', requireAdmin, requireAdminCsrf, async (req, res) => {
+  const teamData = (await readJSON('team.json')) || { staff: [], volunteers: [] };
   teamData.staff = (teamData.staff || []).filter(m => m.id !== req.params.id);
   teamData.volunteers = (teamData.volunteers || []).filter(m => m.id !== req.params.id);
-  writeJSON('team.json', teamData);
+  await writeJSON('team.json', teamData);
   res.redirect('/admin/team');
 });
 
 // ─── MESSAGES ─────────────────────────────────────────
-app.get('/admin/messages', requireAdmin, (req, res) => {
-  const messages = readJSON('messages.json') || [];
+app.get('/admin/messages', requireAdmin, async (req, res) => {
+  const messages = await readJSON('messages.json') || [];
   res.render('admin/messages', { messages });
 });
 
 // ─── COMMUNITY EDITING ───────────────────────────────
-app.get('/admin/community', requireAdmin, (req, res) => {
-  const community = loadCommunityForAdmin();
+app.get('/admin/community', requireAdmin, async (req, res) => {
+  const community = await loadCommunityForAdmin();
   const posts = sortedCommunityPosts(community);
   res.render('admin/edit-community', { posts, saved: false });
 });
 
-app.get('/admin/community/new', requireAdmin, (req, res) => {
+app.get('/admin/community/new', requireAdmin, async (req, res) => {
   res.render('admin/community-form', { post: null });
 });
 
-app.get('/admin/community/edit/:id', requireAdmin, (req, res) => {
-  const community = loadCommunityForAdmin();
+app.get('/admin/community/edit/:id', requireAdmin, async (req, res) => {
+  const community = await loadCommunityForAdmin();
   const post = community.posts.find(p => p.id === req.params.id);
   if (!post) return res.redirect('/admin/community');
   res.render('admin/community-form', { post });
@@ -1116,8 +1180,8 @@ app.post('/admin/community/save', requireAdmin, (req, res, next) => {
 }, upload.fields([
   { name: 'postImage', maxCount: 1 },
   { name: 'postVideo', maxCount: 1 }
-]), (req, res) => {
-  const community = loadCommunityForAdmin();
+]), requireAdminCsrf, async (req, res) => {
+  const community = await loadCommunityForAdmin();
   const { postId, title, date, category, tags, body, quote, quoteAuthor, link, linkText, pinned } = req.body;
 
   let imageUrl = String(req.body.imageUrl || '').trim();
@@ -1131,7 +1195,7 @@ app.post('/admin/community/save', requireAdmin, (req, res, next) => {
   }
 
   const postData = {
-    id: postId || `post-${uuidv4().slice(0, 8)}`,
+    id: postId || `post-${crypto.randomUUID().slice(0, 8)}`,
     date: date || new Date().toISOString().split('T')[0],
     category: category || 'announcements',
     tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
@@ -1154,22 +1218,22 @@ app.post('/admin/community/save', requireAdmin, (req, res, next) => {
     community.posts.push(postData);
   }
 
-  writeJSON('community.json', community);
+  await writeJSON('community.json', community);
   res.redirect('/admin/community');
 });
 
-app.post('/admin/community/delete/:id', requireAdmin, (req, res) => {
-  const community = loadCommunityForAdmin();
+app.post('/admin/community/delete/:id', requireAdmin, requireAdminCsrf, async (req, res) => {
+  const community = await loadCommunityForAdmin();
   community.posts = community.posts.filter(p => p.id !== req.params.id);
-  writeJSON('community.json', community);
+  await writeJSON('community.json', community);
   res.redirect('/admin/community');
 });
 
 const COMMUNITY_PROJECT_KEYS = ['art', 'music', 'drama'];
 const COMMUNITY_SOCIAL_KEYS = ['facebook', 'instagram', 'youtube', 'twitter'];
 
-app.get('/admin/community/page', requireAdmin, (req, res) => {
-  const community = loadCommunityForAdmin();
+app.get('/admin/community/page', requireAdmin, async (req, res) => {
+  const community = await loadCommunityForAdmin();
   if (!community.socialWindows) {
     community.socialWindows = {};
     COMMUNITY_SOCIAL_KEYS.forEach(k => {
@@ -1183,8 +1247,8 @@ app.get('/admin/community/page', requireAdmin, (req, res) => {
   });
 });
 
-app.post('/admin/community/page', requireAdmin, (req, res) => {
-  const community = loadCommunityForAdmin();
+app.post('/admin/community/page', requireAdmin, requireAdminCsrf, async (req, res) => {
+  const community = await loadCommunityForAdmin();
   const nextProjects = { ...community.projects };
   COMMUNITY_PROJECT_KEYS.forEach(key => {
     const prev = community.projects[key] || {};
@@ -1212,22 +1276,22 @@ app.post('/admin/community/page', requireAdmin, (req, res) => {
   });
   community.socialWindows = sw;
 
-  writeJSON('community.json', community);
+  await writeJSON('community.json', community);
   res.redirect('/admin/community/page?saved=1');
 });
 
-app.post('/admin/messages/read/:id', requireAdmin, (req, res) => {
-  const messages = readJSON('messages.json') || [];
+app.post('/admin/messages/read/:id', requireAdmin, requireAdminCsrf, async (req, res) => {
+  const messages = await readJSON('messages.json') || [];
   const msg = messages.find(m => m.id === req.params.id);
   if (msg) msg.read = true;
-  writeJSON('messages.json', messages);
+  await writeJSON('messages.json', messages);
   res.redirect('/admin/messages');
 });
 
-app.post('/admin/messages/delete/:id', requireAdmin, (req, res) => {
-  let messages = readJSON('messages.json') || [];
+app.post('/admin/messages/delete/:id', requireAdmin, requireAdminCsrf, async (req, res) => {
+  let messages = await readJSON('messages.json') || [];
   messages = messages.filter(m => m.id !== req.params.id);
-  writeJSON('messages.json', messages);
+  await writeJSON('messages.json', messages);
   res.redirect('/admin/messages');
 });
 
@@ -1240,8 +1304,8 @@ const ADMIN_TIMELINE_ICONS = [
 const ADMIN_TIMELINE_COLORS = ['orange', 'cyan', 'green', 'pink', 'teal'];
 
 // ─── TIMELINE (milestones) ────────────────────────────
-app.get('/admin/timeline', requireAdmin, (req, res) => {
-  let timeline = readJSON('timeline.json') || [];
+app.get('/admin/timeline', requireAdmin, async (req, res) => {
+  let timeline = await readJSON('timeline.json') || [];
   if (!timeline.length) {
     timeline = [{ year: '', title: '', description: '', icon: 'lucide:sprout', color: 'teal' }];
   }
@@ -1254,7 +1318,7 @@ app.get('/admin/timeline', requireAdmin, (req, res) => {
   });
 });
 
-app.post('/admin/timeline', requireAdmin, (req, res) => {
+app.post('/admin/timeline', requireAdmin, requireAdminCsrf, async (req, res) => {
   const years = [].concat(req.body.m_year || []);
   const titles = [].concat(req.body.m_title || []);
   const descriptions = [].concat(req.body.m_description || []);
@@ -1273,7 +1337,7 @@ app.post('/admin/timeline', requireAdmin, (req, res) => {
       color: String(colors[i] || 'teal').trim()
     });
   }
-  writeJSON('timeline.json', timeline);
+  await writeJSON('timeline.json', timeline);
   res.render('admin/edit-timeline', {
     timeline,
     iconOptions: ADMIN_TIMELINE_ICONS,
@@ -1284,8 +1348,8 @@ app.post('/admin/timeline', requireAdmin, (req, res) => {
 });
 
 // ─── TIMELINE culture strip (art / drama / music) ────
-app.get('/admin/timeline-culture', requireAdmin, (req, res) => {
-  const timelineCulture = readJSON('timeline-culture.json') || { pillars: [] };
+app.get('/admin/timeline-culture', requireAdmin, async (req, res) => {
+  const timelineCulture = await readJSON('timeline-culture.json') || { pillars: [] };
   res.render('admin/edit-timeline-culture', {
     tc: timelineCulture,
     saved: false,
@@ -1295,8 +1359,8 @@ app.get('/admin/timeline-culture', requireAdmin, (req, res) => {
   });
 });
 
-app.post('/admin/timeline-culture', requireAdmin, (req, res) => {
-  const prev = readJSON('timeline-culture.json') || { pillars: [] };
+app.post('/admin/timeline-culture', requireAdmin, requireAdminCsrf, async (req, res) => {
+  const prev = await readJSON('timeline-culture.json') || { pillars: [] };
   const tc = {
     heading: String(req.body.tc_heading || '').trim() || prev.heading,
     subheading: String(req.body.tc_subheading || '').trim() || prev.subheading,
@@ -1334,7 +1398,7 @@ app.post('/admin/timeline-culture', requireAdmin, (req, res) => {
     }
     tc.pillars.push(p);
   });
-  writeJSON('timeline-culture.json', tc);
+  await writeJSON('timeline-culture.json', tc);
   res.render('admin/edit-timeline-culture', {
     tc,
     saved: true,
@@ -1345,14 +1409,14 @@ app.post('/admin/timeline-culture', requireAdmin, (req, res) => {
 });
 
 // ─── PROGRAMMES (timetable detail pages) ─────────────
-app.get('/admin/programmes', requireAdmin, (req, res) => {
-  const data = readJSON('programmes.json');
+app.get('/admin/programmes', requireAdmin, async (req, res) => {
+  const data = await readJSON('programmes.json');
   const programmes = (data && data.programmes) ? data.programmes : [];
   res.render('admin/programmes-index', { programmes, adminTitle: 'Programmes' });
 });
 
-app.get('/admin/programmes/edit/:slug', requireAdmin, (req, res) => {
-  const data = readJSON('programmes.json');
+app.get('/admin/programmes/edit/:slug', requireAdmin, async (req, res) => {
+  const data = await readJSON('programmes.json');
   const programmes = (data && data.programmes) ? data.programmes : [];
   const prog = programmes.find(p => p.slug === req.params.slug);
   if (!prog) return res.redirect('/admin/programmes');
@@ -1367,8 +1431,8 @@ app.get('/admin/programmes/edit/:slug', requireAdmin, (req, res) => {
   });
 });
 
-app.post('/admin/programmes/save', requireAdmin, (req, res) => {
-  const data = readJSON('programmes.json');
+app.post('/admin/programmes/save', requireAdmin, requireAdminCsrf, async (req, res) => {
+  const data = (await readJSON('programmes.json')) || { programmes: [] };
   if (!data.programmes) data.programmes = [];
   const slug = String(req.body.slug || '').trim();
   const idx = data.programmes.findIndex(p => p.slug === slug);
@@ -1414,17 +1478,17 @@ app.post('/admin/programmes/save', requireAdmin, (req, res) => {
   }
 
   data.programmes[idx] = prog;
-  writeJSON('programmes.json', data);
+  await writeJSON('programmes.json', data);
   res.redirect(`/admin/programmes/edit/${encodeURIComponent(slug)}?saved=1`);
 });
 
 // ─── CHANGE PASSWORD ──────────────────────────────────
-app.get('/admin/settings', requireAdmin, (req, res) => {
+app.get('/admin/settings', requireAdmin, async (req, res) => {
   res.render('admin/settings', { saved: false, error: null });
 });
 
-app.post('/admin/settings', requireAdmin, async (req, res) => {
-  const admin = readJSON('admin.json');
+app.post('/admin/settings', requireAdmin, requireAdminCsrf, async (req, res) => {
+  const admin = await readJSON('admin.json');
   if (!admin) return res.render('admin/settings', { saved: false, error: 'Admin file missing' });
   const currentOk = await bcrypt.compare(req.body.currentPassword || '', admin.password);
   if (!currentOk) {
@@ -1435,12 +1499,12 @@ app.post('/admin/settings', requireAdmin, async (req, res) => {
   }
   admin.password = await bcrypt.hash(req.body.newPassword, 12);
   if (req.body.newUsername) admin.username = req.body.newUsername;
-  writeJSON('admin.json', admin);
+  await writeJSON('admin.json', admin);
   res.render('admin/settings', { saved: true, error: null });
 });
 
 // ─── GALLERY / MEDIA UPLOAD ──────────────────────────
-app.get('/admin/gallery', requireAdmin, (req, res) => {
+app.get('/admin/gallery', requireAdmin, async (req, res) => {
   const galleryDir = path.join(UPLOAD_DIR, 'gallery');
   let files = [];
   if (fs.existsSync(galleryDir)) {
@@ -1456,16 +1520,18 @@ app.get('/admin/gallery', requireAdmin, (req, res) => {
 app.post('/admin/gallery/upload', requireAdmin, (req, res, next) => {
   req.uploadDest = 'gallery';
   next();
-}, upload.array('galleryFiles', 20), (req, res) => {
+}, upload.array('galleryFiles', 20), requireAdminCsrf, async (req, res) => {
   res.redirect('/admin/gallery');
 });
 
-app.post('/admin/gallery/delete', requireAdmin, (req, res) => {
-  const file = path.basename(req.body.filename || '');
-  if (!file) return res.redirect('/admin/gallery');
+app.post('/admin/gallery/delete', requireAdmin, requireAdminCsrf, async (req, res) => {
+  const raw = String(req.body.filename || '');
+  const file = path.basename(raw);
+  if (!file || file === '.' || file === '..') return res.redirect('/admin/gallery');
   const galleryDir = path.resolve(UPLOAD_DIR, 'gallery');
   const filePath = path.resolve(galleryDir, file);
-  if (!filePath.startsWith(galleryDir + path.sep) && filePath !== galleryDir) {
+  const rel = path.relative(galleryDir, filePath);
+  if (rel.startsWith('..') || path.isAbsolute(rel)) {
     return res.status(400).send('Invalid filename');
   }
   if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
@@ -1503,7 +1569,8 @@ app.use((req, res) => {
 });
 
 // ─── START (only when run directly — allows `require('./server')` for prerender/tests) ─
-function startServer() {
+async function startServer() {
+  await ensureAdminReady();
   app.listen(PORT, '0.0.0.0', () => {
     const coFile = path.join(DATA_DIR, 'cultural-outreach.json');
     const nmFile = path.join(DATA_DIR, 'news-more.json');
@@ -1529,7 +1596,10 @@ function startServer() {
 }
 
 if (require.main === module) {
-  startServer();
+  startServer().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }
 
 module.exports = app;

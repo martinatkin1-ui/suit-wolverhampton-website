@@ -1,14 +1,16 @@
 <% layout('layout') -%>
+<% const crisis = (content && content.crisis) ? content.crisis : { headline: '', subtext: '', numbers: [] }; %>
+<% const crisisNumbers = Array.isArray(crisis.numbers) ? crisis.numbers : []; %>
 
 <section class="section" style="padding-top: 2rem;">
   <div class="crisis-section">
-    <h2><%= content.crisis.headline %></h2>
+    <h2><%= crisis.headline %></h2>
     <p style="font-size: 1.15rem; margin-top: 1rem; color: var(--text-mid);">
-      <%= content.crisis.subtext %>
+      <%= crisis.subtext %>
     </p>
 
     <div class="crisis-numbers">
-      <% content.crisis.numbers.forEach(function(num) { %>
+      <% crisisNumbers.forEach(function(num) { %>
       <div class="crisis-number">
         <a href="tel:<%= num.number.replace(/\s/g,'') %>" style="text-decoration: none;">
           <span class="number" style="display:inline-flex;align-items:center;gap:0.35rem;"><%- include('partials/icon', { name: 'lucide:phone', size: 22 }) %> <%= num.number %></span>
@@ -35,7 +37,7 @@
   </div>
   <div style="max-width: 800px; margin: 0 auto; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 8px 30px var(--card-shadow);">
     <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2423.5!2d-2.1330!3d52.5870!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sWolverhampton!5e0!3m2!1sen!2suk!4v1"
+      src="https://www.google.com/maps?q=Paycare+House,+George+Street,+Wolverhampton+WV2+4DX&z=16&output=embed"
       width="100%"
       height="400"
       style="border:0;"

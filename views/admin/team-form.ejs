@@ -6,6 +6,7 @@
 </div>
 
 <form method="POST" action="/admin/team/save" enctype="multipart/form-data" class="admin-form">
+  <%- include('../partials/admin-csrf') %>
   <input type="hidden" name="memberId" value="<%= member ? member.id : '' %>">
   <% if (member && member.image) { %>
     <input type="hidden" name="existingImage" value="<%= member.image %>">

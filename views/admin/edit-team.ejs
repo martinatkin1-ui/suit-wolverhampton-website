@@ -36,6 +36,7 @@
           <td class="admin-actions">
             <a href="/admin/team/edit/<%= member.id %>" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; display:inline-flex;align-items:center;gap:0.3rem;"><%- include('../partials/icon', { name: 'lucide:pencil', size: 14 }) %> Edit</a>
             <form method="POST" action="/admin/team/delete/<%= member.id %>" style="display: inline;">
+              <%- include('../partials/admin-csrf') %>
               <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; color: var(--color-crisis); border-color: var(--color-crisis); display:inline-flex;align-items:center;gap:0.3rem;" onclick="return confirm('Remove this team member?')">
                 <%- include('../partials/icon', { name: 'lucide:trash-2', size: 14 }) %> Remove
               </button>
@@ -79,6 +80,7 @@
           <td class="admin-actions">
             <a href="/admin/team/edit/<%= vol.id %>" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; display:inline-flex;align-items:center;gap:0.3rem;"><%- include('../partials/icon', { name: 'lucide:pencil', size: 14 }) %> Edit</a>
             <form method="POST" action="/admin/team/delete/<%= vol.id %>" style="display: inline;">
+              <%- include('../partials/admin-csrf') %>
               <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; color: var(--color-crisis); border-color: var(--color-crisis); display:inline-flex;align-items:center;gap:0.3rem;" onclick="return confirm('Remove this volunteer?')">
                 <%- include('../partials/icon', { name: 'lucide:trash-2', size: 14 }) %> Remove
               </button>

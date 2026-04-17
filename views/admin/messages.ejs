@@ -42,10 +42,12 @@
           <td class="admin-actions" style="flex-direction: column;">
             <% if (!msg.read) { %>
             <form method="POST" action="/admin/messages/read/<%= msg.id %>" style="display: inline;">
+              <%- include('../partials/admin-csrf') %>
               <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; display:inline-flex;align-items:center;gap:0.3rem;"><%- include('../partials/icon', { name: 'lucide:check', size: 14 }) %> Mark Read</button>
             </form>
             <% } %>
             <form method="POST" action="/admin/messages/delete/<%= msg.id %>" style="display: inline;">
+              <%- include('../partials/admin-csrf') %>
               <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; color: var(--color-crisis); border-color: var(--color-crisis);" onclick="return confirm('Delete this message?')" title="Delete"><%- include('../partials/icon', { name: 'lucide:trash-2', size: 16 }) %></button>
             </form>
           </td>

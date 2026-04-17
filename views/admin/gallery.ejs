@@ -9,11 +9,12 @@
 <div class="admin-card">
   <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:upload', size: 22 }) %> Upload New Media</h3>
   <form method="POST" action="/admin/gallery/upload" enctype="multipart/form-data">
+    <%- include('../partials/admin-csrf') %>
     <div class="file-upload-area" onclick="document.getElementById('galleryFiles').click()">
       <p style="margin-bottom: 0.5rem; display:flex; justify-content:center;"><%- include('../partials/icon', { name: 'lucide:folder-open', size: 40 }) %></p>
       <p><strong>Click to upload</strong> photos or videos</p>
       <p style="font-size: 0.85rem;">JPG, PNG, GIF, WebP, MP4, WebM, MOV — Max 100MB per file</p>
-      <input type="file" id="galleryFiles" name="galleryFiles" multiple accept="image/*,video/*" onchange="this.form.submit()">
+      <input type="file" id="galleryFiles" name="galleryFiles" multiple accept="image/jpeg,image/png,image/gif,image/webp,video/*" onchange="this.form.submit()">
     </div>
   </form>
 </div>
@@ -39,6 +40,7 @@
             <%= file.name %>
           </span>
           <form method="POST" action="/admin/gallery/delete" style="display: inline;">
+            <%- include('../partials/admin-csrf') %>
             <input type="hidden" name="filename" value="<%= file.name %>">
             <button type="submit" style="background: none; border: none; color: var(--color-crisis); cursor: pointer; font-size: 1rem; line-height:0;" onclick="return confirm('Delete this file?')" title="Delete"><%- include('../partials/icon', { name: 'lucide:trash-2', size: 18 }) %></button>
           </form>

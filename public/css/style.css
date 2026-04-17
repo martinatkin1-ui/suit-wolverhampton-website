@@ -1489,6 +1489,32 @@ body.light-mode .login-error {
   background: rgba(255,255,255,0.1);
   color: #fff;
 }
+.admin-sidebar nav .sidebar-logout-form {
+  margin: 0;
+  padding: 0;
+}
+.admin-sidebar nav button.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+  color: rgba(255,255,255,0.7);
+  padding: 0.75rem var(--space-md);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.admin-sidebar nav button.sidebar-nav-link:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
 .admin-main {
   flex: 1;
   margin-left: 260px;

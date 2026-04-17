@@ -8,13 +8,14 @@
 <p class="admin-hint">Programme links open the same detail panels visitors see on the <a href="/timetable" target="_blank" rel="noopener">timetable page</a>. Edit those stories under <strong>Programme details</strong> in the sidebar.</p>
 
 <% if (saved) { %>
-  <div class="toast success">Timetable updated successfully!</div>
+  <div class="toast success" role="status" aria-live="polite">Timetable updated successfully!</div>
 <% } %>
 
 <!-- Add New Event Form -->
 <div class="admin-card">
   <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:plus', size: 22 }) %> Add new event</h3>
   <form method="POST" action="/admin/timetable" class="admin-form">
+    <%- include('../partials/admin-csrf') %>
        <div class="form-row">
       <div class="form-group">
         <label for="day">Day</label>
@@ -86,6 +87,7 @@
       <% events.forEach(function(evt) { %>
         <div style="border: 1px solid var(--border-soft); border-radius: var(--radius-md); padding: var(--space-lg); margin-bottom: var(--space-md); background: var(--bg-warm);">
           <form method="POST" action="/admin/timetable" class="admin-form" style="margin-bottom: 0;">
+            <%- include('../partials/admin-csrf') %>
             <input type="hidden" name="action" value="update">
             <input type="hidden" name="updateDay" value="<%= day %>">
             <input type="hidden" name="updateId" value="<%= evt.id %>">
@@ -137,6 +139,7 @@
             </div>
           </form>
           <form method="POST" action="/admin/timetable" style="margin-top: var(--space-sm);">
+            <%- include('../partials/admin-csrf') %>
             <input type="hidden" name="action" value="delete">
             <input type="hidden" name="deleteDay" value="<%= day %>">
             <input type="hidden" name="deleteId" value="<%= evt.id %>">

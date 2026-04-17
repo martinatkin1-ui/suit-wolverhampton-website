@@ -8,7 +8,7 @@
 </div>
 
 <% if (saved) { %>
-  <div class="toast success">Story saved successfully!</div>
+  <div class="toast success" role="status" aria-live="polite">Story saved successfully!</div>
 <% } %>
 
 <div class="admin-card">
@@ -39,6 +39,7 @@
           <td class="admin-actions">
             <a href="/admin/stories/edit/<%= story.id %>" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; display:inline-flex;align-items:center;gap:0.3rem;"><%- include('../partials/icon', { name: 'lucide:pencil', size: 14 }) %> Edit</a>
             <form method="POST" action="/admin/stories/delete/<%= story.id %>" style="display: inline;">
+              <%- include('../partials/admin-csrf') %>
               <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; color: var(--color-crisis); border-color: var(--color-crisis); display:inline-flex;align-items:center;gap:0.3rem;" onclick="return confirm('Delete this story?')">
                 <%- include('../partials/icon', { name: 'lucide:trash-2', size: 14 }) %> Delete
               </button>

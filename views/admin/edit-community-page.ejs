@@ -6,10 +6,11 @@
 </div>
 
 <% if (saved) { %>
-  <div class="toast success">Community page windows saved.</div>
+  <div class="toast success" role="status" aria-live="polite">Community page windows saved.</div>
 <% } %>
 
 <form method="POST" action="/admin/community/page" class="admin-form">
+  <%- include('../partials/admin-csrf') %>
   <% const projectKeys = ['art', 'music', 'drama']; %>
   <% const projectLabels = { art: 'Art & visual arts', music: 'Music & wellbeing', drama: 'Drama & performance' }; %>
 

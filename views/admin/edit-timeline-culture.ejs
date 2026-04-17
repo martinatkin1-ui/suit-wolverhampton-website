@@ -6,10 +6,11 @@
 </div>
 
 <% if (saved) { %>
-  <div class="toast success">Saved.</div>
+  <div class="toast success" role="status" aria-live="polite">Saved.</div>
 <% } %>
 
 <form method="POST" action="/admin/timeline-culture" class="admin-form">
+  <%- include('../partials/admin-csrf') %>
   <div class="admin-card">
     <h3>Section headings</h3>
     <div class="form-group">

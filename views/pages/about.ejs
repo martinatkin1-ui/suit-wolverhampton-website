@@ -1,8 +1,10 @@
 <% layout('layout') -%>
+<% const about = (content && content.about) ? content.about : { intro: '', mission: '', values: [] }; %>
+<% const aboutValues = Array.isArray(about.values) ? about.values : []; %>
 
 <section class="hero" style="min-height: 40vh; padding: 4rem 5%;">
   <h1>About the <em>SUIT Family</em></h1>
-  <p class="hero-sub"><%= content.about.intro %></p>
+  <p class="hero-sub"><%= about.intro %></p>
 </section>
 
 <!-- Mission -->
@@ -11,11 +13,11 @@
     <div class="text-side">
       <h2>Our Mission</h2>
       <p style="font-size: 1.1rem; color: var(--text-mid); margin-bottom: 1.5rem;">
-        <%= content.about.mission %>
+        <%= about.mission %>
       </p>
       <h3 style="margin-bottom: 1rem; color: var(--brand-teal);">Our Values</h3>
       <ul style="color: var(--text-mid); padding-left: 1.5rem;">
-        <% content.about.values.forEach(function(val) { %>
+        <% aboutValues.forEach(function(val) { %>
         <li style="margin-bottom: 0.75rem;"><%= val %></li>
         <% }); %>
       </ul>

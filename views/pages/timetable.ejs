@@ -1,5 +1,6 @@
 <% layout('layout') -%>
 <% const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']; %>
+<% const programmesList = Array.isArray(programmes) ? programmes : []; %>
 
 <section class="hero">
   <h1>Your week at <em>SUIT</em></h1>
@@ -17,7 +18,7 @@
     <p>Open any window for full information from our groups — the same welcoming tone as the rest of the site.</p>
   </div>
   <div class="card-grid programme-window-grid">
-    <% programmes.forEach(function(prog) { %>
+    <% programmesList.forEach(function(prog) { %>
     <div class="card programme-window-card <%= prog.cardClass %>">
       <span class="card-icon"><%- include('partials/icon', { name: prog.icon, size: 28 }) %></span>
       <h3><%= prog.title %></h3>
@@ -63,8 +64,8 @@
                data-day="<%= day %>"
                data-time="<%= evt.time %>"
                data-end="<%= evt.endTime || '' %>"
-               data-title="<%= evt.title.replace(/"/g, '&quot;') %>"
-               data-location="<%= (evt.location || '').replace(/"/g, '&quot;') %>"
+               data-title="<%= evt.title %>"
+               data-location="<%= evt.location || '' %>"
                <% if (evt.programmeSlug) { %>data-programme="<%= evt.programmeSlug %>"<% } %>>
             <div class="tt-event-main">
               <span class="event-time"><%= evt.time %><% if (evt.endTime) { %>–<%= evt.endTime %><% } %></span>

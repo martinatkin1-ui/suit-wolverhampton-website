@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('change', function() {
       if (this.files && this.files[0]) {
         const file = this.files[0];
-        const isImage = file.type.startsWith('image/');
+        const isImage = file.type.startsWith('image/') && file.type !== 'image/svg+xml';
 
         if (isImage) {
           const reader = new FileReader();

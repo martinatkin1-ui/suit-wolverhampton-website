@@ -6,10 +6,11 @@
 </div>
 
 <% if (saved) { %>
-  <div class="toast success">Timeline saved.</div>
+  <div class="toast success" role="status" aria-live="polite">Timeline saved.</div>
 <% } %>
 
 <form method="POST" action="/admin/timeline" class="admin-form" id="timeline-form">
+  <%- include('../partials/admin-csrf') %>
   <div id="timeline-milestone-list">
     <% timeline.forEach(function(item) { %>
     <div class="admin-card timeline-milestone-card">

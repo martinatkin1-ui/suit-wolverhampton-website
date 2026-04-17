@@ -4,6 +4,7 @@
 <p class="admin-hint" style="margin-bottom: var(--space-lg);">Photos and videos appear in the timeline on <a href="/community" target="_blank" rel="noopener">In the Community</a>. Upload files here or paste a link (e.g. from <a href="/admin/gallery">Gallery</a>).</p>
 
 <form method="POST" action="/admin/community/save" enctype="multipart/form-data" class="admin-form">
+  <%- include('../partials/admin-csrf') %>
   <input type="hidden" name="postId" value="<%= post ? post.id : '' %>">
 
   <div class="form-row">

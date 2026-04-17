@@ -34,7 +34,10 @@
         <a href="/admin/settings" class="<%= currentPath === '/admin/settings' ? 'active' : '' %>"><%- include('../partials/icon', { name: 'lucide:settings', size: 18 }) %> Settings</a>
         <hr style="border-color: rgba(255,255,255,0.1); margin: 1rem 0;">
         <a href="/" target="_blank" rel="noopener"><%- include('../partials/icon', { name: 'lucide:globe', size: 18 }) %> View Website</a>
-        <a href="/admin/logout"><%- include('../partials/icon', { name: 'lucide:log-out', size: 18 }) %> Log Out</a>
+        <form method="POST" action="/admin/logout" class="sidebar-logout-form">
+          <%- include('../partials/admin-csrf') %>
+          <button type="submit" class="sidebar-nav-link"><%- include('../partials/icon', { name: 'lucide:log-out', size: 18 }) %> Log Out</button>
+        </form>
       </nav>
     </aside>
 

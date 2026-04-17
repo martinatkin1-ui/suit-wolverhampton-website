@@ -6,6 +6,7 @@
 </div>
 
 <form method="POST" action="/admin/stories/save" enctype="multipart/form-data" class="admin-form">
+  <%- include('../partials/admin-csrf') %>
   <input type="hidden" name="storyId" value="<%= story ? story.id : '' %>">
   <% if (story && story.image) { %>
     <input type="hidden" name="existingImage" value="<%= story.image %>">

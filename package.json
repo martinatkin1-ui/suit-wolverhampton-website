@@ -14,7 +14,8 @@
     "build:outreach": "node scripts/prerender-public-site.js",
     "start:only": "node server.js",
     "media:inventory": "node scripts/legacy-media-inventory.js",
-    "media:inventory:seed": "node scripts/legacy-media-inventory.js --no-sitemap"
+    "media:inventory:seed": "node scripts/legacy-media-inventory.js --no-sitemap",
+    "db:seed": "node scripts/seed-cms-to-neon.js"
   },
   "keywords": [
     "suit",
@@ -31,7 +32,7 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
-    "cookie-parser": "^1.4.7",
+    "connect-pg-simple": "^10.0.0",
     "dotenv": "^17.4.2",
     "ejs": "^4.0.1",
     "ejs-mate": "^4.0.0",
@@ -40,7 +41,7 @@
     "express-session": "^1.19.0",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
-    "sharp": "^0.34.5",
-    "uuid": "^13.0.0"
+    "pg": "^8.20.0",
+    "sharp": "^0.34.5"
   }
 }
