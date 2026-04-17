@@ -1,0 +1,82 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Timeline — art, drama &amp; music strip</h1>
+  <p class="admin-hint">This is the photo section at the top of the <a href="/timeline" target="_blank" rel="noopener">Timeline</a> page. Paste image URLs (one per line). Optional: <code>https://… | short description</code>. YouTube: video ID only (e.g. <code>d147QND9ZVM</code>).</p>
+</div>
+
+<% if (saved) { %>
+  <div class="toast success">Saved.</div>
+<% } %>
+
+<form method="POST" action="/admin/timeline-culture" class="admin-form">
+  <div class="admin-card">
+    <h3>Section headings</h3>
+    <div class="form-group">
+      <label for="tc_heading">Main heading</label>
+      <input type="text" id="tc_heading" name="tc_heading" value="<%= tc.heading %>">
+    </div>
+    <div class="form-group">
+      <label for="tc_subheading">Introduction</label>
+      <textarea id="tc_subheading" name="tc_subheading" rows="3"><%= tc.subheading %></textarea>
+    </div>
+    <div class="form-group">
+      <label for="tc_credit">Small print / photo credit (optional)</label>
+      <textarea id="tc_credit" name="tc_credit" rows="2"><%= tc.credit %></textarea>
+    </div>
+  </div>
+
+  <% (tc.pillars || []).forEach(function(p) { %>
+  <div class="admin-card">
+    <h3 style="text-transform:capitalize;"><%= p.id %> pillar</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="p_<%= p.id %>_title">Title</label>
+        <input type="text" id="p_<%= p.id %>_title" name="p_<%= p.id %>_title" value="<%= p.title %>">
+      </div>
+      <div class="form-group">
+        <label for="p_<%= p.id %>_cardClass">Card accent</label>
+        <select id="p_<%= p.id %>_cardClass" name="p_<%= p.id %>_cardClass">
+          <% pillarCardOptions.forEach(function(cc) { %>
+          <option value="<%= cc %>" <%= p.cardClass === cc ? 'selected' : '' %>><%= cc.replace('card-', '') %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="p_<%= p.id %>_icon">Icon</label>
+        <select id="p_<%= p.id %>_icon" name="p_<%= p.id %>_icon">
+          <% pillarIconOptions.forEach(function(ic) { %>
+          <option value="<%= ic %>" <%= p.icon === ic ? 'selected' : '' %>><%= ic.replace('lucide:', '') %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="p_<%= p.id %>_caption">Short description</label>
+      <textarea id="p_<%= p.id %>_caption" name="p_<%= p.id %>_caption" rows="2"><%= p.caption %></textarea>
+    </div>
+    <div class="form-group">
+      <label for="p_<%= p.id %>_sourceNote">Source note (optional, for staff)</label>
+      <input type="text" id="p_<%= p.id %>_sourceNote" name="p_<%= p.id %>_sourceNote" value="<%= p.sourceNote || '' %>">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="p_<%= p.id %>_youtubeId">YouTube video ID (optional)</label>
+        <input type="text" id="p_<%= p.id %>_youtubeId" name="p_<%= p.id %>_youtubeId" value="<%= p.youtubeId || '' %>" placeholder="d147QND9ZVM">
+      </div>
+      <div class="form-group">
+        <label for="p_<%= p.id %>_youtubeTitle">Video title (accessibility)</label>
+        <input type="text" id="p_<%= p.id %>_youtubeTitle" name="p_<%= p.id %>_youtubeTitle" value="<%= p.youtubeTitle || '' %>">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="p_<%= p.id %>_gallery">Images — one per line: <code>URL | alt text</code></label>
+      <textarea id="p_<%= p.id %>_gallery" name="p_<%= p.id %>_gallery" rows="8" class="admin-textarea-mono" placeholder="https://example.com/photo.jpg | People at workshop"><%= (p.images || []).map(function(img) { return img.src + ' | ' + (img.alt || ''); }).join('\n') %></textarea>
+    </div>
+  </div>
+  <% }); %>
+
+  <button type="submit" class="btn btn-cta" style="display:inline-flex;align-items:center;gap:0.45rem;">
+    <%- include('../partials/icon', { name: 'lucide:save', size: 20 }) %> Save photo section
+  </button>
+</form>

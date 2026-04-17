@@ -1,0 +1,104 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Timeline milestones</h1>
+  <p class="admin-hint">Edit the dated milestones on the <a href="/timeline" target="_blank" rel="noopener">Our Timeline</a> page. Layout and colours are fixed — you only change text and icons. Leave a title blank and save to remove a row.</p>
+</div>
+
+<% if (saved) { %>
+  <div class="toast success">Timeline saved.</div>
+<% } %>
+
+<form method="POST" action="/admin/timeline" class="admin-form" id="timeline-form">
+  <div id="timeline-milestone-list">
+    <% timeline.forEach(function(item) { %>
+    <div class="admin-card timeline-milestone-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Year</label>
+          <input type="text" name="m_year" value="<%= item.year %>" placeholder="2021">
+        </div>
+        <div class="form-group">
+          <label>Accent colour</label>
+          <select name="m_color">
+            <% colorOptions.forEach(function(c) { %>
+            <option value="<%= c %>" <%= item.color === c ? 'selected' : '' %>><%= c %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Icon</label>
+          <select name="m_icon">
+            <% iconOptions.forEach(function(ic) { %>
+            <option value="<%= ic %>" <%= item.icon === ic ? 'selected' : '' %>><%= ic.replace('lucide:', '') %></option>
+            <% }); %>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="m_title" value="<%= item.title %>" placeholder="Milestone title (required)">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="m_description" rows="4" placeholder="What happened?"><%= item.description %></textarea>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+
+  <p style="margin-bottom: 1rem;">
+    <button type="button" class="btn btn-outline" id="timeline-add-row">+ Add another milestone</button>
+  </p>
+
+  <button type="submit" class="btn btn-cta" style="display:inline-flex;align-items:center;gap:0.45rem;">
+    <%- include('../partials/icon', { name: 'lucide:save', size: 20 }) %> Save timeline
+  </button>
+</form>
+
+<template id="timeline-row-template">
+  <div class="admin-card timeline-milestone-card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Year</label>
+        <input type="text" name="m_year" placeholder="2026">
+      </div>
+      <div class="form-group">
+        <label>Accent colour</label>
+        <select name="m_color">
+          <% colorOptions.forEach(function(c) { %>
+          <option value="<%= c %>"><%= c %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Icon</label>
+        <select name="m_icon">
+          <% iconOptions.forEach(function(ic) { %>
+          <option value="<%= ic %>"><%= ic.replace('lucide:', '') %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" name="m_title" placeholder="Milestone title">
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="m_description" rows="4" placeholder="What happened?"></textarea>
+    </div>
+  </div>
+</template>
+
+<script>
+(function () {
+  var btn = document.getElementById('timeline-add-row');
+  var list = document.getElementById('timeline-milestone-list');
+  var tpl = document.getElementById('timeline-row-template');
+  if (!btn || !list || !tpl) return;
+  btn.addEventListener('click', function () {
+    list.appendChild(tpl.content.cloneNode(true));
+  });
+})();
+</script>

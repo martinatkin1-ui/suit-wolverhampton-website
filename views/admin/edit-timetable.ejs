@@ -1,0 +1,151 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Manage Timetable</h1>
+  <p style="color: var(--text-mid);">Add or edit weekly events. Times, titles, locations, and programme links update the live site — page layout does not change.</p>
+</div>
+
+<p class="admin-hint">Programme links open the same detail panels visitors see on the <a href="/timetable" target="_blank" rel="noopener">timetable page</a>. Edit those stories under <strong>Programme details</strong> in the sidebar.</p>
+
+<% if (saved) { %>
+  <div class="toast success">Timetable updated successfully!</div>
+<% } %>
+
+<!-- Add New Event Form -->
+<div class="admin-card">
+  <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:plus', size: 22 }) %> Add new event</h3>
+  <form method="POST" action="/admin/timetable" class="admin-form">
+       <div class="form-row">
+      <div class="form-group">
+        <label for="day">Day</label>
+        <select id="day" name="day" required>
+          <option value="monday">Monday</option>
+          <option value="tuesday">Tuesday</option>
+          <option value="wednesday">Wednesday</option>
+          <option value="thursday">Thursday</option>
+          <option value="friday">Friday</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="time">Start time</label>
+        <input type="time" id="time" name="time" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="endTime">End time (optional)</label>
+        <input type="time" id="endTime" name="endTime">
+      </div>
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+          <option value="dropin">Drop-In</option>
+          <option value="group">Support Group</option>
+          <option value="creative">Creative / Social</option>
+          <option value="women">Women Only</option>
+          <option value="men">Men Only</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="title">Event title</label>
+      <input type="text" id="title" name="title" required placeholder="e.g. Art Therapy Group">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="programmeSlug">Linked programme (optional)</label>
+        <select id="programmeSlug" name="programmeSlug">
+          <option value="">— None —</option>
+          <% (programmeOptions || []).forEach(function(p) { %>
+            <option value="<%= p.slug %>"><%= p.title %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="location">Location (optional)</label>
+        <input type="text" id="location" name="location" placeholder="e.g. Recovery Hub, Connaught Road">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description">Short description (optional)</label>
+      <input type="text" id="description" name="description" placeholder="Shown under the title on the site">
+    </div>
+    <button type="submit" class="btn btn-primary">Add event</button>
+  </form>
+</div>
+
+<!-- Current Timetable -->
+<% const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']; %>
+<% dayOrder.forEach(function(day) { %>
+  <% const events = timetable[day] || []; %>
+  <div class="admin-card">
+    <h3><%= day.charAt(0).toUpperCase() + day.slice(1) %> — <%= events.length %> event<%= events.length === 1 ? '' : 's' %></h3>
+    <% if (events.length === 0) { %>
+      <p style="color: var(--text-mid);">No events scheduled.</p>
+    <% } else { %>
+      <% events.forEach(function(evt) { %>
+        <div style="border: 1px solid var(--border-soft); border-radius: var(--radius-md); padding: var(--space-lg); margin-bottom: var(--space-md); background: var(--bg-warm);">
+          <form method="POST" action="/admin/timetable" class="admin-form" style="margin-bottom: 0;">
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="updateDay" value="<%= day %>">
+            <input type="hidden" name="updateId" value="<%= evt.id %>">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Start</label>
+                <input type="time" name="updateTime" value="<%= evt.time %>" required>
+              </div>
+              <div class="form-group">
+                <label>End (optional)</label>
+                <input type="time" name="updateEndTime" value="<%= evt.endTime || '' %>">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" name="updateTitle" value="<%= evt.title %>" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Category</label>
+                <select name="updateCategory">
+                  <option value="dropin" <%= evt.category === 'dropin' ? 'selected' : '' %>>Drop-In</option>
+                  <option value="group" <%= evt.category === 'group' ? 'selected' : '' %>>Support Group</option>
+                  <option value="creative" <%= evt.category === 'creative' ? 'selected' : '' %>>Creative / Social</option>
+                  <option value="women" <%= evt.category === 'women' ? 'selected' : '' %>>Women Only</option>
+                  <option value="men" <%= evt.category === 'men' ? 'selected' : '' %>>Men Only</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Programme link</label>
+                <select name="updateProgrammeSlug">
+                  <option value="">— None —</option>
+                  <% (programmeOptions || []).forEach(function(p) { %>
+                    <option value="<%= p.slug %>" <%= evt.programmeSlug === p.slug ? 'selected' : '' %>><%= p.title %></option>
+                  <% }); %>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Location (optional — leave blank to clear)</label>
+              <input type="text" name="updateLocation" value="<%= evt.location || '' %>">
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" name="updateDescription" value="<%= evt.description || '' %>">
+            </div>
+            <div class="admin-actions" style="flex-wrap: wrap; align-items: center;">
+              <button type="submit" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.35rem;"><%- include('../partials/icon', { name: 'lucide:save', size: 18 }) %> Save</button>
+            </div>
+          </form>
+          <form method="POST" action="/admin/timetable" style="margin-top: var(--space-sm);">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="deleteDay" value="<%= day %>">
+            <input type="hidden" name="deleteId" value="<%= evt.id %>">
+            <button type="submit" class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.85rem; color: var(--color-crisis); border-color: var(--color-crisis); display:inline-flex;align-items:center;gap:0.3rem;" onclick="return confirm('Delete this event?')">
+              <%- include('../partials/icon', { name: 'lucide:trash-2', size: 14 }) %> Delete
+            </button>
+          </form>
+        </div>
+      <% }); %>
+    <% } %>
+  </div>
+<% }); %>
