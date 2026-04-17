@@ -1,0 +1,17 @@
+<!-- Accessibility & Safety Top Bar -->
+<div class="a11y-bar" role="toolbar" aria-label="Accessibility options">
+  <button id="themeToggleBtn" type="button" onclick="toggleLightMode()" aria-label="Toggle light/dark mode"><%- include('partials/icon', { name: 'lucide:sun', size: 18 }) %> <span class="theme-toggle-label">Light</span></button>
+  <button type="button" onclick="toggleHighContrast()" aria-label="Toggle high contrast mode"><%- include('partials/icon', { name: 'lucide:contrast', size: 18 }) %> High Contrast</button>
+  <button type="button" onclick="toggleDyslexiaFont()" aria-label="Toggle dyslexia-friendly font">Aa Dyslexia Font</button>
+  <select onchange="translatePage(this.value)" aria-label="Translate page">
+    <option value="">Language</option>
+    <option value="en">English</option>
+    <option value="pl">Polski</option>
+    <option value="ur">Urdu</option>
+    <option value="pa">Punjabi</option>
+    <option value="bn">Bengali</option>
+    <option value="ro">Română</option>
+    <option value="ar">Arabic</option>
+    <option value="so">Soomaali</option>
+  </select>
+</div>

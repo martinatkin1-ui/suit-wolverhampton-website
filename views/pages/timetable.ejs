@@ -1,0 +1,119 @@
+<% layout('layout') -%>
+<% const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']; %>
+
+<section class="hero">
+  <h1>Your week at <em>SUIT</em></h1>
+  <p class="hero-sub">Everything listed here is free. Tap a programme card for the full story, photos, and links — then use the weekly diary to see where and when each session runs.</p>
+  <div class="hero-buttons">
+    <a href="#programme-windows" class="btn btn-cta">Explore programmes</a>
+    <a href="#week-diary" class="btn btn-outline">Jump to the diary</a>
+    <a href="tel:01902328983" class="btn btn-outline">Call 01902 328983</a>
+  </div>
+</section>
+
+<section class="section section-alt" id="programme-windows">
+  <div class="section-header">
+    <h2>Programmes &amp; groups</h2>
+    <p>Open any window for full information from our groups — the same welcoming tone as the rest of the site.</p>
+  </div>
+  <div class="card-grid programme-window-grid">
+    <% programmes.forEach(function(prog) { %>
+    <div class="card programme-window-card <%= prog.cardClass %>">
+      <span class="card-icon"><%- include('partials/icon', { name: prog.icon, size: 28 }) %></span>
+      <h3><%= prog.title %></h3>
+      <p><%= prog.teaser %></p>
+      <p class="programme-window-meta"><strong>When:</strong> <%= prog.scheduleSummary %></p>
+      <p class="programme-window-meta"><%= prog.location %></p>
+      <button type="button" class="btn btn-primary programme-window-btn" data-open-programme="<%= prog.slug %>">
+        Open full details
+      </button>
+    </div>
+    <% }); %>
+  </div>
+</section>
+
+<section class="section" id="week-diary">
+  <div class="section-header">
+    <h2>Weekly diary</h2>
+    <p>Where and when it happens — tap <strong>More info</strong> to read the full programme page. Add sessions to your phone calendar with <strong>Add</strong>.</p>
+  </div>
+
+  <div class="timetable-container tt-diary-wrap">
+    <div class="timetable-filters">
+      <button type="button" class="filter-btn active" onclick="filterTimetable('all', this)">All</button>
+      <button type="button" class="filter-btn" onclick="filterTimetable('dropin', this)">Drop-ins</button>
+      <button type="button" class="filter-btn" onclick="filterTimetable('group', this)">Support groups</button>
+      <button type="button" class="filter-btn" onclick="filterTimetable('creative', this)">Creative / social</button>
+      <button type="button" class="filter-btn" onclick="filterTimetable('women', this)">Women only</button>
+      <button type="button" class="filter-btn" onclick="filterTimetable('men', this)">Men only</button>
+    </div>
+
+    <div class="tt-week-grid" role="region" aria-label="Weekly timetable Monday to Friday">
+      <% dayOrder.forEach(function(day) { %>
+      <% const events = timetable[day] || []; %>
+      <div class="tt-day-column" data-day-col="<%= day %>">
+        <h3 class="tt-day-title"><%= day.charAt(0).toUpperCase() + day.slice(1) %></h3>
+        <% if (events.length === 0) { %>
+        <p class="tt-day-empty">Nothing listed — call us to check what’s on.</p>
+        <% } else { %>
+        <div class="tt-day-events">
+          <% events.forEach(function(evt) { %>
+          <div class="timetable-event tt-event<%= evt.programmeSlug ? ' tt-event-linked' : '' %>"
+               data-category="<%= evt.category %>"
+               data-day="<%= day %>"
+               data-time="<%= evt.time %>"
+               data-end="<%= evt.endTime || '' %>"
+               data-title="<%= evt.title.replace(/"/g, '&quot;') %>"
+               data-location="<%= (evt.location || '').replace(/"/g, '&quot;') %>"
+               <% if (evt.programmeSlug) { %>data-programme="<%= evt.programmeSlug %>"<% } %>>
+            <div class="tt-event-main">
+              <span class="event-time"><%= evt.time %><% if (evt.endTime) { %>–<%= evt.endTime %><% } %></span>
+              <div class="tt-event-text">
+                <span class="event-title"><%= evt.title %></span>
+                <% if (evt.location) { %>
+                <span class="tt-event-loc"><%= evt.location %></span>
+                <% } %>
+                <% if (evt.description) { %>
+                <span class="tt-event-desc"><%= evt.description %></span>
+                <% } %>
+              </div>
+              <span class="event-tag tag-<%= evt.category %>"><%= evt.category %></span>
+            </div>
+            <div class="tt-event-actions">
+              <% if (evt.programmeSlug) { %>
+              <button type="button" class="btn btn-outline tt-more-btn" data-open-programme="<%= evt.programmeSlug %>">More info</button>
+              <% } %>
+              <button type="button" class="event-cal-btn" onclick="addToCalendarFromDataset(this)" title="Add to phone calendar">
+                <%- include('partials/icon', { name: 'lucide:calendar-plus', size: 16 }) %> Add
+              </button>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+        <% } %>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="section band-teal">
+  <div class="section-header" style="color: #fff;">
+    <h2 style="color: #fff;">Not sure which session is for you?</h2>
+    <p style="color: rgba(255,255,255,0.9);">We’ll help you find the right door — no jargon, no judgement.</p>
+  </div>
+  <div class="text-center" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    <a href="/get-help" class="btn btn-cta">Get Help Now</a>
+    <a href="/contact" class="btn btn-outline-white">Contact Us</a>
+  </div>
+</section>
+
+<div id="programmeModal" class="programme-modal" role="dialog" aria-modal="true" aria-labelledby="programmeModalTitle" hidden>
+  <div class="programme-modal-backdrop" data-close-programme-modal></div>
+  <div class="programme-modal-panel">
+    <button type="button" class="programme-modal-close" data-close-programme-modal aria-label="Close details">&times;</button>
+    <div id="programmeModalInner" class="programme-modal-inner"></div>
+  </div>
+</div>
+
+<script id="suit-programmes-json" type="application/json"><%- JSON.stringify(programmes).replace(/</g, '\\u003c') %></script>
