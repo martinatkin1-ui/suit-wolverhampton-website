@@ -1,0 +1,79 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1><%= story ? 'Edit Story' : 'Add New Story' %></h1>
+  <a href="/admin/stories" class="btn btn-outline">← Back to Stories</a>
+</div>
+
+<form method="POST" action="/admin/stories/save" enctype="multipart/form-data" class="admin-form">
+  <input type="hidden" name="storyId" value="<%= story ? story.id : '' %>">
+  <% if (story && story.image) { %>
+    <input type="hidden" name="existingImage" value="<%= story.image %>">
+  <% } %>
+  <% if (story && story.video) { %>
+    <input type="hidden" name="existingVideo" value="<%= story.video %>">
+  <% } %>
+
+  <div class="admin-card">
+    <h3>Person Details</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Name (first name or anonymous)</label>
+        <input type="text" id="name" name="name" required value="<%= story ? story.name : '' %>" placeholder="e.g. John">
+      </div>
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" value="<%= story ? story.date : new Date().toISOString().split('T')[0] %>">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="title">Story Title (short & inspiring)</label>
+      <input type="text" id="title" name="title" required value="<%= story ? story.title : '' %>" placeholder="e.g. From sleeping rough to managing a local business">
+    </div>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" name="featured" <%= story && story.featured ? 'checked' : '' %>> Featured on homepage
+      </label>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <h3>Story Content</h3>
+    <div class="form-group">
+      <label for="excerpt">Short Excerpt (shown on cards, 1-2 sentences)</label>
+      <textarea id="excerpt" name="excerpt" rows="3" required placeholder="A brief teaser of the story…"><%= story ? story.excerpt : '' %></textarea>
+    </div>
+    <div class="form-group">
+      <label for="fullStory">Full Story (use blank lines between paragraphs)</label>
+      <textarea id="fullStory" name="fullStory" rows="12" required placeholder="Tell the full story here. Use blank lines to separate paragraphs."><%= story ? story.fullStory : '' %></textarea>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <h3>Media (Photo & Video)</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Portrait Photo</label>
+        <% if (story && story.image) { %>
+          <div style="margin-bottom: 0.5rem;">
+            <img src="<%= story.image %>" class="preview-image" alt="Current photo">
+            <p style="font-size: 0.8rem; color: var(--text-mid);">Current photo — upload a new one to replace</p>
+          </div>
+        <% } %>
+        <input type="file" name="storyImage" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label>Video (optional — 60-second story)</label>
+        <% if (story && story.video) { %>
+          <p style="font-size: 0.8rem; color: var(--text-mid); margin-bottom: 0.5rem;">Video currently uploaded</p>
+        <% } %>
+        <input type="file" name="storyVideo" accept="video/*">
+        <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem;">MP4, WebM, or MOV. Max 100MB.</p>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-cta" style="font-size: 1.1rem; padding: 1rem 2.5rem; display:inline-flex;align-items:center;gap:0.45rem;">
+    <%- include('../partials/icon', { name: 'lucide:save', size: 20 }) %> Save Story
+  </button>
+</form>
