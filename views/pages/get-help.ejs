@@ -1,0 +1,72 @@
+<% layout('layout') -%>
+
+<section class="section" style="padding-top: 2rem;">
+  <div class="crisis-section">
+    <h2><%= content.crisis.headline %></h2>
+    <p style="font-size: 1.15rem; margin-top: 1rem; color: var(--text-mid);">
+      <%= content.crisis.subtext %>
+    </p>
+
+    <div class="crisis-numbers">
+      <% content.crisis.numbers.forEach(function(num) { %>
+      <div class="crisis-number">
+        <a href="tel:<%= num.number.replace(/\s/g,'') %>" style="text-decoration: none;">
+          <span class="number" style="display:inline-flex;align-items:center;gap:0.35rem;"><%- include('partials/icon', { name: 'lucide:phone', size: 22 }) %> <%= num.number %></span>
+        </a>
+        <span class="label"><strong><%= num.name %></strong> — <%= num.hours %></span>
+      </div>
+      <% }); %>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <a href="<%= content.site.whatsapp %>" target="_blank" rel="noopener" class="btn btn-whatsapp" style="font-size: 1.1rem; padding: 1rem 2rem;">
+        <%- include('partials/icon', { name: 'lucide:message-circle', size: 22 }) %>
+        Message a Peer Mentor on WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Map Section -->
+<section class="section section-alt">
+  <div class="section-header">
+    <h2>How to Find Us</h2>
+    <p>We're easy to reach from Wolverhampton bus and train station.</p>
+  </div>
+  <div style="max-width: 800px; margin: 0 auto; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 8px 30px var(--card-shadow);">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2423.5!2d-2.1330!3d52.5870!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sWolverhampton!5e0!3m2!1sen!2suk!4v1"
+      width="100%"
+      height="400"
+      style="border:0;"
+      allowfullscreen=""
+      loading="lazy"
+      title="SUIT Wolverhampton Location Map"
+    ></iframe>
+  </div>
+  <div class="text-center mt-lg">
+    <p style="color: var(--text-mid);">
+      <span style="display:inline-flex;align-items:flex-start;gap:0.35rem;justify-content:center;"><%- include('partials/icon', { name: 'lucide:map-pin', size: 18 }) %> <%= content.site.address %></span><br>
+      <span style="display:inline-flex;align-items:center;gap:0.35rem;justify-content:center;margin-top:0.35rem;"><%- include('partials/icon', { name: 'lucide:phone', size: 18 }) %> <a href="tel:<%= content.site.phone.replace(/\s/g,'') %>"><%= content.site.phone %></a></span>
+    </p>
+  </div>
+</section>
+
+<!-- Additional Support Info -->
+<section class="section">
+  <div class="section-header">
+    <h2>You Don't Have to Do This Alone</h2>
+  </div>
+  <div class="card-grid" style="max-width: 800px;">
+    <div class="card card-orange">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:clock', size: 32 }) %></span>
+      <h3>Drop-In Hours</h3>
+      <p>Monday to Friday, 10am – 4pm. No appointment needed. Just walk in.</p>
+    </div>
+    <div class="card card-cyan">
+      <span class="card-icon"><%- include('partials/icon', { name: 'lucide:moon', size: 32 }) %></span>
+      <h3>Out of Hours</h3>
+      <p>If it's outside our hours, please call the Samaritans on <strong>116 123</strong> — free, any time, day or night.</p>
+    </div>
+  </div>
+</section>
