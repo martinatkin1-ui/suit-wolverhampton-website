@@ -1,0 +1,289 @@
+<% layout('layout') -%>
+
+<!-- Hero -->
+<section class="hero" style="min-height: 40vh; padding: 4rem 5%;">
+  <h1>SUIT in the <em>Community</em></h1>
+  <p class="hero-sub"><%= community.intro.subtext %></p>
+</section>
+
+<!-- Creative Projects Overview -->
+<section class="section">
+  <div class="section-header">
+    <h2>Our Creative Projects</h2>
+    <p>Recovery isn't just about stopping something — it's about starting something extraordinary.</p>
+  </div>
+  <% var projectFeedHrefs = { art: '/community?cat=art#community-feed', music: '/community?cat=music#community-feed', drama: '/community?cat=drama#community-feed' }; %>
+  <% var creativeProjectKeys = ['art', 'music', 'drama']; %>
+  <div class="projects-showcase">
+    <% creativeProjectKeys.forEach(function(key) { var proj = community.projects[key]; if (!proj) return; var feedHref = projectFeedHrefs[key] || '/community#community-feed'; var hasCardVideo = !!(proj.videoUrl && String(proj.videoUrl).trim()); var tagOpen = hasCardVideo ? 'div' : 'a'; %>
+    <<%= tagOpen %> <% if (!hasCardVideo) { %>href="<%= feedHref %>" <% } %>class="project-card project-<%= key %><% if (!hasCardVideo) { %> project-card--link<% } %>">
+      <% if (proj.imageUrl || proj.videoUrl) { %>
+      <div class="project-card-media">
+        <% if (proj.imageUrl) { %>
+        <img src="<%= proj.imageUrl %>" alt="<%= proj.imageAlt || proj.title %>" loading="lazy" width="640" height="400">
+        <% } %>
+        <% if (proj.videoUrl) { %>
+          <% var projYt = proj.videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/); %>
+          <% if (projYt) { %>
+          <div class="project-card-embed">
+            <iframe src="https://www.youtube.com/embed/<%= projYt[1] %>" title="<%= proj.title %> — video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <% } else { %>
+          <video class="project-card-file-video" src="<%= proj.videoUrl %>" controls playsinline preload="metadata" title="<%= proj.title %>"></video>
+          <% } %>
+        <% } %>
+      </div>
+      <% } %>
+      <div class="project-card-body">
+        <div class="project-icon">
+          <% if (key === 'art') { %><%- include('partials/icon', { name: 'lucide:palette', size: 36 }) %><% } else if (key === 'music') { %><%- include('partials/icon', { name: 'lucide:music-2', size: 36 }) %><% } else { %><%- include('partials/icon', { name: 'lucide:theater', size: 36 }) %><% } %>
+        </div>
+        <h3><%= proj.title %></h3>
+        <p><%= proj.description %></p>
+        <div class="project-partners">
+          <% (proj.partners || []).forEach(function(p) { %>
+          <span class="partner-chip"><%= p %></span>
+          <% }); %>
+        </div>
+        <% if (hasCardVideo) { %>
+        <p class="project-card-cta"><a href="<%= feedHref %>">View stories in this area →</a></p>
+        <% } %>
+      </div>
+    </<%= tagOpen %>>
+    <% }); %>
+    <% var co = (typeof culturalOutreach !== 'undefined' && culturalOutreach) ? culturalOutreach : null; %>
+    <% var outreachTitle = (co && co.hubTitle) ? co.hubTitle : 'Cultural Outreach'; %>
+    <% var outreachBlurb = (co && co.hubIntro) ? co.hubIntro : 'Punjabi, Polish, and Afro Caribbean support — multilingual, culturally sensitive recovery outreach in Wolverhampton.'; %>
+    <a href="/community/outreach" class="project-card project-culturalOutreach project-card--link">
+      <div class="project-card-body">
+        <div class="project-icon">
+          <%- include('partials/icon', { name: 'lucide:languages', size: 36 }) %>
+        </div>
+        <h3><%= outreachTitle %></h3>
+        <p><%= outreachBlurb %></p>
+        <div class="project-partners">
+          <span class="partner-chip">Punjabi</span>
+          <span class="partner-chip">Polish</span>
+          <span class="partner-chip">Afro Caribbean</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Filter Tabs -->
+<section class="section section-alt" id="community-feed">
+  <div class="section-header">
+    <h2>Our Story — 5 Years of Impact</h2>
+    <p>Scroll through years of community events, exhibitions, conferences, and cultural milestones.</p>
+  </div>
+
+  <div class="feed-filters">
+    <button type="button" class="feed-filter active" data-filter="all" onclick="filterCommunity('all', this)">All</button>
+    <button type="button" class="feed-filter" data-filter="art" onclick="filterCommunity('art', this)"><%- include('partials/icon', { name: 'lucide:palette', size: 16 }) %> Art</button>
+    <button type="button" class="feed-filter" data-filter="music" onclick="filterCommunity('music', this)"><%- include('partials/icon', { name: 'lucide:music-2', size: 16 }) %> Music</button>
+    <button type="button" class="feed-filter" data-filter="drama" onclick="filterCommunity('drama', this)"><%- include('partials/icon', { name: 'lucide:theater', size: 16 }) %> Drama</button>
+    <button type="button" class="feed-filter" data-filter="events" onclick="filterCommunity('events', this)"><%- include('partials/icon', { name: 'lucide:calendar', size: 16 }) %> Events</button>
+    <button type="button" class="feed-filter" data-filter="pride" onclick="filterCommunity('pride', this)"><%- include('partials/icon', { name: 'lucide:heart', size: 16 }) %> PRIDE</button>
+    <button type="button" class="feed-filter" data-filter="cultural" onclick="filterCommunity('cultural', this)"><%- include('partials/icon', { name: 'lucide:globe', size: 16 }) %> Cultural</button>
+    <button type="button" class="feed-filter" data-filter="announcements" onclick="filterCommunity('announcements', this)"><%- include('partials/icon', { name: 'lucide:megaphone', size: 16 }) %> Announcements</button>
+  </div>
+
+  <!-- Community Feed Timeline -->
+  <div class="community-feed" id="communityFeed">
+    <% var currentYear = ''; %>
+    <% posts.forEach(function(post) { %>
+    <% var postYear = post.date.split('-')[0]; %>
+    <% if (postYear !== currentYear) { currentYear = postYear; %>
+    <div class="feed-year-marker" data-category="all">
+      <span><%= postYear %></span>
+    </div>
+    <% } %>
+    <article class="feed-item <%= post.pinned ? 'feed-pinned' : '' %>" data-category="<%= post.category %>" data-tags="<%= (post.tags || []).join(' ') %>">
+      <div class="feed-date-badge">
+        <span class="feed-month"><%= ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(post.date.split('-')[1]) - 1] %></span>
+        <span class="feed-day"><%= parseInt(post.date.split('-')[2]) %></span>
+      </div>
+      <div class="feed-content">
+        <div class="feed-meta">
+          <span class="feed-category feed-cat-<%= post.category %>" style="display:inline-flex;align-items:center;gap:0.35rem;">
+            <%- include('partials/category-icon', { category: post.category, size: 16 }) %>
+            <%= post.category.charAt(0).toUpperCase() + post.category.slice(1) %>
+          </span>
+          <% if (post.pinned) { %><span class="feed-pin" style="display:inline-flex;align-items:center;gap:0.25rem;"><%- include('partials/icon', { name: 'lucide:pin', size: 14 }) %> Pinned</span><% } %>
+          <% if (post.tags) { post.tags.slice(0, 3).forEach(function(tag) { %>
+          <span class="feed-tag">#<%= tag %></span>
+          <% }); } %>
+        </div>
+        <% var hasImg = post.imageUrl && String(post.imageUrl).trim(); %>
+        <% var vRaw = post.videoUrl && String(post.videoUrl).trim(); %>
+        <% var ytMatch = vRaw ? vRaw.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/) : null; %>
+        <% var isFileVideo = !!(vRaw && !ytMatch && vRaw.charAt(0) === '/' && /\.(mp4|webm|mov)(\?|$)/i.test(vRaw)); %>
+        <% if (hasImg || vRaw) { %>
+        <div class="feed-hero-media">
+          <% if (hasImg) { %>
+          <div class="feed-media feed-media-hero">
+            <img src="<%= post.imageUrl %>" alt="<%= post.title %>" loading="lazy" class="feed-image" width="800" height="450">
+          </div>
+          <% } %>
+          <% if (vRaw) { %>
+          <div class="feed-media <%= ytMatch ? 'feed-video' : isFileVideo ? 'feed-video-file' : '' %>">
+            <% if (ytMatch) { %>
+            <iframe src="https://www.youtube.com/embed/<%= ytMatch[1] %>" title="<%= post.title %>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+            <% } else if (isFileVideo) { %>
+            <video class="feed-native-video" src="<%= vRaw %>" controls playsinline preload="metadata" title="<%= post.title %>"></video>
+            <% } else { %>
+            <a href="<%= vRaw %>" target="_blank" rel="noopener" class="feed-video-link">Watch Video →</a>
+            <% } %>
+          </div>
+          <% } %>
+        </div>
+        <% } %>
+        <h3><%= post.title %></h3>
+        <p><%= post.body %></p>
+        <% if (post.quote) { %>
+        <blockquote class="feed-quote">
+          "<%= post.quote %>"
+          <% if (post.quoteAuthor) { %><cite>— <%= post.quoteAuthor %></cite><% } %>
+        </blockquote>
+        <% } %>
+        <% if (post.link) { %>
+        <a href="<%= post.link %>" target="_blank" rel="noopener" class="feed-link"><%= post.linkText || 'Learn more' %> →</a>
+        <% } %>
+      </div>
+    </article>
+    <% }); %>
+  </div>
+</section>
+
+<!-- Social Feeds Embed Section -->
+<section class="section">
+  <div class="section-header">
+    <h2>Follow SUIT on Social Media</h2>
+    <p>Stay connected with our latest updates, events, and community moments.</p>
+  </div>
+  <% var sw = community.socialWindows || {}; %>
+  <div class="social-embed-grid">
+    <div class="social-embed-card">
+      <% if (sw.facebook && sw.facebook.imageUrl) { %>
+      <div class="social-embed-media"><img src="<%= sw.facebook.imageUrl %>" alt="<%= sw.facebook.imageAlt || 'SUIT on Facebook' %>" loading="lazy" width="400" height="220"></div>
+      <% } %>
+      <h4 style="display:flex;align-items:center;gap:0.4rem;"><%- include('partials/icon', { name: 'lucide:facebook', size: 22 }) %> Facebook</h4>
+      <p>Event updates, photos, and community news from the SUIT family.</p>
+      <a href="<%= content.site.facebook %>" target="_blank" rel="noopener" class="btn btn-outline">Follow on Facebook →</a>
+    </div>
+    <div class="social-embed-card">
+      <% if (sw.instagram && sw.instagram.imageUrl) { %>
+      <div class="social-embed-media"><img src="<%= sw.instagram.imageUrl %>" alt="<%= sw.instagram.imageAlt || 'SUIT on Instagram' %>" loading="lazy" width="400" height="220"></div>
+      <% } %>
+      <h4 style="display:flex;align-items:center;gap:0.4rem;"><%- include('partials/icon', { name: 'lucide:instagram', size: 22 }) %> Instagram</h4>
+      <p>Behind the scenes of our art projects, events, and daily life at Paycare House.</p>
+      <a href="<%= content.site.instagram %>" target="_blank" rel="noopener" class="btn btn-outline">Follow on Instagram →</a>
+    </div>
+    <div class="social-embed-card">
+      <% if (sw.youtube && sw.youtube.imageUrl) { %>
+      <div class="social-embed-media"><img src="<%= sw.youtube.imageUrl %>" alt="<%= sw.youtube.imageAlt || 'SUIT on YouTube' %>" loading="lazy" width="400" height="220"></div>
+      <% } %>
+      <h4 style="display:flex;align-items:center;gap:0.4rem;"><%- include('partials/icon', { name: 'lucide:youtube', size: 22 }) %> YouTube</h4>
+      <p>Watch our performances, conference presentations, and recovery stories.</p>
+      <a href="<%= content.site.youtube %>" target="_blank" rel="noopener" class="btn btn-outline">Subscribe on YouTube →</a>
+    </div>
+    <div class="social-embed-card">
+      <% if (sw.twitter && sw.twitter.imageUrl) { %>
+      <div class="social-embed-media"><img src="<%= sw.twitter.imageUrl %>" alt="<%= sw.twitter.imageAlt || 'SUIT on X' %>" loading="lazy" width="400" height="220"></div>
+      <% } %>
+      <h4 style="display:flex;align-items:center;gap:0.4rem;"><%- include('partials/icon', { name: 'lucide:twitter', size: 22 }) %> X (Twitter)</h4>
+      <p>Quick updates, national conversations, and links to our latest work.</p>
+      <a href="<%= content.site.twitter %>" target="_blank" rel="noopener" class="btn btn-outline">Follow on X →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA: Get Involved -->
+<section class="section band-teal">
+  <div class="cta-involved">
+    <h2>Be Part of Our Story</h2>
+    <p style="font-size: 1.15rem; opacity: 0.9; max-width: 700px; margin: 0 auto 2rem;">
+      Whether you're an artist, musician, community group, or local business — there's a place for you in SUIT's community.
+      Collaborate with us to make a real difference.
+    </p>
+    <div class="cta-button-row">
+      <a href="/contact?type=volunteer" class="btn btn-cta">Volunteer With Us</a>
+      <a href="/contact?type=collaborate" class="btn btn-outline-white">Propose a Collaboration</a>
+      <a href="/contact?type=donate" class="btn btn-outline-white">Support Our Work</a>
+    </div>
+  </div>
+</section>
+
+<!-- Quote -->
+<section class="quote-block">
+  <blockquote>"Through multiple showcasing opportunities the focus is to raise the profile and experience of individuals to enter the professional sector and include their lived experience in the cultural ecology of the city."</blockquote>
+  <cite>— Asylum Artist Quarter, on the [P R O] F I L E programme with SUIT</cite>
+</section>
+
+<script>
+function communityFeedTagMatch(el, tag) {
+  if (!el.classList.contains('feed-item')) return false;
+  var tags = (el.dataset.tags || '').split(/\s+/).filter(Boolean);
+  return tags.indexOf(tag) !== -1;
+}
+
+function filterCommunityByTopic(tag) {
+  document.querySelectorAll('.feed-filter').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.feed-item, .feed-year-marker').forEach(function(item) {
+    if (item.classList.contains('feed-year-marker')) {
+      item.style.display = 'none';
+      var next = item.nextElementSibling;
+      while (next && !next.classList.contains('feed-year-marker')) {
+        if (communityFeedTagMatch(next, tag)) {
+          item.style.display = '';
+          break;
+        }
+        next = next.nextElementSibling;
+      }
+    } else {
+      item.style.display = communityFeedTagMatch(item, tag) ? '' : 'none';
+    }
+  });
+}
+
+function filterCommunity(cat, btn) {
+  document.querySelectorAll('.feed-filter').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.feed-item, .feed-year-marker').forEach(function(item) {
+    if (cat === 'all') {
+      item.style.display = '';
+    } else if (item.classList.contains('feed-year-marker')) {
+      item.style.display = 'none';
+      var next = item.nextElementSibling;
+      while (next && !next.classList.contains('feed-year-marker')) {
+        if (next.dataset.category === cat) {
+          item.style.display = '';
+          break;
+        }
+        next = next.nextElementSibling;
+      }
+    } else {
+      item.style.display = item.dataset.category === cat ? '' : 'none';
+    }
+  });
+}
+
+(function initCommunityFeedFromQuery() {
+  var params = new URLSearchParams(window.location.search);
+  var topic = params.get('topic');
+  var cat = params.get('cat');
+  if (topic === 'cultural-outreach') {
+    filterCommunityByTopic('cultural-outreach');
+    var feedEl = document.getElementById('community-feed');
+    if (feedEl) feedEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else if (cat && ['art', 'music', 'drama', 'events', 'pride', 'cultural', 'announcements'].indexOf(cat) !== -1) {
+    var btn = document.querySelector('.feed-filter[data-filter="' + cat + '"]');
+    if (btn) {
+      filterCommunity(cat, btn);
+      var feedEl2 = document.getElementById('community-feed');
+      if (feedEl2) feedEl2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+})();
+</script>
