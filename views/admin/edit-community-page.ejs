@@ -1,0 +1,80 @@
+<% layout('../admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Community page — windows &amp; media</h1>
+  <p style="color: var(--text-mid);">Images and video for the three creative project cards (art, music, drama) and the four “Follow us” panels on <a href="/community" target="_blank" rel="noopener">In the Community</a>. Cultural outreach (Punjabi, Polish, Afro Caribbean) is in <code>data/cultural-outreach.json</code>. <strong>News &amp; More</strong> hub pages are in <code>data/news-more.json</code> (regenerate galleries from <code>data/legacy-media-manifest.json</code> with <code>node scripts/build-news-more-data.js</code>; then <code>npm run build:static</code> or restart the site to refresh <code>public/</code> HTML). Paste URLs from <a href="/admin/gallery">Gallery &amp; Media</a> (Copy URL) or any HTTPS image link.</p>
+</div>
+
+<% if (saved) { %>
+  <div class="toast success">Community page windows saved.</div>
+<% } %>
+
+<form method="POST" action="/admin/community/page" class="admin-form">
+  <% const projectKeys = ['art', 'music', 'drama']; %>
+  <% const projectLabels = { art: 'Art & visual arts', music: 'Music & wellbeing', drama: 'Drama & performance' }; %>
+
+  <% projectKeys.forEach(function(key) { %>
+    <% var proj = community.projects[key] || {}; %>
+    <div class="admin-card">
+      <h3 style="text-transform: capitalize;"><%= projectLabels[key] %></h3>
+      <p class="admin-hint" style="margin-bottom: var(--space-md);">Card: <code>project-<%= key %></code> on the public page.</p>
+      <div class="form-group">
+        <label for="project_<%= key %>_title">Title</label>
+        <input type="text" id="project_<%= key %>_title" name="project_<%= key %>_title" value="<%= proj.title || '' %>">
+      </div>
+      <div class="form-group">
+        <label for="project_<%= key %>_description">Description</label>
+        <textarea id="project_<%= key %>_description" name="project_<%= key %>_description" rows="4"><%= proj.description || '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label for="project_<%= key %>_partners">Partners (one per line)</label>
+        <textarea id="project_<%= key %>_partners" name="project_<%= key %>_partners" rows="4" class="admin-textarea-mono"><%= (proj.partners || []).join('\n') %></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="project_<%= key %>_imageUrl">Image URL</label>
+          <input type="text" id="project_<%= key %>_imageUrl" name="project_<%= key %>_imageUrl" value="<%= proj.imageUrl || '' %>" placeholder="/uploads/gallery/photo.jpg">
+        </div>
+        <div class="form-group">
+          <label for="project_<%= key %>_imageAlt">Image description (accessibility)</label>
+          <input type="text" id="project_<%= key %>_imageAlt" name="project_<%= key %>_imageAlt" value="<%= proj.imageAlt || '' %>" placeholder="Short alt text">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="project_<%= key %>_videoUrl">Video (optional)</label>
+        <input type="text" id="project_<%= key %>_videoUrl" name="project_<%= key %>_videoUrl" value="<%= proj.videoUrl || '' %>" placeholder="YouTube link or /uploads/gallery/clips.mp4">
+        <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.35rem;">YouTube/watch or youtu.be embeds in the card. Direct <code>.mp4</code> / <code>.webm</code> files play in the page.</p>
+      </div>
+    </div>
+  <% }); %>
+
+  <div class="admin-card">
+    <h3>Social “Follow us” panels</h3>
+    <p class="admin-hint" style="margin-bottom: var(--space-md);">Optional photo above each network. Buttons still use contact details from Homepage &amp; contact.</p>
+    <% const social = community.socialWindows || {}; %>
+    <% const socialList = [
+      { key: 'facebook', label: 'Facebook' },
+      { key: 'instagram', label: 'Instagram' },
+      { key: 'youtube', label: 'YouTube' },
+      { key: 'twitter', label: 'X (Twitter)' }
+    ]; %>
+    <% socialList.forEach(function(s) { %>
+      <% var w = social[s.key] || {}; %>
+      <div class="form-row" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border-soft);">
+        <div class="form-group">
+          <label for="social_<%= s.key %>_imageUrl"><%= s.label %> — image URL</label>
+          <input type="text" id="social_<%= s.key %>_imageUrl" name="social_<%= s.key %>_imageUrl" value="<%= w.imageUrl || '' %>" placeholder="/uploads/gallery/...">
+        </div>
+        <div class="form-group">
+          <label for="social_<%= s.key %>_imageAlt"><%= s.label %> — alt text</label>
+          <input type="text" id="social_<%= s.key %>_imageAlt" name="social_<%= s.key %>_imageAlt" value="<%= w.imageAlt || '' %>">
+        </div>
+      </div>
+    <% }); %>
+  </div>
+
+  <button type="submit" class="btn btn-cta" style="display:inline-flex;align-items:center;gap:0.45rem;">
+    <%- include('../partials/icon', { name: 'lucide:save', size: 20 }) %> Save windows
+  </button>
+  <a href="/admin/community" class="btn btn-outline" style="margin-left:0.5rem;">Back to community posts</a>
+</form>

@@ -1,0 +1,100 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Dashboard</h1>
+  <p style="color: var(--text-mid);">Welcome back. Use the sidebar or the map below to jump to the page you want to update.</p>
+</div>
+
+<div class="admin-card">
+  <h3>Where to edit what</h3>
+  <p style="color: var(--text-mid); margin-bottom: 0;">Each link opens a simple form. You change words, images, and times — not the overall design.</p>
+  <div class="admin-site-map">
+    <a href="/admin/content">Homepage &amp; contact<span>Hero, impact block, quote, phone, email, social links</span></a>
+    <a href="/admin/services">Services<span>Icons and blurbs on the homepage services grid</span></a>
+    <a href="/admin/timetable">Timetable<span>Weekly sessions, times, locations, programme links</span></a>
+    <a href="/admin/timeline">Timeline — milestones<span>Dated story on the Our Timeline page</span></a>
+    <a href="/admin/timeline-culture">Timeline — photos<span>Top photo strip and pillar cards on the Timeline page</span></a>
+    <a href="/admin/programmes">Programme details<span>Longer text and galleries for timetable pop-ups</span></a>
+    <a href="/admin/stories">Stories<span>Recovery stories and news posts</span></a>
+    <a href="/admin/team">Team<span>Staff and volunteers</span></a>
+    <a href="/admin/community">Community<span>Feed posts; project cards &amp; social images under “windows”</span></a>
+    <a href="/admin/gallery">Gallery / media<span>Upload images and clips</span></a>
+    <a href="/admin/messages">Messages<span>Contact form inbox</span></a>
+    <a href="/admin/settings">Settings<span>Admin preferences</span></a>
+  </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 2rem;">
+  <div class="admin-card text-center" style="border-left: 4px solid var(--brand-orange);">
+    <div style="font-size: 2.5rem; font-weight: 800; color: var(--brand-orange);"><%= unread %></div>
+    <p>Unread Messages</p>
+    <a href="/admin/messages" style="font-size: 0.9rem;">View All →</a>
+  </div>
+  <div class="admin-card text-center" style="border-left: 4px solid var(--brand-cyan);">
+    <div style="font-size: 2.5rem; font-weight: 800; color: var(--brand-cyan);"><%= stories.length %></div>
+    <p>Stories Published</p>
+    <a href="/admin/stories" style="font-size: 0.9rem;">Manage →</a>
+  </div>
+  <div class="admin-card text-center" style="border-left: 4px solid var(--brand-green);">
+    <div style="font-size: 2.5rem; font-weight: 800; color: var(--brand-green);"><%= team.length + volunteers.length %></div>
+    <p>Team (<%= team.length %> Staff + <%= volunteers.length %> Volunteers)</p>
+    <a href="/admin/team" style="font-size: 0.9rem;">Manage →</a>
+  </div>
+  <div class="admin-card text-center" style="border-left: 4px solid var(--brand-pink);">
+    <div style="font-size: 2.5rem; font-weight: 800; color: var(--brand-pink);"><%= messages.length %></div>
+    <p>Total Messages</p>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="admin-card">
+  <h3>Quick actions</h3>
+  <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+    <a href="/admin/content" class="btn btn-primary">Homepage &amp; contact</a>
+    <a href="/admin/timetable" class="btn btn-outline">Timetable</a>
+    <a href="/admin/timeline" class="btn btn-outline">Timeline milestones</a>
+    <a href="/admin/stories/new" class="btn btn-outline">New story</a>
+    <a href="/admin/community/new" class="btn btn-outline">Community post</a>
+    <a href="/admin/team/new" class="btn btn-outline">Team member</a>
+    <a href="/admin/gallery" class="btn btn-outline">Upload media</a>
+  </div>
+</div>
+
+<!-- Recent Messages -->
+<div class="admin-card">
+  <h3>Recent Messages</h3>
+  <% if (messages.length === 0) { %>
+    <p style="color: var(--text-mid); padding: 1rem 0;">No messages yet.</p>
+  <% } else { %>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% messages.slice(-5).reverse().forEach(function(msg) { %>
+        <tr>
+          <td><strong><%= msg.name %></strong></td>
+          <td><%= msg.type %></td>
+          <td><%= new Date(msg.date).toLocaleDateString('en-GB') %></td>
+          <td>
+            <% if (msg.read) { %>
+              <span style="color: var(--brand-green); display:inline-flex;align-items:center;gap:0.3rem;"><%- include('../partials/icon', { name: 'lucide:check', size: 16 }) %> Read</span>
+            <% } else { %>
+              <span style="color: var(--brand-orange); font-weight: 600; display:inline-flex;align-items:center;gap:0.3rem;"><%- include('../partials/icon', { name: 'lucide:circle', size: 12, iconStyle: 'fill: currentColor' }) %> New</span>
+            <% } %>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <div style="margin-top: 1rem;">
+      <a href="/admin/messages" style="font-weight: 600;">View all messages →</a>
+    </div>
+  <% } %>
+</div>
