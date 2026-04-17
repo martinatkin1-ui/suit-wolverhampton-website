@@ -1,0 +1,92 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Team Members</h1>
+  <div>
+    <a href="/admin/team/new" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.4rem;"><%- include('../partials/icon', { name: 'lucide:plus', size: 18 }) %> Add Team Member</a>
+  </div>
+</div>
+
+<div class="admin-card">
+  <h3>Staff (<%= team.length %>)</h3>
+  <% if (team.length === 0) { %>
+    <p style="color: var(--text-mid); padding: 1rem 0;">No staff members yet.</p>
+  <% } else { %>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% team.forEach(function(member) { %>
+        <tr>
+          <td>
+            <% if (member.image) { %>
+              <img src="<%= member.image %>" alt="<%= member.name %>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+            <% } else { %>
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--brand-orange); display:flex; align-items:center; justify-content:center; color:#fff;"><%- include('../partials/icon', { name: 'lucide:user', size: 20 }) %></div>
+            <% } %>
+          </td>
+          <td><strong><%= member.name %></strong></td>
+          <td><%= member.role %></td>
+          <td class="admin-actions">
+            <a href="/admin/team/edit/<%= member.id %>" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; display:inline-flex;align-items:center;gap:0.3rem;"><%- include('../partials/icon', { name: 'lucide:pencil', size: 14 }) %> Edit</a>
+            <form method="POST" action="/admin/team/delete/<%= member.id %>" style="display: inline;">
+              <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; color: var(--color-crisis); border-color: var(--color-crisis); display:inline-flex;align-items:center;gap:0.3rem;" onclick="return confirm('Remove this team member?')">
+                <%- include('../partials/icon', { name: 'lucide:trash-2', size: 14 }) %> Remove
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<div class="admin-card" style="margin-top: 1.5rem;">
+  <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:handshake', size: 22 }) %> Volunteers (<%= volunteers.length %>)</h3>
+  <% if (volunteers.length === 0) { %>
+    <p style="color: var(--text-mid); padding: 1rem 0;">No volunteers yet.</p>
+  <% } else { %>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Name</th>
+          <th>Team</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% volunteers.forEach(function(vol) { %>
+        <tr>
+          <td>
+            <% if (vol.image) { %>
+              <img src="<%= vol.image %>" alt="<%= vol.name %>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+            <% } else { %>
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--brand-teal); display:flex; align-items:center; justify-content:center; color:#fff;"><%- include('../partials/icon', { name: 'lucide:user', size: 20 }) %></div>
+            <% } %>
+          </td>
+          <td><strong><%= vol.name %></strong></td>
+          <td><%= vol.team || '—' %></td>
+          <td><%= vol.role %></td>
+          <td class="admin-actions">
+            <a href="/admin/team/edit/<%= vol.id %>" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; display:inline-flex;align-items:center;gap:0.3rem;"><%- include('../partials/icon', { name: 'lucide:pencil', size: 14 }) %> Edit</a>
+            <form method="POST" action="/admin/team/delete/<%= vol.id %>" style="display: inline;">
+              <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; color: var(--color-crisis); border-color: var(--color-crisis); display:inline-flex;align-items:center;gap:0.3rem;" onclick="return confirm('Remove this volunteer?')">
+                <%- include('../partials/icon', { name: 'lucide:trash-2', size: 14 }) %> Remove
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</div>

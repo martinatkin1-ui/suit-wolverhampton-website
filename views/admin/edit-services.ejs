@@ -1,0 +1,51 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Manage Services</h1>
+  <p style="color: var(--text-mid);">Edit the services shown on the "How We Help" page.</p>
+</div>
+
+<% if (saved) { %>
+  <div class="toast success">Services saved successfully!</div>
+<% } %>
+
+<form method="POST" action="/admin/services" class="admin-form">
+  <div id="services-list">
+    <% services.forEach(function(svc, index) { %>
+    <div class="admin-card" id="service-<%= index %>">
+      <h3>Service #<%= index + 1 %></h3>
+      <input type="hidden" name="serviceId" value="<%= svc.id %>">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Icon (Lucide id, e.g. lucide:handshake)</label>
+          <input type="text" name="serviceIcon" value="<%= svc.icon %>" placeholder="lucide:handshake" style="width: 100%; max-width: 280px;">
+        </div>
+        <div class="form-group">
+          <label>Colour Theme</label>
+          <select name="serviceColor">
+            <option value="card-orange" <%= svc.colorClass === 'card-orange' ? 'selected' : '' %>>Orange (Hope)</option>
+            <option value="card-cyan" <%= svc.colorClass === 'card-cyan' ? 'selected' : '' %>>Blue (Trust)</option>
+            <option value="card-green" <%= svc.colorClass === 'card-green' ? 'selected' : '' %>>Green (Growth)</option>
+            <option value="card-pink" <%= svc.colorClass === 'card-pink' ? 'selected' : '' %>>Pink (Compassion)</option>
+            <option value="card-teal" <%= svc.colorClass === 'card-teal' ? 'selected' : '' %>>Teal (Stability)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Service Title</label>
+        <input type="text" name="serviceTitle" value="<%= svc.title %>">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="serviceDescription" rows="3"><%= svc.description %></textarea>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+
+  <button type="submit" class="btn btn-cta" style="font-size: 1.1rem; padding: 1rem 2.5rem; display:inline-flex;align-items:center;gap:0.45rem;">
+    <%- include('../partials/icon', { name: 'lucide:save', size: 20 }) %> Save All Services
+  </button>
+</form>

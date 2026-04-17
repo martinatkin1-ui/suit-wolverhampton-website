@@ -1,0 +1,52 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Stories of Hope</h1>
+  <div>
+    <a href="/admin/stories/new" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.4rem;"><%- include('../partials/icon', { name: 'lucide:plus', size: 18 }) %> Add New Story</a>
+  </div>
+</div>
+
+<% if (saved) { %>
+  <div class="toast success">Story saved successfully!</div>
+<% } %>
+
+<div class="admin-card">
+  <% if (stories.length === 0) { %>
+    <p style="color: var(--text-mid); padding: 1rem 0;">No stories yet. Add your first story to inspire others.</p>
+  <% } else { %>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Title</th>
+          <th>Featured</th>
+          <th>Media</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% stories.forEach(function(story) { %>
+        <tr>
+          <td><strong><%= story.name %></strong></td>
+          <td><%= story.title %></td>
+          <td><% if (story.featured) { %><span style="display:inline-flex;align-items:center;gap:0.25rem;"><%- include('../partials/icon', { name: 'lucide:star', size: 16 }) %> Yes</span><% } else { %>No<% } %></td>
+          <td style="display:flex;align-items:center;gap:0.35rem;">
+            <% if (story.image) { %><%- include('../partials/icon', { name: 'lucide:image', size: 16 }) %><% } %>
+            <% if (story.video) { %><%- include('../partials/icon', { name: 'lucide:video', size: 16 }) %><% } %>
+            <%= (!story.image && !story.video) ? '—' : '' %>
+          </td>
+          <td class="admin-actions">
+            <a href="/admin/stories/edit/<%= story.id %>" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; display:inline-flex;align-items:center;gap:0.3rem;"><%- include('../partials/icon', { name: 'lucide:pencil', size: 14 }) %> Edit</a>
+            <form method="POST" action="/admin/stories/delete/<%= story.id %>" style="display: inline;">
+              <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; color: var(--color-crisis); border-color: var(--color-crisis); display:inline-flex;align-items:center;gap:0.3rem;" onclick="return confirm('Delete this story?')">
+                <%- include('../partials/icon', { name: 'lucide:trash-2', size: 14 }) %> Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
