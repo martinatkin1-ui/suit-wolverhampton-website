@@ -1,0 +1,99 @@
+{
+  "heading": "Art, drama & music in our story",
+  "subheading": "Real photos from SUIT’s creative programmes on the original site — gallery visits, theatre work, literature festival, podcasts, and community exhibitions.",
+  "credit": "Images hosted on the legacy Squarespace site; additional photos credited to Steph Teague where noted on suitrecoverywolverhampton.com.",
+  "pillars": [
+    {
+      "id": "art",
+      "title": "Art",
+      "icon": "lucide:palette",
+      "cardClass": "card-pink",
+      "caption": "Weekly art group, Wolverhampton Art Gallery, Asylum Artist Quarter, and exhibition work.",
+      "sourceNote": "creative-arts · asylum-artist-quarter · gallery",
+      "images": [
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/9cf480e9-f35d-45af-b515-15877eec906f/P1173024.jpg",
+          "alt": "SUIT art group at Wolverhampton Art Gallery"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/0913ab8b-ac2e-4ec9-a806-411a06f072f2/P1173062.jpg",
+          "alt": "Creative work on display"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/61887f65-b650-41c4-84e9-09b7040c56a9/P1173082.jpg",
+          "alt": "Art group exhibition pieces"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/66a58939-7dde-4c5e-bdb1-eb304f3375cb/Art+Poster+Jan+2025.jpg",
+          "alt": "SUIT art poster"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/0eb745b0-7a89-44be-bdf4-9cdbe161f32f/IMG_1256.JPEG",
+          "alt": "Asylum Artist Quarter — community art"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/48f1f25a-d424-4f48-aa8c-e03b1be3984e/20240217_173642.jpg",
+          "alt": "Asylum Artist Quarter event"
+        }
+      ]
+    },
+    {
+      "id": "drama",
+      "title": "Drama",
+      "icon": "lucide:theater",
+      "cardClass": "card-teal",
+      "caption": "Theatre projects, performances, and work with partners such as Geese Theatre.",
+      "sourceNote": "drama · conferences",
+      "images": [
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/712c3c39-a971-44e7-875b-f5d239388272/IMG_1700.JPEG",
+          "alt": "SUIT drama and performance"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/dc5bf4da-88e7-461a-acfc-0448bebe4e15/IMG_1705.JPEG",
+          "alt": "Theatre workshop moment"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/00332579-e5ec-4b8b-84d6-7ae3b5329c8e/Arena+Poster.jpg",
+          "alt": "Arena theatre poster"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/87f4da2b-51fe-479e-ad51-14d9ab61eaab/20241102_202436.jpg",
+          "alt": "Performance evening"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/0d9276e9-5f83-49b4-a8c3-3481becc4688/IMG_1511.JPEG",
+          "alt": "Drama group"
+        }
+      ]
+    },
+    {
+      "id": "music",
+      "title": "Music & spoken word",
+      "icon": "lucide:music-2",
+      "cardClass": "card-cyan",
+      "caption": "Wolverhampton Literature Festival, spoken word, podcasts, and radio appearances.",
+      "sourceNote": "wolverhampton-literature-festival · podcasts · publications",
+      "youtubeId": "d147QND9ZVM",
+      "youtubeTitle": "Clip featured on SUIT publications / media pages",
+      "images": [
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/70fcee92-44f0-4b49-9a8b-809f54f5a1ff/20240129_110302.jpg",
+          "alt": "Literature festival activity"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/f4030526-2963-4794-904d-503859bbf691/20230202_141834.jpg",
+          "alt": "Spoken word and literature event"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/09b00ed8-c627-4793-bed1-087e6d285a17/20250130_125653.jpg",
+          "alt": "Podcasts and media"
+        },
+        {
+          "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/55648c05-fe47-4a83-bc3d-23915e7a5a36/20240129_115439.jpg",
+          "alt": "Literature festival — Wolverhampton"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "staff": [
+    { "id": "marcus-johnson", "name": "Marcus Johnson", "role": "Project Manager", "bio": "Lived experience service-user involvement working alongside clinical treatment is undoubtedly the most important ingredient for the optimum outcome in the battle against addiction. I have been in recovery from alcoholism for over 10 years.", "image": "/uploads/team/marcus-johnson.png", "videoUrl": "" },
+    { "id": "jason-spreckley", "name": "Jason Spreckley", "role": "Outreach Lead", "bio": "Until you become inspired by someone else, the change can't happen. I've been with SUIT for over 12 years. I have lived experience of addiction and I value peer-support.", "image": "/uploads/team/jason-spreckley.jpg", "videoUrl": "" },
+    { "id": "michelle-lane", "name": "Michelle Lane", "role": "Volunteer Coordinator", "bio": "I went from feeling like an outsider, to someone who had found their tribe. The value of understanding that you get from someone who has experienced similar issues cannot be underestimated.", "image": "/uploads/team/michelle-lane.jpg", "videoUrl": "" },
+    { "id": "fallon-burnett", "name": "Fallon Burnett", "role": "Project Support Worker & Shared Care Lead", "bio": "I am a champion of diversity, and want to break down barriers, remove societal stigma, and bring the community together.", "image": "/uploads/team/fallon-burnett.jpg", "videoUrl": "" },
+    { "id": "christiane-jenkins", "name": "Christiane Jenkins", "role": "Creative Arts & Research Lead", "bio": "Appreciate connections & social interactions… we are not alone in our emotions. I'm 9 years into recovery. Using art for support in recovery introduces vibrant and productive networks, environments, and opportunities.", "image": "/uploads/team/christiane-jenkins.jpg", "videoUrl": "" },
+    { "id": "cody-jenkins", "name": "Cody Jenkins", "role": "Data Illustrator", "bio": "I work as SUIT's Data Illustrator. A family member went through their recovery with SUIT so I saw firsthand the support given.", "image": "/uploads/team/cody-jenkins.jpg", "videoUrl": "" },
+    { "id": "vijay-sahota", "name": "Vijay Sahota", "role": "Punjabi-Speaking Project Worker", "bio": "Being part of the SUIT family gives me purpose, and I can use my lived experience of addiction to show others that recovery and change is possible.", "image": "/uploads/team/vijay-sahota.jpg", "videoUrl": "https://www.youtube.com/c/TheSahotas/about" },
+    { "id": "matt-whittall", "name": "Matt Whittall", "role": "Peer Support Worker - Hospital Drug & Alcohol Liaison Team", "bio": "It takes real bravery to seek help. Be brave and reach out and you will find a team that will offer patience, calm, and a duty of care.", "image": "/uploads/team/matt-whittall.jpg", "videoUrl": "" },
+    { "id": "warren-sutherland", "name": "Warren Sutherland", "role": "SMART & Lived Experience Day Hab Coordinator", "bio": "I hope you appreciate the words, but more than that, I hope it makes you think. My addiction wasn't wasted time — it was my lesson getting me ready to help others.", "image": "/uploads/team/warren-sutherland.jpg", "videoUrl": "" },
+    { "id": "karolina-sowinska", "name": "Karolina Sowinska", "role": "Polish-Speaking Support Worker", "bio": "Everyone deserves to have supporters on their side, to keep believing in them, to help them achieve. To keep being different, unique, valued. To survive.", "image": "/uploads/team/karolina-sowinska.jpg", "videoUrl": "" },
+    { "id": "kiran-kaur", "name": "Kiran Kaur", "role": "LERO Project Administrator (Punjabi-Speaking)", "bio": "Supporting the SUIT team and our community with administrative coordination.", "image": "/uploads/team/kiran-kaur.jpg", "videoUrl": "" }
+  ],
+  "volunteers": [
+    {
+      "id": "giles-staddon",
+      "name": "Giles Staddon",
+      "role": "Office & Wraparound Support Volunteer",
+      "team": "Office & Wraparound Support",
+      "bio": "Providing vital office and wraparound support as a lived experience volunteer with SUIT.",
+      "image": "/uploads/team/giles-staddon.png"
+    },
+    {
+      "id": "richard-felton",
+      "name": "Richard Felton",
+      "role": "Office & Wraparound Support Volunteer",
+      "team": "Office & Wraparound Support",
+      "bio": "Supporting clients and the SUIT office team through lived experience volunteering.",
+      "image": "/uploads/team/richard-felton.jpg"
+    },
+    {
+      "id": "amy-felton",
+      "name": "Amy Felton",
+      "role": "Office & Wraparound Support Volunteer",
+      "team": "Office & Wraparound Support",
+      "bio": "Providing wraparound support to clients at Paycare House through the Recovery Ambassador Programme.",
+      "image": "/uploads/team/amy-felton.jpg"
+    },
+    {
+      "id": "ingrid-forman",
+      "name": "Ingrid Forman",
+      "role": "Office & Wraparound Support Volunteer",
+      "team": "Office & Wraparound Support",
+      "bio": "Volunteering at SUIT, offering guidance and support to people in recovery.",
+      "image": "/uploads/team/ingrid-forman.jpg"
+    },
+    {
+      "id": "salgram-dass",
+      "name": "Salgram Dass",
+      "team": "Cultural Engagement Team",
+      "role": "Cultural Engagement Team Volunteer",
+      "bio": "Supporting SUIT's cultural engagement work, helping to reach communities with language and cultural understanding.",
+      "image": "/uploads/team/salgram-dass.jpg"
+    },
+    {
+      "id": "dal-rai-singh",
+      "name": "Dal Rai Singh",
+      "team": "Cultural Engagement Team",
+      "role": "Cultural Engagement Team Volunteer",
+      "bio": "Volunteering with the Cultural Engagement Team to break down barriers in Punjabi-speaking communities.",
+      "image": "/uploads/team/dal-rai-singh.jpg"
+    },
+    {
+      "id": "jas-sallon-singh",
+      "name": "Jas Sallon Singh",
+      "team": "Cultural Engagement Team",
+      "role": "Cultural Engagement Team Volunteer",
+      "bio": "Part of SUIT's Cultural Engagement Team, building trust and understanding in the community.",
+      "image": "/uploads/team/jas-sallon-singh.jpg"
+    },
+    {
+      "id": "lynette-john",
+      "name": "Lynette John",
+      "team": "Cultural Engagement Team",
+      "role": "Cultural Engagement Team Volunteer",
+      "bio": "Supporting SUIT's cultural engagement outreach and community events.",
+      "image": "/uploads/team/lynette-john.jpg"
+    },
+    {
+      "id": "sarah-millington",
+      "name": "Sarah Millington",
+      "team": "Group Facilitators",
+      "role": "Group Facilitator Volunteer",
+      "bio": "Facilitating recovery groups at SUIT, using lived experience to support others.",
+      "image": "/uploads/team/sarah-millington.jpg"
+    },
+    {
+      "id": "mark-harris",
+      "name": "Mark Harris",
+      "team": "Group Facilitators",
+      "role": "Group Facilitator Volunteer",
+      "bio": "Leading and supporting recovery group sessions as a lived experience volunteer.",
+      "image": "/uploads/team/mark-harris.jpg"
+    },
+    {
+      "id": "barry-thompson",
+      "name": "Barry Thompson",
+      "team": "Group Facilitators",
+      "role": "Group Facilitator Volunteer",
+      "bio": "Facilitating groups and providing peer support to SUIT service users.",
+      "image": "/uploads/team/barry-thompson.jpg"
+    },
+    {
+      "id": "andrew-edwards",
+      "name": "Andrew Edwards",
+      "team": "Group Facilitators",
+      "role": "Group Facilitator Volunteer",
+      "bio": "Supporting group sessions and recovery activities at SUIT through volunteering.",
+      "image": "/uploads/team/andrew-edwards.jpg"
+    },
+    {
+      "id": "howie-atkin",
+      "name": "Howie Atkin",
+      "team": "Group Facilitators",
+      "role": "Group Facilitator Volunteer",
+      "bio": "Volunteering as a group facilitator, helping to create safe spaces for recovery discussions.",
+      "image": "/uploads/team/howie-atkin.jpg"
+    },
+    {
+      "id": "cordula-roosariedener",
+      "name": "Cordula Roosa'riedener",
+      "team": "Group Facilitators",
+      "role": "Group Facilitator Volunteer",
+      "bio": "Facilitating recovery groups with compassion and lived experience knowledge.",
+      "image": "/uploads/team/cordula-roosariedener.jpg"
+    },
+    {
+      "id": "chelsea-willetts",
+      "name": "Chelsea Willetts",
+      "team": "Criminal Justice Team",
+      "role": "Criminal Justice Team Volunteer",
+      "bio": "Supporting individuals within the criminal justice system through lived experience peer mentoring.",
+      "image": "/uploads/team/chelsea-willetts.jpg"
+    },
+    {
+      "id": "chloe-hughes",
+      "name": "Chloe Hughes",
+      "team": "Research",
+      "role": "Research Assistant Volunteer",
+      "bio": "Studying Criminology at the University of Wolverhampton and volunteering with SUIT as a Research Assistant, contributing to evidence-based recovery research.",
+      "image": "/uploads/team/chloe-hughes.jpg"
+    }
+  ]
+}
