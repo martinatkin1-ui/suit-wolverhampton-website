@@ -1,0 +1,112 @@
+<% layout('../admin/admin-layout') -%>
+
+<h2><%= post ? 'Edit' : 'New' %> Community Post</h2>
+<p class="admin-hint" style="margin-bottom: var(--space-lg);">Photos and videos appear in the timeline on <a href="/community" target="_blank" rel="noopener">In the Community</a>. Upload files here or paste a link (e.g. from <a href="/admin/gallery">Gallery</a>).</p>
+
+<form method="POST" action="/admin/community/save" enctype="multipart/form-data" class="admin-form">
+  <input type="hidden" name="postId" value="<%= post ? post.id : '' %>">
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="title">Title *</label>
+      <input type="text" id="title" name="title" required value="<%= post ? post.title : '' %>" placeholder="Post title">
+    </div>
+    <div class="form-group">
+      <label for="date">Date *</label>
+      <input type="date" id="date" name="date" required value="<%= post ? post.date : new Date().toISOString().split('T')[0] %>">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="category">Category *</label>
+      <select id="category" name="category" required>
+        <option value="art" <%= post && post.category === 'art' ? 'selected' : '' %>>Art</option>
+        <option value="music" <%= post && post.category === 'music' ? 'selected' : '' %>>Music</option>
+        <option value="drama" <%= post && post.category === 'drama' ? 'selected' : '' %>>Drama</option>
+        <option value="events" <%= post && post.category === 'events' ? 'selected' : '' %>>Events</option>
+        <option value="pride" <%= post && post.category === 'pride' ? 'selected' : '' %>>PRIDE</option>
+        <option value="cultural" <%= post && post.category === 'cultural' ? 'selected' : '' %>>Cultural</option>
+        <option value="announcements" <%= post && post.category === 'announcements' ? 'selected' : '' %>>Announcements</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="tags">Tags (comma-separated)</label>
+      <input type="text" id="tags" name="tags" value="<%= post && post.tags ? post.tags.join(', ') : '' %>" placeholder="e.g. exhibition, milestone, national">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="body">Body *</label>
+    <textarea id="body" name="body" rows="6" required placeholder="Write the post content..."><%= post ? post.body : '' %></textarea>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="quote">Quote (optional)</label>
+      <textarea id="quote" name="quote" rows="3" placeholder="Optional quote to highlight"><%= post && post.quote ? post.quote : '' %></textarea>
+    </div>
+    <div class="form-group">
+      <label for="quoteAuthor">Quote Author</label>
+      <input type="text" id="quoteAuthor" name="quoteAuthor" value="<%= post && post.quoteAuthor ? post.quoteAuthor : '' %>" placeholder="e.g. Marcus Johnson">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="link">Link URL (optional)</label>
+      <input type="url" id="link" name="link" value="<%= post && post.link ? post.link : '' %>" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label for="linkText">Link Text</label>
+      <input type="text" id="linkText" name="linkText" value="<%= post && post.linkText ? post.linkText : '' %>" placeholder="e.g. Visit the exhibition">
+    </div>
+  </div>
+
+  <div class="admin-card" style="margin: var(--space-lg) 0;">
+    <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:images', size: 22 }) %> Image &amp; video in the timeline</h3>
+    <p style="color: var(--text-mid); font-size: 0.9rem; margin-bottom: var(--space-md);">Shown on the story card after the tags and before the title. Upload replaces the URL field for that type.</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="postImage">Upload photo</label>
+        <% if (post && post.imageUrl) { %>
+          <div style="margin-bottom: 0.5rem;">
+            <img src="<%= post.imageUrl %>" class="preview-image" alt="" style="max-height: 160px; object-fit: cover; border-radius: var(--radius-sm);">
+            <p style="font-size: 0.8rem; color: var(--text-mid);">Current image — upload a new file or change the URL below</p>
+          </div>
+        <% } %>
+        <input type="file" id="postImage" name="postImage" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label for="postVideo">Upload video file</label>
+        <% if (post && post.videoUrl && post.videoUrl.match(/^\//)) { %>
+          <p style="font-size: 0.8rem; color: var(--text-mid); margin-bottom: 0.5rem;">Current file: <code><%= post.videoUrl %></code></p>
+        <% } %>
+        <input type="file" id="postVideo" name="postVideo" accept="video/*">
+        <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem;">MP4, WebM, or MOV. Max 100MB. Or use a YouTube link in the field below instead.</p>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="imageUrl">Image URL (optional)</label>
+        <input type="text" id="imageUrl" name="imageUrl" value="<%= post && post.imageUrl ? post.imageUrl : '' %>" placeholder="https://… or /uploads/gallery/…">
+      </div>
+      <div class="form-group">
+        <label for="videoUrl">Video URL (optional)</label>
+        <input type="text" id="videoUrl" name="videoUrl" value="<%= post && post.videoUrl ? post.videoUrl : '' %>" placeholder="YouTube link or /uploads/…">
+        <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem;">YouTube links embed. Direct video paths play in the page.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>
+      <input type="checkbox" name="pinned" <%= post && post.pinned ? 'checked' : '' %>> Pin this post to the top
+    </label>
+  </div>
+
+  <div style="display: flex; gap: 1rem; margin-top: var(--space-lg);">
+    <button type="submit" class="btn btn-primary">Save Post</button>
+    <a href="/admin/community" class="btn btn-outline">Cancel</a>
+  </div>
+</form>
