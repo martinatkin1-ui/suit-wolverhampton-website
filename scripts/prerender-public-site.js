@@ -245,7 +245,7 @@ async function main() {
     for (const slug of Object.keys(nm.pages || {})) {
       const rawPage = nm.pages[slug];
       if (!rawPage || typeof rawPage !== 'object') continue;
-      const page = enrichNewsMorePage(rawPage, community);
+      const page = enrichNewsMorePage(rawPage, community, slug);
       const hub = nm.hubTitle || 'News & More';
       const pageTitle = slug === 'announcements' ? `${page.title} | SUIT` : `${page.title} — ${hub}`;
       await go(`/news-more/${slug}`, 'pages/news-more-page', {

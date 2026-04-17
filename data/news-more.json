@@ -905,7 +905,6 @@
       "title": "Announcements",
       "heroLead": "Upcoming dates, consultations, liver scan pop-ups, and cultural engagement news.",
       "legacyUrl": "https://www.suitrecoverywolverhampton.com/announcements",
-      "heroCommunityPostId": "post-mental-health-drop-in-2026",
       "relatedCommunityCategory": "announcements",
       "relatedCommunityLimit": 8,
       "relatedCommunitySectionTitle": "Announcement posts (community timeline)",
@@ -925,6 +924,26 @@
             {
               "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/aa28e022-39d1-4935-884b-5bd84cebbc22/IMG_5282.JPEG",
               "alt": "Community event"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/34436632-96f1-46b0-8ac5-026867689f33/IMG_5274+%281%29.JPEG",
+              "alt": "SUIT — /announcements"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/61c1ff67-0522-40e7-a9c3-4e07f706a2d3/IMG_5275+%281%29.JPEG",
+              "alt": "SUIT — /announcements"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/bdb09999-680c-4e70-adda-0abde18de870/IMG_5276+%281%29.JPEG",
+              "alt": "SUIT — /announcements"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/4ad3cf57-0bb7-4152-8482-e787445d1e6c/IMG_5278.JPEG",
+              "alt": "SUIT — /announcements"
+            },
+            {
+              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/df74659e-1050-4556-b129-6264059d90b9/IMG_5279.JPEG",
+              "alt": "SUIT — /announcements"
             }
           ]
         },
@@ -964,35 +983,13 @@
               "href": "/community/outreach/punjabi"
             }
           ],
-          "communityPostId": "post-liver-scans-2025",
-          "gallery": [
-            {
-              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/34436632-96f1-46b0-8ac5-026867689f33/IMG_5274+%281%29.JPEG",
-              "alt": "Community liver scan clinic"
-            },
-            {
-              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/61c1ff67-0522-40e7-a9c3-4e07f706a2d3/IMG_5275+%281%29.JPEG",
-              "alt": "Community liver scan clinic"
-            },
-            {
-              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/bdb09999-680c-4e70-adda-0abde18de870/IMG_5276+%281%29.JPEG",
-              "alt": "Community liver scan clinic"
-            },
-            {
-              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/4ad3cf57-0bb7-4152-8482-e787445d1e6c/IMG_5278.JPEG",
-              "alt": "Community liver scan clinic"
-            },
-            {
-              "src": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/df74659e-1050-4556-b129-6264059d90b9/IMG_5279.JPEG",
-              "alt": "Community liver scan clinic"
-            }
-          ]
+          "communityPostId": "post-liver-scans-2025"
         },
         {
           "type": "text",
           "title": "Mental Health Peer Support Drop-Ins",
           "paragraphs": [
-            "First Friday of every month, 10am–12pm, Train Station Hub WV1 1LE — see Mental Health Support for crisis lines and partners. The photo in the page header is the same image as this item in the community timeline — update it in Admin → Community."
+            "First Friday of every month, 10am–12pm, Train Station Hub WV1 1LE — see Mental Health Support for crisis lines and partners. The page header image is set on the matching community post in Admin (header image checkboxes for this topic page)."
           ],
           "links": [
             {

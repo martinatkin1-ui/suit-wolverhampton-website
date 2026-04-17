@@ -96,6 +96,43 @@
 </section>
 <% }); %>
 
+<% (page.syndicatedBlocks || []).forEach(function(sp) { %>
+<section class="section section-alt nm-syndicated-post">
+  <div class="outreach-section-inner nm-section">
+    <p class="nm-syndicated-meta"><time datetime="<%= sp.date %>"><%= sp.date %></time> · <a href="/community?cat=<%= sp.category %>#community-feed">In the Community</a></p>
+    <% var spVRaw = sp.videoUrl && String(sp.videoUrl).trim(); %>
+    <% var spYt = spVRaw ? spVRaw.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/) : null; %>
+    <% var spFileVid = !!(spVRaw && !spYt && spVRaw.charAt(0) === '/' && /\.(mp4|webm|mov)(\?|$)/i.test(spVRaw)); %>
+    <% if (sp.imageUrl && String(sp.imageUrl).trim()) { %>
+    <figure class="nm-section-figure">
+      <img src="<%= sp.imageUrl %>" alt="<%= sp.title %>" loading="lazy" width="800" height="450">
+    </figure>
+    <% } %>
+    <% if (spVRaw) { %>
+    <div class="outreach-video nm-inline-video">
+      <% if (spYt) { %>
+      <iframe src="https://www.youtube.com/embed/<%= spYt[1] %>" title="<%= sp.title %>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      <% } else if (spFileVid) { %>
+      <video src="<%= spVRaw %>" controls playsinline preload="metadata" title="<%= sp.title %>" style="width:100%;max-height:480px;"></video>
+      <% } else { %>
+      <p class="outreach-prose"><a href="<%= spVRaw %>" target="_blank" rel="noopener noreferrer">Watch video →</a></p>
+      <% } %>
+    </div>
+    <% } %>
+    <h2><%= sp.title %></h2>
+    <p class="outreach-prose"><%= sp.body %></p>
+    <% if (sp.quote) { %>
+    <blockquote class="outreach-quote">“<%= sp.quote %>”<% if (sp.quoteAuthor) { %><cite>— <%= sp.quoteAuthor %></cite><% } %></blockquote>
+    <% } %>
+    <% if (sp.link) { %>
+    <ul class="outreach-link-list">
+      <li><a href="<%= sp.link %>" target="_blank" rel="noopener noreferrer"><%= sp.linkText || 'Learn more' %> →</a></li>
+    </ul>
+    <% } %>
+  </div>
+</section>
+<% }); %>
+
 <% if (page.relatedCommunityPosts && page.relatedCommunityPosts.length) { %>
 <section class="section">
   <div class="section-header">

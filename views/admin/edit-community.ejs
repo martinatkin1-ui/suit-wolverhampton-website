@@ -2,7 +2,7 @@
 
 <h2>Community Posts</h2>
 <p style="color: var(--text-mid); margin-bottom: var(--space-lg);">
-  Manage the content that appears on the "SUIT in the Community" page. Posts are shown as a timeline feed.
+  Manage posts for <strong>In the Community</strong> and, when you select News &amp; More pages on each post, the same content can appear on those topic pages with one edit.
 </p>
 
 <% if (saved) { %>
@@ -23,6 +23,7 @@
         <th>Title</th>
         <th>Media</th>
         <th>Pinned</th>
+        <th>News &amp; More</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -38,6 +39,12 @@
           <% if (!(post.imageUrl && String(post.imageUrl).trim()) && !(post.videoUrl && String(post.videoUrl).trim())) { %>—<% } %>
         </td>
         <td><% if (post.pinned) { %><%- include('../partials/icon', { name: 'lucide:pin', size: 18 }) %><% } %></td>
+        <td style="font-size: 0.8rem; max-width: 14rem;">
+          <% var syn = post.syndicateNewsMoreSlugs; var hero = post.syndicateAsHeroOnNewsMoreSlugs; %>
+          <% if ((!syn || !syn.length) && (!hero || !hero.length)) { %>—<% } %>
+          <% if (syn && syn.length) { %><span title="Full post on these News &amp; More pages">Full: <%= syn.join(', ') %></span><% } %>
+          <% if (hero && hero.length) { %><% if (syn && syn.length) { %><br><% } %><span title="Header image on these pages">Hero: <%= hero.join(', ') %></span><% } %>
+        </td>
         <td class="admin-actions">
           <a href="/admin/community/edit/<%= post.id %>" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Edit</a>
           <form method="POST" action="/admin/community/delete/<%= post.id %>" style="display:inline;" onsubmit="return confirm('Delete this post?')">

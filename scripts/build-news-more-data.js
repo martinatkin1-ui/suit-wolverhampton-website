@@ -400,12 +400,11 @@ data.pages.gallery = {
   gallery: galleryFor('/gallery', 16)
 };
 
-// announcements — hero thumbnail + section media aligned with legacy page; heroCommunityPostId = Admin source of truth
+// announcements — page header image: set on the community post in Admin (syndicate as hero on this slug)
 data.pages.announcements = {
   title: 'Announcements',
   heroLead: 'Upcoming dates, consultations, liver scan pop-ups, and cultural engagement news.',
   legacyUrl: 'https://www.suitrecoverywolverhampton.com/announcements',
-  heroCommunityPostId: 'post-mental-health-drop-in-2026',
   relatedCommunityCategory: 'announcements',
   relatedCommunityLimit: 8,
   relatedCommunitySectionTitle: 'Announcement posts (community timeline)',
@@ -425,6 +424,26 @@ data.pages.announcements = {
         {
           src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/aa28e022-39d1-4935-884b-5bd84cebbc22/IMG_5282.JPEG',
           alt: 'Community event'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/34436632-96f1-46b0-8ac5-026867689f33/IMG_5274+%281%29.JPEG',
+          alt: 'SUIT — /announcements'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/61c1ff67-0522-40e7-a9c3-4e07f706a2d3/IMG_5275+%281%29.JPEG',
+          alt: 'SUIT — /announcements'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/bdb09999-680c-4e70-adda-0abde18de870/IMG_5276+%281%29.JPEG',
+          alt: 'SUIT — /announcements'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/4ad3cf57-0bb7-4152-8482-e787445d1e6c/IMG_5278.JPEG',
+          alt: 'SUIT — /announcements'
+        },
+        {
+          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/df74659e-1050-4556-b129-6264059d90b9/IMG_5279.JPEG',
+          alt: 'SUIT — /announcements'
         }
       ]
     },
@@ -454,29 +473,7 @@ data.pages.announcements = {
         '“Over 1,200 liver scans have now been completed at pop-up clinics across Wolverhampton…” — Councillor Obaida Ahmed, Cabinet Member for Health, Wellbeing and Community, City of Wolverhampton Council (Dec 2025).'
       ],
       links: [{ label: 'Cultural outreach — Punjabi project', href: '/community/outreach/punjabi' }],
-      communityPostId: 'post-liver-scans-2025',
-      gallery: [
-        {
-          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/34436632-96f1-46b0-8ac5-026867689f33/IMG_5274+%281%29.JPEG',
-          alt: 'Community liver scan clinic'
-        },
-        {
-          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/61c1ff67-0522-40e7-a9c3-4e07f706a2d3/IMG_5275+%281%29.JPEG',
-          alt: 'Community liver scan clinic'
-        },
-        {
-          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/bdb09999-680c-4e70-adda-0abde18de870/IMG_5276+%281%29.JPEG',
-          alt: 'Community liver scan clinic'
-        },
-        {
-          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/4ad3cf57-0bb7-4152-8482-e787445d1e6c/IMG_5278.JPEG',
-          alt: 'Community liver scan clinic'
-        },
-        {
-          src: 'https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/df74659e-1050-4556-b129-6264059d90b9/IMG_5279.JPEG',
-          alt: 'Community liver scan clinic'
-        }
-      ]
+      communityPostId: 'post-liver-scans-2025'
     },
     {
       type: 'text',

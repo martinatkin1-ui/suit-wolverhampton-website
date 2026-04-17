@@ -630,7 +630,7 @@ app.get('/news-more/:slug', async (req, res) => {
       pageCanonical: ''
     });
   }
-  const page = enrichNewsMorePage(rawPage, await loadCommunityForPublic());
+  const page = enrichNewsMorePage(rawPage, await loadCommunityForPublic(), slug);
   const hub = nm.hubTitle || 'News & More';
   const pageTitle = slug === 'announcements' ? `${page.title} | SUIT` : `${page.title} — ${hub}`;
   res.render('pages/news-more-page', {
@@ -1258,15 +1258,36 @@ app.get('/admin/community', requireAdmin, async (req, res) => {
   res.render('admin/edit-community', { posts, saved: false });
 });
 
+async function newsMorePagesForAdmin() {
+  const nm = await readJSON('news-more.json');
+  if (!nm || !nm.pages || typeof nm.pages !== 'object') return [];
+  return Object.keys(nm.pages)
+    .map(slug => ({
+      slug,
+      title: (nm.pages[slug] && nm.pages[slug].title) || slug
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }));
+}
+
+function parseCheckboxSlugArray(body, fieldName) {
+  const v = body[fieldName];
+  if (v == null || v === '') return [];
+  return (Array.isArray(v) ? v : [v])
+    .map(s => String(s).trim())
+    .filter(Boolean);
+}
+
 app.get('/admin/community/new', requireAdmin, async (req, res) => {
-  res.render('admin/community-form', { post: null });
+  const newsMorePages = await newsMorePagesForAdmin();
+  res.render('admin/community-form', { post: null, newsMorePages });
 });
 
 app.get('/admin/community/edit/:id', requireAdmin, async (req, res) => {
   const community = await loadCommunityForAdmin();
   const post = community.posts.find(p => p.id === req.params.id);
   if (!post) return res.redirect('/admin/community');
-  res.render('admin/community-form', { post });
+  const newsMorePages = await newsMorePagesForAdmin();
+  res.render('admin/community-form', { post, newsMorePages });
 });
 
 app.post('/admin/community/save', requireAdmin, (req, res, next) => {
@@ -1289,7 +1310,14 @@ app.post('/admin/community/save', requireAdmin, (req, res, next) => {
     videoUrl = `/uploads/community/${req.files.postVideo[0].filename}`;
   }
 
+  const syndicateNewsMoreSlugs = parseCheckboxSlugArray(req.body, 'syndicateNewsMoreSlugs');
+  const syndicateAsHeroOnNewsMoreSlugs = parseCheckboxSlugArray(req.body, 'syndicateAsHeroOnNewsMoreSlugs');
+
+  const idxExisting = community.posts.findIndex(p => p.id === (postId || ''));
+  const prev = idxExisting >= 0 ? community.posts[idxExisting] : {};
+
   const postData = {
+    ...prev,
     id: postId || `post-${crypto.randomUUID().slice(0, 8)}`,
     date: date || new Date().toISOString().split('T')[0],
     category: category || 'announcements',
@@ -1303,7 +1331,9 @@ app.post('/admin/community/save', requireAdmin, (req, res, next) => {
     linkText: linkText || '',
     imageUrl,
     videoUrl,
-    pinned: pinned === 'on' || pinned === 'true'
+    pinned: pinned === 'on' || pinned === 'true',
+    syndicateNewsMoreSlugs,
+    syndicateAsHeroOnNewsMoreSlugs
   };
 
   const idx = community.posts.findIndex(p => p.id === postData.id);

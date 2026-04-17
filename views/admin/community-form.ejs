@@ -1,7 +1,8 @@
 <% layout('../admin/admin-layout') -%>
 
+<% var nmPages = typeof newsMorePages !== 'undefined' && newsMorePages ? newsMorePages : []; %>
 <h2><%= post ? 'Edit' : 'New' %> Community Post</h2>
-<p class="admin-hint" style="margin-bottom: var(--space-lg);">Photos and videos appear on <a href="/community" target="_blank" rel="noopener">In the Community</a> (upload or paste a URL, e.g. from <a href="/admin/gallery">Gallery</a>). <strong>Category</strong> sets the timeline filter. To drive a <strong>News &amp; More</strong> page header or section from this post, reference its <code class="nm-inline-mono">id</code> as <code class="nm-inline-mono">heroCommunityPostId</code> or <code class="nm-inline-mono">communityPostId</code> in <code class="nm-inline-mono">data/news-more.json</code>.</p>
+<p class="admin-hint" style="margin-bottom: var(--space-lg);">This is the <strong>one place to edit</strong> each story. It appears on <a href="/community" target="_blank" rel="noopener">In the Community</a> (upload or paste media, e.g. from <a href="/admin/gallery">Gallery</a>). Use the boxes below to <strong>also show the same post</strong> on News &amp; More topic pages, and optionally use its image as that page’s header. Static page text still comes from <code class="nm-inline-mono">data/news-more.json</code>; optional <code class="nm-inline-mono">communityPostId</code> there can still attach one post’s image to a section.</p>
 
 <form method="POST" action="/admin/community/save" enctype="multipart/form-data" class="admin-form">
   <%- include('../partials/admin-csrf') %>
@@ -98,6 +99,37 @@
         <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem;">YouTube links embed. Direct video paths play in the page.</p>
       </div>
     </div>
+  </div>
+
+  <div class="admin-card" style="margin: var(--space-lg) 0;">
+    <h3 style="margin-top: 0;">Also show on News &amp; More pages</h3>
+    <p style="color: var(--text-mid); font-size: 0.9rem; margin-bottom: var(--space-md);">Tick where this post should be copied as a full block (after the page’s fixed sections). Header image is separate — you can show only the header image without duplicating the full post.</p>
+    <% if (!nmPages.length) { %>
+    <p style="color: var(--text-mid); font-size: 0.9rem;">No News &amp; More pages found — check <code class="nm-inline-mono">data/news-more.json</code>.</p>
+    <% } else { %>
+    <fieldset style="border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: var(--space-md); margin-bottom: var(--space-md);">
+      <legend style="font-weight: 600; padding: 0 0.35rem;">Full post (repeat this content on page)</legend>
+      <div style="display: grid; gap: 0.5rem;">
+        <% nmPages.forEach(function(p) { %>
+        <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+          <input type="checkbox" name="syndicateNewsMoreSlugs" value="<%= p.slug %>" <%= post && Array.isArray(post.syndicateNewsMoreSlugs) && post.syndicateNewsMoreSlugs.indexOf(p.slug) !== -1 ? 'checked' : '' %>>
+          <span><%= p.title %> <span class="nm-inline-mono" style="opacity:0.85">/news-more/<%= p.slug %></span></span>
+        </label>
+        <% }); %>
+      </div>
+    </fieldset>
+    <fieldset style="border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: var(--space-md);">
+      <legend style="font-weight: 600; padding: 0 0.35rem;">Page header image (this post’s photo in the hero)</legend>
+      <div style="display: grid; gap: 0.5rem;">
+        <% nmPages.forEach(function(p) { %>
+        <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+          <input type="checkbox" name="syndicateAsHeroOnNewsMoreSlugs" value="<%= p.slug %>" <%= post && Array.isArray(post.syndicateAsHeroOnNewsMoreSlugs) && post.syndicateAsHeroOnNewsMoreSlugs.indexOf(p.slug) !== -1 ? 'checked' : '' %>>
+          <span><%= p.title %> <span class="nm-inline-mono" style="opacity:0.85">/news-more/<%= p.slug %></span></span>
+        </label>
+        <% }); %>
+      </div>
+    </fieldset>
+    <% } %>
   </div>
 
   <div class="form-group">

@@ -68,7 +68,9 @@
       "source": "website",
       "imageUrl": "https://images.squarespace-cdn.com/content/v1/6319d1d6074332650d41d0f6/14eb5d19-eee7-49ad-a5da-7cffa8a6ba48/FB_IMG_1674215219770.jpg",
       "videoUrl": "",
-      "pinned": false
+      "pinned": false,
+      "syndicateNewsMoreSlugs": [],
+      "syndicateAsHeroOnNewsMoreSlugs": ["announcements"]
     },
     {
       "id": "post-liver-scans-2025",
