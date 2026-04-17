@@ -14,7 +14,12 @@
     "build:outreach": "node scripts/prerender-public-site.js",
     "start:only": "node server.js",
     "media:inventory": "node scripts/legacy-media-inventory.js",
-    "media:inventory:seed": "node scripts/legacy-media-inventory.js --no-sitemap"
+    "media:inventory:seed": "node scripts/legacy-media-inventory.js --no-sitemap",
+    "test": "node --test \"./tests/*.test.js\"",
+    "test:ci": "node --test \"./tests/*.test.js\""
+  },
+  "devDependencies": {
+    "supertest": "^7.1.4"
   },
   "keywords": ["suit", "wolverhampton", "recovery", "addiction", "peer-support"],
   "author": "SUIT Wolverhampton / WVCA",

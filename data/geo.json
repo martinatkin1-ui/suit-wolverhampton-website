@@ -1,0 +1,51 @@
+{
+  "answerFirst": {
+    "home": "SUIT (Service User Involvement Team) is Wolverhampton’s Lived Experience Recovery Organisation (LERO), a WVCA project since February 2007. For drug or alcohol support, call 01902 328983 or visit Paycare House, George Street, Wolverhampton WV2 4DX — peer mentoring, advocacy, SMART Recovery–style groups, harm reduction, and cultural outreach. We are not an emergency service; for immediate danger dial 999 (UK).",
+    "getHelp": "For addiction or alcohol support in Wolverhampton, contact SUIT on 01902 328983 (see this page for hours) or use WhatsApp from our site. Out of hours: Samaritans 116 123 (free, 24/7). National drug advice: FRANK 0300 123 6600. NHS urgent mental health: call 111 and select mental health. Life-threatening emergency: 999.",
+    "services": "SUIT offers free, confidential, peer-led wraparound help in Wolverhampton: buddy support and mentoring; advocacy (housing, benefits, forms); drop-in sanctuary; creative arts recovery; and pathways alongside Recovery Near You for clinical treatment. Main number 01902 328983 — many routes need no GP referral."
+  },
+  "faqs": [
+    {
+      "question": "Who can I call for drug or alcohol help in Wolverhampton?",
+      "answer": "SUIT’s direct line is 01902 328983 (Service User Involvement Team, Paycare House, George Street, WV2 4DX). Recovery Near You, Wolverhampton’s community drug and alcohol treatment service, can be reached on 01902 444044. National helpline FRANK is 0300 123 6600."
+    },
+    {
+      "question": "Does SUIT replace NHS or emergency services?",
+      "answer": "No. SUIT is a charitable peer-support organisation. For medical emergencies or immediate danger use 999. For urgent mental health advice use NHS 111. SUIT complements clinical and statutory services; it does not provide emergency medical care."
+    },
+    {
+      "question": "Do I need a referral to use SUIT?",
+      "answer": "Many SUIT routes — including drop-in and peer support — do not require a referral. Check the Get Help and Timetable pages for current drop-in and appointment hours. Clinical treatment may be arranged via Recovery Near You or your GP depending on your needs."
+    },
+    {
+      "question": "What is a Lived Experience Recovery Organisation (LERO)?",
+      "answer": "A LERO is an organisation where leadership and delivery draw heavily on people with personal or family experience of addiction and recovery. SUIT describes itself as Wolverhampton’s LERO and has operated since 2007 as a WVCA project."
+    },
+    {
+      "question": "Where can I verify SUIT’s parent organisation?",
+      "answer": "SUIT is a project of WVCA (Wolverhampton Voluntary & Community Action). Official site: https://www.wvca.org.uk/"
+    }
+  ],
+  "authorityLinks": [
+    {
+      "label": "WVCA — Wolverhampton Voluntary & Community Action (parent organisation)",
+      "url": "https://www.wvca.org.uk/"
+    },
+    {
+      "label": "NHS — Find drug addiction support services (England)",
+      "url": "https://www.gov.uk/find-drug-addiction-support-services"
+    },
+    {
+      "label": "NHS mental health services overview",
+      "url": "https://www.nhs.uk/nhs-services/mental-health-services/"
+    },
+    {
+      "label": "FRANK — national drugs information and helpline",
+      "url": "https://www.talktofrank.com/"
+    },
+    {
+      "label": "Samaritans — 24/7 listening service",
+      "url": "https://www.samaritans.org/"
+    }
+  ]
+}

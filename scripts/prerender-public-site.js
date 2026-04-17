@@ -6,6 +6,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { getPageUpdates } = require('../lib/page-updates');
 
 const root = path.join(__dirname, '..');
 const dataDir = path.join(root, 'data');
@@ -45,6 +46,20 @@ function sortedCommunityPosts(community) {
   return [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
+function faqPageSchemaFromGeo(geo) {
+  const faqs = geo && Array.isArray(geo.faqs) ? geo.faqs : [];
+  if (!faqs.length) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: { '@type': 'Answer', text: f.answer }
+    }))
+  };
+}
+
 function writeToPublic(urlPath, html) {
   const norm = urlPath === '/' || urlPath === '' ? '' : urlPath.replace(/^\//, '').replace(/\/+$/, '');
   if (!norm) {
@@ -71,11 +86,13 @@ async function main() {
 
   const content = readJSON('content.json');
   if (!content) throw new Error('data/content.json missing');
+  const geo = readJSON('geo.json') || {};
 
   const B = (extra) => ({
     content,
     newsMoreNavCards: navCards,
     isAdmin: false,
+    geo,
     ...extra
   });
 
@@ -108,7 +125,8 @@ async function main() {
       pageTitle: 'Get Help Now',
       pageDescription:
         'Need help with addiction in Wolverhampton? Call SUIT on 01902 328983 or walk in to Paycare House. Free, confidential, lived experience support. No referral needed.',
-      pageCanonical: '/get-help'
+      pageCanonical: '/get-help',
+      faqStructuredData: faqPageSchemaFromGeo(geo)
     })
   });
 
@@ -188,7 +206,8 @@ async function main() {
     }),
     community,
     culturalOutreach,
-    posts
+    posts,
+    pageUpdates: getPageUpdates('community', null)
   });
 
   const outreach = readJSON('cultural-outreach.json');
@@ -201,7 +220,8 @@ async function main() {
           outreach.hubIntro || 'Multilingual and culturally sensitive recovery outreach in Wolverhampton.',
         pageCanonical: '/community/outreach'
       }),
-      outreach
+      outreach,
+      pageUpdates: getPageUpdates('outreach-hub', null)
     });
     for (const slug of Object.keys(outreach.programmes || {})) {
       const programme = outreach.programmes[slug];
@@ -215,7 +235,8 @@ async function main() {
         }),
         outreach,
         programme,
-        slug
+        slug,
+        pageUpdates: getPageUpdates('outreach', slug)
       });
     }
   }
@@ -228,7 +249,8 @@ async function main() {
         pageDescription: (nm.hubIntro || '').slice(0, 160),
         pageCanonical: '/news-more'
       }),
-      nm
+      nm,
+      pageUpdates: getPageUpdates('news-more-hub', null)
     });
     for (const slug of Object.keys(nm.pages || {})) {
       const page = nm.pages[slug];
@@ -242,7 +264,8 @@ async function main() {
         }),
         nm,
         page,
-        slug
+        slug,
+        pageUpdates: getPageUpdates('news-more', slug)
       });
     }
   }
