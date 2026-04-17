@@ -53,6 +53,33 @@
     </div>
   </div>
 
+  <!-- Site name & header (next to logo) -->
+  <div class="admin-card">
+    <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:building-2', size: 22 }) %> Site name &amp; header</h3>
+    <p class="admin-hint" style="margin-top:0;">The <strong>organisation name</strong> and <strong>footer tagline</strong> are used across the site. <strong>Header</strong> lines appear next to the logo (the small line is hidden on phones to save space).</p>
+    <div class="form-group">
+      <label for="siteTitle">Organisation name</label>
+      <input type="text" id="siteTitle" name="siteTitle" value="<%= content.site.title || '' %>">
+    </div>
+    <div class="form-group">
+      <label for="siteTagline">Footer tagline</label>
+      <input type="text" id="siteTagline" name="siteTagline" value="<%= content.site.tagline || '' %>">
+    </div>
+    <% var editHeaderSub = (content.site.headerSubtitle !== undefined && content.site.headerSubtitle !== null)
+      ? String(content.site.headerSubtitle)
+      : 'Service User Involvement Team'; %>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="siteHeaderTitle">Header — main text next to logo</label>
+        <input type="text" id="siteHeaderTitle" name="siteHeaderTitle" value="<%= content.site.headerTitle != null ? content.site.headerTitle : '' %>" placeholder="Leave blank to use organisation name">
+      </div>
+      <div class="form-group">
+        <label for="siteHeaderSub">Header — small line (desktop only)</label>
+        <input type="text" id="siteHeaderSub" name="siteHeaderSub" value="<%= editHeaderSub %>" placeholder="Leave blank to hide">
+      </div>
+    </div>
+  </div>
+
   <!-- Contact Details -->
   <div class="admin-card">
     <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:phone', size: 22 }) %> Contact Information</h3>

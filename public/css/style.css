@@ -313,7 +313,7 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 1.6rem;
   color: var(--text-dark);
 }
-.logo-text span {
+.logo-text .logo-text__strap {
   display: block;
   font-size: 0.55rem;
   font-weight: 500;
@@ -1042,12 +1042,27 @@ body.light-mode .site-footer {
   right: 20px;
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 10px;
   z-index: 9999;
 }
 .floating-buttons .btn {
   box-shadow: 0 6px 24px rgba(0,0,0,0.25);
   font-size: 0.9rem;
+}
+.floating-buttons__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+.floating-buttons__fab {
+  display: none;
+}
+.floating-buttons__action.btn-crisis {
+  padding: 0.65rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 /* --- LIVE TIMETABLE SNIPPET (HOME) --- */
@@ -1172,15 +1187,71 @@ body.light-mode .site-footer {
     grid-template-columns: 1fr;
   }
   .featured-split { flex-direction: column; }
-  .floating-buttons { bottom: 12px; right: 12px; }
+  .floating-buttons { bottom: 12px; right: 12px; gap: 8px; }
+  .floating-buttons__fab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 48px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: var(--brand-teal);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.82rem;
+    font-family: var(--font-body);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+  .floating-buttons__fab:hover {
+    background: var(--color-deep);
+    color: #fff;
+  }
+  .floating-buttons__fab:focus-visible {
+    outline: 2px solid var(--brand-orange);
+    outline-offset: 2px;
+  }
+  .floating-buttons:not(.is-open) .floating-buttons__panel {
+    display: none;
+  }
+  .floating-buttons.is-open .floating-buttons__panel {
+    display: flex;
+  }
+  .floating-buttons.is-open .floating-buttons__fab {
+    background: var(--text-mid);
+  }
+  .logo-text {
+    font-size: 1.25rem;
+    line-height: 1.15;
+    max-width: min(52vw, 14rem);
+  }
+  .logo-text .logo-text__strap {
+    display: none;
+  }
+  .logo-link img {
+    height: 44px;
+  }
   .ai-bubble { bottom: 80px; left: 12px; }
   .ai-chat-popup { width: 280px; }
+}
+
+@media (min-width: 901px) {
+  .floating-buttons__fab {
+    display: none !important;
+  }
+  .floating-buttons__panel {
+    display: flex !important;
+  }
 }
 
 @media (max-width: 480px) {
   .hero { padding: 4rem 5% 3rem; }
   .hero-buttons { flex-direction: column; align-items: center; }
-  .btn { width: 100%; justify-content: center; }
+  .hero .btn,
+  .hero-buttons .btn { width: 100%; justify-content: center; }
   .a11y-bar { flex-wrap: wrap; justify-content: center; }
 }
 

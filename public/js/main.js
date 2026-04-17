@@ -8,6 +8,39 @@ function quickExit() {
   window.location.replace('https://www.google.co.uk');
 }
 
+// ─── Floating safety rail (mobile: compact FAB expands to WhatsApp + Quick exit) ───
+function toggleFloatingSafety(ev) {
+  if (ev) ev.stopPropagation();
+  var rail = document.getElementById('floatingSafetyRail');
+  var fab = document.getElementById('floatingSafetyFab');
+  if (!rail || !fab) return;
+  var open = rail.classList.toggle('is-open');
+  fab.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
+(function initFloatingSafetyRail() {
+  function closeRail() {
+    var rail = document.getElementById('floatingSafetyRail');
+    var fab = document.getElementById('floatingSafetyFab');
+    if (!rail || !fab || !rail.classList.contains('is-open')) return;
+    if (window.matchMedia('(min-width: 901px)').matches) return;
+    rail.classList.remove('is-open');
+    fab.setAttribute('aria-expanded', 'false');
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var panel = document.getElementById('floatingSafetyPanel');
+    if (panel) {
+      panel.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+    }
+  });
+  document.addEventListener('click', closeRail);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeRail();
+  });
+})();
+
 // ─── Mobile Navigation Toggle ────────────────────────
 function toggleMobileNav() {
   const nav = document.getElementById('navLinks');

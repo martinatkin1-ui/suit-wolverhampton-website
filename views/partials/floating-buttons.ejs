@@ -1,11 +1,17 @@
-<!-- Floating Safety & WhatsApp Buttons -->
-<div class="floating-buttons">
-  <a href="<%= content.site.whatsapp %>" target="_blank" rel="noopener" class="btn btn-whatsapp" aria-label="Message us on WhatsApp">
-    <%- include('partials/icon', { name: 'lucide:message-circle', size: 20 }) %>
-    WhatsApp Us
-  </a>
-  <button class="btn btn-crisis" style="padding: 0.7rem 1.2rem; font-size: 0.85rem;" type="button" onclick="quickExit()" aria-label="Quick exit — leaves this site immediately">
-    <%- include('partials/icon', { name: 'lucide:log-out', size: 18 }) %>
-    Quick Exit
+<!-- Floating Safety & WhatsApp — compact FAB on small screens; full buttons on desktop -->
+<div class="floating-buttons" id="floatingSafetyRail">
+  <div class="floating-buttons__panel" id="floatingSafetyPanel" role="group" aria-label="WhatsApp and quick exit">
+    <a href="<%= content.site.whatsapp %>" target="_blank" rel="noopener" class="btn btn-whatsapp floating-buttons__action" aria-label="Message us on WhatsApp">
+      <%- include('partials/icon', { name: 'lucide:message-circle', size: 20 }) %>
+      <span class="floating-buttons__label">WhatsApp Us</span>
+    </a>
+    <button class="btn btn-crisis floating-buttons__action" type="button" onclick="quickExit()" aria-label="Quick exit — leaves this site immediately">
+      <%- include('partials/icon', { name: 'lucide:log-out', size: 18 }) %>
+      <span class="floating-buttons__label">Quick Exit</span>
+    </button>
+  </div>
+  <button type="button" class="floating-buttons__fab" id="floatingSafetyFab" aria-expanded="false" aria-controls="floatingSafetyPanel" aria-haspopup="true" aria-label="Open or close WhatsApp and quick exit" onclick="toggleFloatingSafety(event)">
+    <%- include('partials/icon', { name: 'lucide:shield', size: 22 }) %>
+    <span class="floating-buttons__fab-text" aria-hidden="true">Safety</span>
   </button>
 </div>
