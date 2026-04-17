@@ -1,4 +1,6 @@
-require('dotenv').config();
+require('dotenv').config({
+  quiet: process.env.VERCEL === '1' || process.env.NODE_ENV === 'production'
+});
 /**
  * SUIT Wolverhampton 2026 — Main Server
  * Express + EJS + JSON flat-file CMS
@@ -23,8 +25,19 @@ if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
 }
 
 // ─── Paths ────────────────────────────────────────────
-const DATA_DIR = path.join(__dirname, 'data');
-const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
+/** Vercel may place the traced server file under api/; data/views live at repo root. */
+function resolveProjectRoot() {
+  const candidates = [__dirname, path.join(__dirname, '..')];
+  for (const root of candidates) {
+    const hasCms = fs.existsSync(path.join(root, 'data', 'content.json'));
+    const hasViews = fs.existsSync(path.join(root, 'views', 'layout.ejs'));
+    if (hasCms && hasViews) return root;
+  }
+  return __dirname;
+}
+const ROOT_DIR = resolveProjectRoot();
+const DATA_DIR = path.join(ROOT_DIR, 'data');
+const UPLOAD_DIR = path.join(ROOT_DIR, 'public', 'uploads');
 
 // ─── Helpers ──────────────────────────────────────────
 function readJSON(filename) {
@@ -116,7 +129,7 @@ function resolveLegacyMapTo(mapTo) {
 
 function loadLegacyRedirectMap() {
   const map = new Map();
-  const filePath = path.join(__dirname, 'scripts', 'legacy-urls.json');
+  const filePath = path.join(ROOT_DIR, 'scripts', 'legacy-urls.json');
   if (!fs.existsSync(filePath)) {
     console.warn('[legacy-urls] scripts/legacy-urls.json not found; legacy redirects disabled');
     return map;
@@ -186,12 +199,12 @@ const upload = multer({
 const ejsMate = require('ejs-mate');
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(ROOT_DIR, 'views'));
 /* EJS resolves includes relative to the current file first; this fallback finds partials/ from views root. */
 app.set('view options', {
-  views: [path.join(__dirname, 'views')]
+  views: [path.join(ROOT_DIR, 'views')]
 });
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(ROOT_DIR, 'public')));
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
@@ -256,7 +269,7 @@ app.get('/__suit-health', (req, res) => {
   res.type('json').send(JSON.stringify({
     app: 'suit-wolverhampton-2026',
     serverFile: __filename,
-    serverRoot: __dirname,
+    serverRoot: ROOT_DIR,
     processCwd: process.cwd(),
     listenPort: PORT,
     data: {
@@ -652,7 +665,7 @@ app.get('/manifest.json', (req, res) => {
 
 // Service Worker
 app.get('/sw.js', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'sw.js'));
+  res.sendFile(path.join(ROOT_DIR, 'public', 'sw.js'));
 });
 
 // Sitemap.xml (SEO)

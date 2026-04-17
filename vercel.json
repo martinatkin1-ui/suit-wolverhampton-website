@@ -4,7 +4,13 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 60,
-      "includeFiles": "{views/**,data/**,public/**,scripts/**}"
+      "includeFiles": [
+        "views/**",
+        "data/**",
+        "public/**",
+        "scripts/**",
+        "lib/**"
+      ]
     }
   },
   "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
