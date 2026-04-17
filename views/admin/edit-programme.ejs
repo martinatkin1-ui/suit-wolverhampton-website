@@ -1,0 +1,65 @@
+<% layout('admin/admin-layout') -%>
+
+<div class="admin-header">
+  <h1>Edit programme</h1>
+  <p class="admin-hint"><strong><%= prog.title %></strong> (<code><%= prog.slug %></code>). Long story blocks (paragraphs and bullet lists) stay in the data file for safety — ask for a copy edit if you need those changed.</p>
+</div>
+
+<% if (saved) { %>
+  <div class="toast success">Programme saved.</div>
+<% } %>
+
+<form method="POST" action="/admin/programmes/save" class="admin-form">
+  <input type="hidden" name="slug" value="<%= prog.slug %>">
+
+  <div class="admin-card">
+    <h3>What visitors see first</h3>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" value="<%= prog.title %>">
+    </div>
+    <div class="form-group">
+      <label for="teaser">Short teaser</label>
+      <textarea id="teaser" name="teaser" rows="3"><%= prog.teaser %></textarea>
+    </div>
+    <div class="form-group">
+      <label for="scheduleSummary">When it runs (one line)</label>
+      <input type="text" id="scheduleSummary" name="scheduleSummary" value="<%= prog.scheduleSummary %>">
+    </div>
+    <div class="form-group">
+      <label for="location">Where</label>
+      <input type="text" id="location" name="location" value="<%= prog.location %>">
+    </div>
+    <div class="form-group">
+      <label for="referralNote">Referral / who can come</label>
+      <textarea id="referralNote" name="referralNote" rows="2"><%= prog.referralNote %></textarea>
+    </div>
+    <div class="form-group">
+      <label for="mediaNote">Note about photos / video (optional)</label>
+      <textarea id="mediaNote" name="mediaNote" rows="2"><%= prog.mediaNote || '' %></textarea>
+    </div>
+    <div class="form-group">
+      <label for="sourceUrl">Link to original page on old site (optional)</label>
+      <input type="url" id="sourceUrl" name="sourceUrl" value="<%= prog.sourceUrl || '' %>">
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <h3>Gallery &amp; links</h3>
+    <p class="admin-hint">Images: one per line. Format: <code>https://… | description</code>. Leave this box unchanged to keep current photos.</p>
+    <div class="form-group">
+      <label for="galleryText">Images</label>
+      <textarea id="galleryText" name="galleryText" rows="10" class="admin-textarea-mono"><%= galleryText %></textarea>
+    </div>
+    <p class="admin-hint">Links: one per line. Format: <code>Label | https://…</code></p>
+    <div class="form-group">
+      <label for="linksText">Buttons / links</label>
+      <textarea id="linksText" name="linksText" rows="5" class="admin-textarea-mono"><%= linksText %></textarea>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-cta" style="display:inline-flex;align-items:center;gap:0.45rem;">
+    <%- include('../partials/icon', { name: 'lucide:save', size: 20 }) %> Save programme
+  </button>
+  <a href="/admin/programmes" class="btn btn-outline" style="margin-left:0.5rem;">Back to list</a>
+</form>
