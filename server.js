@@ -25,6 +25,34 @@ if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
 
+/**
+ * Vercel: vercel.json forwards `/:path*` → `/api/:path*` so the function receives the real URL path.
+ * Older `destination: /api` alone set req.url to `/api`, so no `/admin/*` route matched and the app fell through to the public 404.
+ */
+function vercelStripApiFunctionPrefix(req, _res, next) {
+  if (process.env.VERCEL !== '1') return next();
+  const raw = req.url || '';
+  if (raw.startsWith('/api/')) {
+    const fixed = raw.slice(4);
+    req.url = fixed;
+    req.originalUrl = fixed;
+    return next();
+  }
+  if (raw === '/api') {
+    req.url = '/';
+    req.originalUrl = '/';
+    return next();
+  }
+  if (raw.startsWith('/api?')) {
+    const fixed = `/${raw.slice(4)}`;
+    req.url = fixed;
+    req.originalUrl = fixed;
+    return next();
+  }
+  return next();
+}
+app.use(vercelStripApiFunctionPrefix);
+
 // ─── Paths ────────────────────────────────────────────
 /** Vercel may place the traced server file under api/; data/views live at repo root. */
 function resolveProjectRoot() {
@@ -233,6 +261,11 @@ function ensureAdminReady() {
 }
 ensureAdminReady();
 
+/** Vercel/serverless: public/uploads is not writable; community image uploads go to Neon (see cms_media). */
+function useServerlessCmsUploads() {
+  return process.env.VERCEL === '1' && cms.cmsEnabled();
+}
+
 // ─── Multer (File Uploads) ────────────────────────────
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -246,26 +279,54 @@ const storage = multer.diskStorage({
     cb(null, `${crypto.randomUUID()}${ext}`);
   }
 });
+
+function multerUploadFileFilter(req, file, cb) {
+  if (useServerlessCmsUploads() && file.fieldname === 'postVideo') {
+    return cb(
+      new Error(
+        'Video file upload is not available on the live server. Use a YouTube link or paste a video URL in the form, or upload video files when running the site locally.'
+      )
+    );
+  }
+  const ext = path.extname(file.originalname).toLowerCase();
+  const m = String(file.mimetype || '').toLowerCase();
+  if (ext === '.svg' || m === 'image/svg+xml') {
+    return cb(new Error('SVG uploads are not allowed'));
+  }
+  const imageExt = ['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext);
+  const videoExt = ['.mp4', '.webm', '.mov'].includes(ext);
+  const imageMime = /^image\/(jpeg|pjpeg|png|gif|webp)$/i.test(m);
+  const videoMime = /^video\/(mp4|webm|quicktime|x-msvideo)$/i.test(m);
+  if (imageExt && (imageMime || !m)) return cb(null, true);
+  if (videoExt && (videoMime || !m)) return cb(null, true);
+  if (imageMime && imageExt) return cb(null, true);
+  if (videoMime && videoExt) return cb(null, true);
+  cb(new Error('Only image (JPEG, PNG, GIF, WebP) and video (MP4, WebM, MOV) files are allowed'));
+}
+
 const upload = multer({
   storage,
   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB for video
-  fileFilter: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const m = String(file.mimetype || '').toLowerCase();
-    if (ext === '.svg' || m === 'image/svg+xml') {
-      return cb(new Error('SVG uploads are not allowed'));
-    }
-    const imageExt = ['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext);
-    const videoExt = ['.mp4', '.webm', '.mov'].includes(ext);
-    const imageMime = /^image\/(jpeg|pjpeg|png|gif|webp)$/i.test(m);
-    const videoMime = /^video\/(mp4|webm|quicktime|x-msvideo)$/i.test(m);
-    if (imageExt && (imageMime || !m)) return cb(null, true);
-    if (videoExt && (videoMime || !m)) return cb(null, true);
-    if (imageMime && imageExt) return cb(null, true);
-    if (videoMime && videoExt) return cb(null, true);
-    cb(new Error('Only image (JPEG, PNG, GIF, WebP) and video (MP4, WebM, MOV) files are allowed'));
-  }
+  fileFilter: multerUploadFileFilter
 });
+
+const uploadCommunityMemory = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 15 * 1024 * 1024 },
+  fileFilter: multerUploadFileFilter
+});
+
+const communityUploadFields = [
+  { name: 'postImage', maxCount: 1 },
+  { name: 'postVideo', maxCount: 1 }
+];
+
+function communityUploadMiddleware(req, res, next) {
+  const mw = useServerlessCmsUploads()
+    ? uploadCommunityMemory.fields(communityUploadFields)
+    : upload.fields(communityUploadFields);
+  mw(req, res, next);
+}
 
 // ─── Middleware ────────────────────────────────────────
 const ejsMate = require('ejs-mate');
@@ -288,6 +349,25 @@ app.use(
     }
   })
 );
+
+/** Images saved to Neon on serverless (multer memory → cms_media). Same URL shape works on local disk uploads. */
+app.get('/uploads/cms/:id', async (req, res) => {
+  const id = String(req.params.id || '').trim();
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+    return res.status(404).end();
+  }
+  try {
+    const media = await cms.readMedia(id);
+    if (!media || !media.buffer) return res.status(404).end();
+    res.setHeader('Content-Type', media.contentType || 'application/octet-stream');
+    res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
+    res.send(media.buffer);
+  } catch (e) {
+    console.error('[uploads/cms]', e && e.message ? e.message : e);
+    if (!res.headersSent) res.status(500).end();
+  }
+});
+
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
@@ -1279,7 +1359,11 @@ function parseCheckboxSlugArray(body, fieldName) {
 
 app.get('/admin/community/new', requireAdmin, async (req, res) => {
   const newsMorePages = await newsMorePagesForAdmin();
-  res.render('admin/community-form', { post: null, newsMorePages });
+  res.render('admin/community-form', {
+    post: null,
+    newsMorePages,
+    serverlessMediaUpload: useServerlessCmsUploads()
+  });
 });
 
 app.get('/admin/community/edit/:id', requireAdmin, async (req, res) => {
@@ -1287,27 +1371,52 @@ app.get('/admin/community/edit/:id', requireAdmin, async (req, res) => {
   const post = community.posts.find(p => p.id === req.params.id);
   if (!post) return res.redirect('/admin/community');
   const newsMorePages = await newsMorePagesForAdmin();
-  res.render('admin/community-form', { post, newsMorePages });
+  res.render('admin/community-form', {
+    post,
+    newsMorePages,
+    serverlessMediaUpload: useServerlessCmsUploads()
+  });
 });
 
 app.post('/admin/community/save', requireAdmin, (req, res, next) => {
   req.uploadDest = 'community';
+  if (process.env.VERCEL === '1' && !cms.cmsEnabled()) {
+    return res
+      .status(503)
+      .type('text/plain')
+      .send(
+        'Saving community posts on the live site requires DATABASE_URL (Neon). Without it, the server cannot store uploads or JSON. Add Neon in Vercel env or run the site locally.'
+      );
+  }
   next();
-}, upload.fields([
-  { name: 'postImage', maxCount: 1 },
-  { name: 'postVideo', maxCount: 1 }
-]), requireAdminCsrf, async (req, res) => {
+}, communityUploadMiddleware, requireAdminCsrf, async (req, res) => {
   const community = await loadCommunityForAdmin();
-  const { postId, title, date, category, tags, body, quote, quoteAuthor, link, linkText, pinned } = req.body;
+  const { postId, title, subtitle, date, category, tags, body, quote, quoteAuthor, link, linkText, pinned } =
+    req.body;
 
   let imageUrl = String(req.body.imageUrl || '').trim();
-  if (req.files?.postImage?.[0]) {
-    imageUrl = `/uploads/community/${req.files.postImage[0].filename}`;
+  const imgFile = req.files?.postImage?.[0];
+  if (imgFile) {
+    if (imgFile.buffer) {
+      try {
+        const id = await cms.saveMedia(imgFile.buffer, imgFile.mimetype || 'image/jpeg');
+        imageUrl = `/uploads/cms/${id}`;
+      } catch (e) {
+        console.error('[admin/community/save] image saveMedia', e.message || e);
+        return res
+          .status(500)
+          .type('text/plain')
+          .send('Could not store the uploaded image. Check DATABASE_URL and try again, or use an image URL instead.');
+      }
+    } else if (imgFile.filename) {
+      imageUrl = `/uploads/community/${imgFile.filename}`;
+    }
   }
 
   let videoUrl = String(req.body.videoUrl || '').trim();
-  if (req.files?.postVideo?.[0]) {
-    videoUrl = `/uploads/community/${req.files.postVideo[0].filename}`;
+  const vidFile = req.files?.postVideo?.[0];
+  if (vidFile && vidFile.filename) {
+    videoUrl = `/uploads/community/${vidFile.filename}`;
   }
 
   const syndicateNewsMoreSlugs = parseCheckboxSlugArray(req.body, 'syndicateNewsMoreSlugs');
@@ -1323,6 +1432,7 @@ app.post('/admin/community/save', requireAdmin, (req, res, next) => {
     category: category || 'announcements',
     tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
     title: title || 'Untitled',
+    subtitle: subtitle != null ? String(subtitle).trim() : '',
     body: body || '',
     quote: quote || '',
     quoteAuthor: quoteAuthor || '',
@@ -1677,6 +1787,15 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   console.error('[server error]', err.stack || err.message || err);
   if (res.headersSent) return next(err);
+  if (req.path && req.path.startsWith('/admin')) {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).type('text/plain').send(err.message || 'Upload error');
+    }
+    const msg = err && err.message ? String(err.message) : '';
+    if (msg && (msg.includes('upload') || msg.includes('Upload') || msg.includes('not allowed'))) {
+      return res.status(400).type('text/plain').send(msg);
+    }
+  }
   try {
     res.status(500).render('pages/404', { pageTitle: 'Server Error', pageCanonical: '' });
   } catch (renderErr) {

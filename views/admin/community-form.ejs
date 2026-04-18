@@ -1,8 +1,11 @@
-<% layout('../admin/admin-layout') -%>
+<% layout('admin/admin-layout') -%>
 
 <% var nmPages = typeof newsMorePages !== 'undefined' && newsMorePages ? newsMorePages : []; %>
 <h2><%= post ? 'Edit' : 'New' %> Community Post</h2>
-<p class="admin-hint" style="margin-bottom: var(--space-lg);">This is the <strong>one place to edit</strong> each story. It appears on <a href="/community" target="_blank" rel="noopener">In the Community</a> (upload or paste media, e.g. from <a href="/admin/gallery">Gallery</a>). Use the boxes below to <strong>also show the same post</strong> on News &amp; More topic pages, and optionally use its image as that page’s header. Static page text still comes from <code class="nm-inline-mono">data/news-more.json</code>; optional <code class="nm-inline-mono">communityPostId</code> there can still attach one post’s image to a section.</p>
+<% if (typeof serverlessMediaUpload !== 'undefined' && serverlessMediaUpload) { %>
+<p class="admin-hint" style="margin-bottom: var(--space-md);">On the <strong>live site</strong>, photos you upload here are stored in the database (not on disk). Video <strong>files</strong> cannot be uploaded there — use a YouTube or other link in the video URL field.</p>
+<% } %>
+<p class="admin-hint" style="margin-bottom: var(--space-lg);">Posts show on <a href="/community" target="_blank" rel="noopener">In the Community</a>. Tick pages below to <strong>also</strong> publish the same story on News &amp; More topic pages. You can use a <strong>file upload</strong>, a <strong>URL</strong>, or both (upload wins for that slot).</p>
 
 <form method="POST" action="/admin/community/save" enctype="multipart/form-data" class="admin-form">
   <%- include('../partials/admin-csrf') %>
@@ -10,19 +13,12 @@
 
   <div class="form-row">
     <div class="form-group">
-      <label for="title">Title *</label>
-      <input type="text" id="title" name="title" required value="<%= post ? post.title : '' %>" placeholder="Post title">
-    </div>
-    <div class="form-group">
       <label for="date">Date *</label>
       <input type="date" id="date" name="date" required value="<%= post ? post.date : new Date().toISOString().split('T')[0] %>">
     </div>
-  </div>
-
-  <div class="form-row">
     <div class="form-group">
-      <label for="category">Category *</label>
-      <select id="category" name="category" required>
+      <label for="category">Feed category *</label>
+      <select id="category" name="category" required aria-describedby="category-hint">
         <option value="art" <%= post && post.category === 'art' ? 'selected' : '' %>>Art</option>
         <option value="music" <%= post && post.category === 'music' ? 'selected' : '' %>>Music</option>
         <option value="drama" <%= post && post.category === 'drama' ? 'selected' : '' %>>Drama</option>
@@ -31,43 +27,55 @@
         <option value="cultural" <%= post && post.category === 'cultural' ? 'selected' : '' %>>Cultural</option>
         <option value="announcements" <%= post && post.category === 'announcements' ? 'selected' : '' %>>Announcements</option>
       </select>
+      <p id="category-hint" style="font-size: 0.8rem; color: var(--text-mid); margin-top: 0.35rem;">Used for filters on the community timeline.</p>
     </div>
     <div class="form-group">
-      <label for="tags">Tags (comma-separated)</label>
-      <input type="text" id="tags" name="tags" value="<%= post && post.tags ? post.tags.join(', ') : '' %>" placeholder="e.g. exhibition, milestone, national">
+      <label for="tags">Tags (optional)</label>
+      <input type="text" id="tags" name="tags" value="<%= post && post.tags ? post.tags.join(', ') : '' %>" placeholder="e.g. exhibition, conference" aria-describedby="tags-hint">
+      <p id="tags-hint" style="font-size: 0.8rem; color: var(--text-mid); margin-top: 0.35rem;">Comma-separated labels shown on the card.</p>
     </div>
   </div>
 
   <div class="form-group">
-    <label for="body">Body *</label>
-    <textarea id="body" name="body" rows="6" required placeholder="Write the post content..."><%= post ? post.body : '' %></textarea>
+    <label for="title">Header (title) *</label>
+    <input type="text" id="title" name="title" required value="<%= post ? post.title : '' %>" placeholder="Main headline">
+  </div>
+
+  <div class="form-group">
+    <label for="subtitle">Sub-heading (optional)</label>
+    <input type="text" id="subtitle" name="subtitle" value="<%= post && post.subtitle ? post.subtitle : '' %>" placeholder="Short line under the headline">
+  </div>
+
+  <div class="form-group">
+    <label for="body">Main text *</label>
+    <textarea id="body" name="body" rows="8" required placeholder="The main message for this post…"><%= post ? post.body : '' %></textarea>
   </div>
 
   <div class="form-row">
     <div class="form-group">
-      <label for="quote">Quote (optional)</label>
-      <textarea id="quote" name="quote" rows="3" placeholder="Optional quote to highlight"><%= post && post.quote ? post.quote : '' %></textarea>
+      <label for="link">Link (optional)</label>
+      <input type="url" id="link" name="link" value="<%= post && post.link ? post.link : '' %>" placeholder="https://…">
     </div>
     <div class="form-group">
-      <label for="quoteAuthor">Quote Author</label>
-      <input type="text" id="quoteAuthor" name="quoteAuthor" value="<%= post && post.quoteAuthor ? post.quoteAuthor : '' %>" placeholder="e.g. Marcus Johnson">
+      <label for="linkText">Link label</label>
+      <input type="text" id="linkText" name="linkText" value="<%= post && post.linkText ? post.linkText : '' %>" placeholder="e.g. Book a place">
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group">
-      <label for="link">Link URL (optional)</label>
-      <input type="url" id="link" name="link" value="<%= post && post.link ? post.link : '' %>" placeholder="https://...">
+      <label for="quote">Pull quote (optional)</label>
+      <textarea id="quote" name="quote" rows="2" placeholder="Optional highlighted quote"><%= post && post.quote ? post.quote : '' %></textarea>
     </div>
     <div class="form-group">
-      <label for="linkText">Link Text</label>
-      <input type="text" id="linkText" name="linkText" value="<%= post && post.linkText ? post.linkText : '' %>" placeholder="e.g. Visit the exhibition">
+      <label for="quoteAuthor">Quote attribution</label>
+      <input type="text" id="quoteAuthor" name="quoteAuthor" value="<%= post && post.quoteAuthor ? post.quoteAuthor : '' %>" placeholder="Name or role">
     </div>
   </div>
 
   <div class="admin-card" style="margin: var(--space-lg) 0;">
-    <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:images', size: 22 }) %> Image &amp; video in the timeline</h3>
-    <p style="color: var(--text-mid); font-size: 0.9rem; margin-bottom: var(--space-md);">Shown on the story card after the tags and before the title. Upload replaces the URL field for that type.</p>
+    <h3 style="display:flex;align-items:center;gap:0.45rem;"><%- include('../partials/icon', { name: 'lucide:images', size: 22 }) %> Photo &amp; video</h3>
+    <p style="color: var(--text-mid); font-size: 0.9rem; margin-bottom: var(--space-md);">Add a picture or video to the card. Use upload and/or paste a URL (from <a href="/admin/gallery">Gallery</a> or elsewhere).</p>
     <div class="form-row">
       <div class="form-group">
         <label for="postImage">Upload photo</label>
@@ -102,8 +110,8 @@
   </div>
 
   <div class="admin-card" style="margin: var(--space-lg) 0;">
-    <h3 style="margin-top: 0;">Also show on News &amp; More pages</h3>
-    <p style="color: var(--text-mid); font-size: 0.9rem; margin-bottom: var(--space-md);">Tick where this post should be copied as a full block (after the page’s fixed sections). Header image is separate — you can show only the header image without duplicating the full post.</p>
+    <h3 style="margin-top: 0;">Where else to publish</h3>
+    <p style="color: var(--text-mid); font-size: 0.9rem; margin-bottom: var(--space-md);">Tick any News &amp; More page that should show this story. “Full post” adds the text and media after that page’s fixed content. “Header image” uses this post’s photo only in that page’s top banner.</p>
     <% if (!nmPages.length) { %>
     <p style="color: var(--text-mid); font-size: 0.9rem;">No News &amp; More pages found — check <code class="nm-inline-mono">data/news-more.json</code>.</p>
     <% } else { %>

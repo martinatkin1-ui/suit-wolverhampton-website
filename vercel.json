@@ -7,5 +7,5 @@
       "includeFiles": "{views/**,data/**,public/**,scripts/**}"
     }
   },
-  "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
+  "rewrites": [{ "source": "/:path*", "destination": "/api/:path*" }]
 }

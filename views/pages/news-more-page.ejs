@@ -120,6 +120,9 @@
     </div>
     <% } %>
     <h2><%= sp.title %></h2>
+    <% if (sp.subtitle && String(sp.subtitle).trim()) { %>
+    <p class="outreach-prose" style="font-size:1.1rem;color:var(--text-mid);margin-bottom:0.75rem;"><%= sp.subtitle %></p>
+    <% } %>
     <p class="outreach-prose"><%= sp.body %></p>
     <% if (sp.quote) { %>
     <blockquote class="outreach-quote">“<%= sp.quote %>”<% if (sp.quoteAuthor) { %><cite>— <%= sp.quoteAuthor %></cite><% } %></blockquote>

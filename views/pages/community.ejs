@@ -140,6 +140,9 @@
         </div>
         <% } %>
         <h3><%= post.title %></h3>
+        <% if (post.subtitle && String(post.subtitle).trim()) { %>
+        <p class="feed-subtitle" style="font-size:1.05rem;color:var(--text-mid);margin:0.35rem 0 0.75rem;"><%= post.subtitle %></p>
+        <% } %>
         <p><%= post.body %></p>
         <% if (post.quote) { %>
         <blockquote class="feed-quote">
