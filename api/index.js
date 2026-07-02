@@ -17,6 +17,7 @@
 const app = require('../server.js');
 
 module.exports = (req, res) => {
+  // 1) Rebuild the real path from the __p query param (see vercel.json rewrite).
   try {
     const u = new URL(req.url || '/', 'http://internal');
     if (u.searchParams.has('__p')) {
@@ -28,5 +29,22 @@ module.exports = (req, res) => {
   } catch (_) {
     /* fall through with the original req.url */
   }
+
+  // 2) After a POST (login, admin saves, etc.) Express replies with its default
+  //    302 redirect. Vercel's rewrite layer rewrites 302->307 / 301->308, which
+  //    PRESERVE the method — so the browser re-POSTs to the redirect target. That
+  //    target (e.g. GET /admin) is GET-only, so it 404s and the action looks like
+  //    it failed (this is why login appeared broken). Force non-GET redirects to
+  //    303 See Other, which forces the browser to GET and which Vercel passes
+  //    through unchanged. GET/HEAD redirects are left alone (307-of-a-GET is fine).
+  const method = (req.method || 'GET').toUpperCase();
+  if (method !== 'GET' && method !== 'HEAD') {
+    const writeHead = res.writeHead;
+    res.writeHead = function (status, ...rest) {
+      if (status === 301 || status === 302) status = 303;
+      return writeHead.call(this, status, ...rest);
+    };
+  }
+
   return app(req, res);
 };
